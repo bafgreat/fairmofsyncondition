@@ -41,3 +41,7 @@ To install fairmofsyncondition from PYPI, simply execute the following commands 
 pip install fairmofsyncondition
 
 ```
+
+# LICENSE
+
+This project is licensed under the MIT

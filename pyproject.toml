@@ -6,8 +6,18 @@ authors = ["Dinga Wonanke <bafgreat@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.11"
+torch = "2.2.2"
+numpy = "<2.0"
+pytorch-lightning = "^2.4.0"
+scikit-learn = "^1.5.1"
+ase = "^3.23.0"
+sphinxcontrib-mermaid = "^0.9.2"
+sphinx-copybutton = "^0.5.2"
 
+
+[tool.poetry.group.dev.dependencies]
+sphinx = "<8.0.2"
 
 [build-system]
 requires = ["poetry-core"]
