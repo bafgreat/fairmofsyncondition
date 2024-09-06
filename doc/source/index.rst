@@ -54,7 +54,11 @@ This project is licensed under the MIT License.
    :maxdepth: 2
    :caption: Contents:
 
-   module
+   quickstart
+   how_to
+   update
+   api_reference
+
 
 Indices and tables
 ==================

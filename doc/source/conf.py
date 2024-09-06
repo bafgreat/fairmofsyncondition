@@ -8,6 +8,7 @@
 import os
 import sys
 
+sys.setrecursionlimit(1500)
 sys.path.insert(0, os.path.abspath('../fairmofsyncondition'))
 
 project = 'fairmofsyncondition'
