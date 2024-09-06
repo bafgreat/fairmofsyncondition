@@ -7,17 +7,20 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
-torch = "2.2.2"
+torch = "2.2.0"
 numpy = "<2.0"
 pytorch-lightning = "^2.4.0"
 scikit-learn = "^1.5.1"
 ase = "^3.23.0"
-sphinxcontrib-mermaid = "^0.9.2"
-sphinx-copybutton = "^0.5.2"
+orb-models = { git = "https://github.com/bafgreat/orb-models-mof.git" }
+pynanoflann = { git = "https://github.com/dwastberg/pynanoflann.git", rev = "af434039ae14bedcbb838a7808924d6689274168" }
 
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "<8.0.2"
+sphinxcontrib-mermaid = "^0.9.2"
+sphinx-copybutton = "^0.5.2"
+
 
 [build-system]
 requires = ["poetry-core"]
