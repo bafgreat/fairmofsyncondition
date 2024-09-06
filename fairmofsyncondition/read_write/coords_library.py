@@ -8,7 +8,7 @@ import re
 from ase.io import read
 from ase import Atoms, Atom
 from orb_models.forcefield import atomic_system
-from fairmofsyncondition.io import filetyper
+from fairmofsyncondition.read_write import filetyper
 
 
 def read_and_return_ase_atoms(filename):
