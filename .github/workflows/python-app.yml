@@ -1,14 +1,14 @@
-name: Python Application with Poetry and Sphinx Documentation
+name: CI/CD fairmofsyncondition
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,19 +16,22 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
       with:
-        python-version: "3.10"
+        python-version: '3.10'
 
     - name: Install Poetry using pip
       run: |
@@ -36,9 +39,17 @@ jobs:
         pip install poetry
         poetry --version
 
+    - name: Cache Poetry virtual environment
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pypoetry/virtualenvs
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+
     - name: Install Dependencies with Poetry
       run: |
-        poetry install --no-root
+        poetry install --no-interaction --no-ansi
 
     - name: Lint with flake8
       run: |
@@ -57,7 +68,6 @@ jobs:
       uses: actions/upload-pages-artifact@v3
       with:
         path: docs/build/html
-
 
   deploy:
     environment:
