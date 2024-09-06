@@ -16,7 +16,6 @@ __status__ = "production"
 ###############################################################################
 
 import torch
-from fairmofsyncondition.geometry import coords_library, filetyper
 
 
 class SimilarityFinder:
@@ -109,7 +108,7 @@ class SimilarityFinder:
         **returns:**
             - A similarity index between 0 and 1.
         """
-       
+
         if weights is None:
             weights = {
                 'n_nodes_diff': 0.1,
