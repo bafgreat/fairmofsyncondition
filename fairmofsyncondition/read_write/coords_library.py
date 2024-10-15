@@ -199,7 +199,7 @@ def coordinate_definition(filename):
     """
     define how coordinates should be extracted
     """
-    print (filename)
+    # print (filename)
     #Robust algorithm for finding file extention (check)
     iter_index = re.finditer(r'\.', filename)
     check = [filename[i.span()[0]+1:] for i in iter_index  ][-1]

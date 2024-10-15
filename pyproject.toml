@@ -6,9 +6,9 @@ authors = ["Dinga Wonanke <bafgreat@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.10,<4.0"
 torch = "2.2.0"
-numpy = "<2.0"
+# numpy = "<2.0"
 pytorch-lightning = "2.4.0"
 scikit-learn = "^1.5.1"
 ase = "^3.23.0"
@@ -17,6 +17,8 @@ pynanoflann = { git = "https://github.com/dwastberg/pynanoflann.git", rev = "af4
 pandas = "^2.2.2"
 pytest = "^8.3.2"
 attr = "^0.3.2"
+llama-stack = "^0.0.40"
+transformers = "^4.45.1"
 
 
 [tool.poetry.group.dev.dependencies]

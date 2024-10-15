@@ -55,6 +55,8 @@ This project is licensed under the MIT License.
    :caption: Contents:
 
    quickstart
+   similarity
+   graph_analysis
    how_to
    update
    api_reference
