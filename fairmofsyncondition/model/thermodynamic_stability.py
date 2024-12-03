@@ -1,228 +1,219 @@
+
+#!/usr/bin/python
+from __future__ import print_function
+__author__ = "Dr. Dinga Wonanke"
+__status__ = "production"
+
+##############################################################################
+# fairmofsyncondition is a machine learning package for predicting the        #
+# synthesis condition of the crystal structures of MOFs. It is also intended  #
+# for predicting all MOFs the can be generated from a given set of conditions #
+# In addition the package also predicts the stability of MOFs, compute their  #
+# their PXRD and crystallite sizes. This package is part of our effort to     #
+# to accelerate the discovery and optimization of the synthesises of novel    #
+# high performing MOFs. This package is being developed by Dr Dinga Wonanke   #
+# as part of hos MSCA post doctoral fellowship at TU Dresden.                 #
+#                                                                             #
+###############################################################################
+
+import os
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch_geometric.data import Data, DataLoader
-from torch_geometric.nn import GCNConv, global_mean_pool
+import random
+from torch import nn
+from torch.nn import functional
+from ase.db import connect
+from torch import optim
+from torch_geometric.nn import GATv2Conv, global_mean_pool
+from torch_geometric.loader import DataLoader
+from fairmofsyncondition.read_write import coords_library, filetyper
 
-class EnergyPredictionGCN(nn.Module):
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+class EnergyGNN(nn.Module):
     """
-    A GCN-based model for predicting energy from molecular graph data.
+    A Graph Neural Network class for predicting the thermodynamic
+    stability of MOFs using Graph Attention Networks (GATv2).
 
-    Parameters:
-    -----------
-    node_feature_dim : int
-        Dimensionality of node features (e.g., atomic numbers).
-    hidden_dim : int
-        Number of hidden units in the GCN layers.
-    output_dim : int
-        Dimensionality of the output (for energy prediction, this will be 1).
+    Arg:
+        input_dim (int): Number of input node features.
+        hidden_dim (int): Number of hidden units in the GATv2 layers.
+        output_dim (int): Number of output units (e.g., 1 for regression).
+        heads (int, optional): Number of attention heads. Default is 1.
+        dropout (float, optional): Dropout rate. Default is 0.2.
     """
+    def __init__(self, input_dim, hidden_dim, output_dim, edge_dim, heads=1, dropout=0.2):
+        super(EnergyGNN, self).__init__()
+        self.conv1 = GATv2Conv(input_dim, hidden_dim, heads=heads, edge_dim=edge_dim)
+        self.norm1 = nn.BatchNorm1d(hidden_dim * heads)
+        self.conv2 = GATv2Conv(hidden_dim * heads, hidden_dim, heads=heads, edge_dim=edge_dim)
+        self.norm2 = nn.BatchNorm1d(hidden_dim * heads)
+        self.fc1 = nn.Linear(hidden_dim * heads, hidden_dim)
+        self.dropout = nn.Dropout(p=dropout)
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
 
-    def __init__(self, node_feature_dim, hidden_dim, output_dim=1):
-        super(EnergyPredictionGCN, self).__init__()
-
-        # Define two Graph Convolutional layers
-        self.conv1 = GCNConv(node_feature_dim, hidden_dim)
-        self.conv2 = GCNConv(hidden_dim, hidden_dim)
-
-        # Batch normalization for stable training
-        self.batch_norm = nn.BatchNorm1d(hidden_dim)
-
-        # MLP for graph-level energy prediction
-        self.mlp = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, output_dim)
-        )
-
-    def forward(self, data: Data):
+    def forward(self, data):
         """
         Forward pass of the model.
 
-        Parameters:
-        -----------
-        data : torch_geometric.data.Data
-            A batched data object containing node features, edge index, and batch information.
+        **parameters:**
+            data (torch_geometric.data.Data): Input graph data
 
-        Returns:
-        --------
-        energy_pred : torch.Tensor
-            Predicted energy for the input batch of graphs.
+        **returns:**
+            torch.Tensor: Predicted energy value.
         """
-        x, edge_index, batch = data.x, data.edge_index, data.batch
-
-        # First GCN layer
-        x = self.conv1(x, edge_index)
-        x = torch.relu(x)
-
-        # Second GCN layer
-        x = self.conv2(x, edge_index)
-
-        # Apply batch normalization
-        x = self.batch_norm(x)
-
-        # Global pooling to aggregate node-level embeddings into graph-level representations
+        # x, edge_index, edge_attr, batch = data.x, data.edge_index, data.edge_attr, data.batch
+        x, edge_index, edge_attr, batch = data.x, data.edge_index, data.edge_attr, data.batch
+        x = functional.relu(self.norm1(self.conv1(x, edge_index, edge_attr)))
+        x = self.dropout(x)
+        x = functional.relu(self.norm2(self.conv2(x, edge_index, edge_attr)))
         x = global_mean_pool(x, batch)
+        x = functional.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
 
-        # Predict energy using the MLP
-        energy_pred = self.mlp(x)
 
-        return energy_pred
-
-def train_model(model, dataloader, optimizer, criterion, device):
+def prepare_dataset(ase_obj, energy):
     """
-    Train the model for one epoch.
+    Prepares a dataset from ASE Atoms objects and their corresponding energy values.
 
-    Parameters:
-    -----------
-    model : nn.Module
-        The GCN model.
-    dataloader : DataLoader
-        DataLoader providing batches of graph data.
-    optimizer : torch.optim.Optimizer
-        Optimizer for updating model weights.
-    criterion : nn.Module
-        Loss function (e.g., Mean Squared Error Loss).
-    device : torch.device
-        The device (CPU or GPU) for computation.
+    **parameters:**
+        ase_obj (ASE.Atoms): ASE Atoms object.
+        energy (float): Energy value of the crystal structure.
 
-    Returns:
-    --------
-    float
-        The average training loss over the epoch.
+    **returns:**
+        torch_geometric.data.Data: PyTorch Geometric Data object with input features, edge indices, and energy value.
     """
+    data = coords_library.ase_to_pytorch_geometric(ase_obj)
+    data.y = torch.tensor([energy], dtype=torch.float)
+    return data
+
+
+
+def data_from_aseDb(path_to_db):
+    """
+    Load data from ASE database and prepare it for training.
+
+    **parameters:**
+        path_to_db (str): Path to the ASE database file.
+
+    **returns:**
+        list: List of PyTorch Geometric Data objects for training.
+    """
+    dataset = []
+    counter = 0
+    db = connect(path_to_db)
+    for row in db.select():
+        data = prepare_dataset(row.toatoms(), row.r_energy)
+        dataset.append(data)
+        if counter >= 5000:
+            break
+        counter += 1
+    return dataset
+
+
+def train(model, dataloader, optimizer, criterion, device):
+    """
+    Train the model using the given data and optimizer.
+
+    **parameters:**
+        model (nn.Module): The GNN model to train
+        dataloader (DataLoader): DataLoader for batching the dataset during training.
+        optimizer (optim.Optimizer): Optimizer for updating model parameters.
+        criterion (nn.Module): Loss function (e.g., MSELoss) to compute the training loss.
+        device (torch.device): The device (CPU or GPU) for computation.
+
+    **returns:**
+        float: The average training loss over the epoch.
+    """
+
     model.train()
     total_loss = 0
-
     for data in dataloader:
         data = data.to(device)
         optimizer.zero_grad()
-        output = model(data)
-        loss = criterion(output, data.y)
+        predictions = model(data)
+        loss = criterion(predictions, data.y)
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
-
     return total_loss / len(dataloader)
 
-def evaluate_model(model, dataloader, criterion, device):
-    """
-    Evaluate the model on the validation/test dataset.
 
-    Parameters:
-    -----------
-    model : nn.Module
-        The GCN model.
-    dataloader : DataLoader
-        DataLoader providing batches of graph data.
-    criterion : nn.Module
-        Loss function (e.g., Mean Squared Error Loss).
-    device : torch.device
-        The device (CPU or GPU) for computation.
 
-    Returns:
-    --------
-    float
-        The average loss over the dataset.
+def evaluate(model, dataloader, criterion, device):
     """
+    Evaluate the model using the given data and loss function.
+
+    **parameters:**
+        model (nn.Module): The trained GNN model to evaluate.
+        dataloader (DataLoader): DataLoader for batching the dataset during evaluation.
+        criterion (nn.Module): Loss function (e.g., MSELoss) to compute the evaluation loss.
+        device (torch.device): The device (CPU or GPU) for computation.
+
+    **returns:**
+        float: The average evaluation loss over the epoch.
+    """
+
     model.eval()
     total_loss = 0
     with torch.no_grad():
         for data in dataloader:
             data = data.to(device)
-            output = model(data)
-            loss = criterion(output, data.y)
+            predictions = model(data)
+            loss = criterion(predictions, data.y)
             total_loss += loss.item()
-
     return total_loss / len(dataloader)
 
-def save_model(model, optimizer, epoch, filepath='gcn_model.pth'):
-    """
-    Save the trained model and optimizer state for future use.
 
-    Parameters:
-    -----------
-    model : nn.Module
-        The trained GCN model.
-    optimizer : torch.optim.Optimizer
-        The optimizer used during training.
-    epoch : int
-        The epoch number (useful for resuming training).
-    filepath : str
-        Path where the model will be saved.
+def save_model(model, optimizer, path="model.pth"):
     """
-    checkpoint = {
+    Save the trained model to a file.
+
+    **parameters:**
+        model (nn.Module): The trained GNN model to save.
+        optimizer (optim.Optimizer): Optimizer for updating model parameters.
+        path (str, optional): Path to save the model. Default is "model.pth".
+    """
+
+    torch.save({
         'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'epoch': epoch
-    }
-    torch.save(checkpoint, filepath)
-    print(f"Model saved to {filepath}")
+        'optimizer_state_dict': optimizer.state_dict()
+    }, path)
 
-def load_model(filepath, model, optimizer=None):
+
+def load_model(model, optimizer, path="model.pth", device="cpu"):
     """
-    Load a saved model and optionally its optimizer state.
+    Load a saved model from a file.
 
-    Parameters:
-    -----------
-    filepath : str
-        Path to the saved model file.
-    model : nn.Module
-        The model instance where the state_dict will be loaded.
-    optimizer : torch.optim.Optimizer, optional
-        The optimizer instance to load its state (for resuming training).
-
-    Returns:
-    --------
-    int
-        The epoch number to resume training from.
+    **parameters:**
+        model (nn.Module): The model to load.
+        optimizer (optim.Optimizer): Optimizer for updating model parameters.
+        path (str, optional): Path to load the model. Default is "model.pth".
+        device (torch.device, optional): The device (CPU or GPU) for computation. Default is "cpu".
     """
-    checkpoint = torch.load(filepath)
+
+    checkpoint = torch.load(path, map_location=device)
     model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    return model, optimizer
 
-    if optimizer:
-        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-
-    epoch = checkpoint['epoch']
-    print(f"Model loaded from {filepath}, resuming from epoch {epoch}")
-    return epoch
-
-# Example usage:
 
 if __name__ == "__main__":
-    # Hyperparameters
-    node_feature_dim = 118  # For atomic number embeddings
-    hidden_dim = 64         # Hidden units in GCN
-    output_dim = 1          # Energy prediction
-    lr = 0.001              # Learning rate
-    epochs = 100            # Number of epochs
+    dataset = data_from_aseDb('../../data/MOF_stability.db')
+    random.shuffle(dataset)
+    train_data = dataset[:int(0.8 * len(dataset))]
+    val_data = dataset[int(0.8 * len(dataset)):]
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # Initialize the model, loss function, and optimizer
-    model = EnergyPredictionGCN(node_feature_dim, hidden_dim, output_dim).to(device)
+    train_loader = DataLoader(train_data, batch_size=100, shuffle=True)
+    val_loader = DataLoader(val_data, batch_size=100, shuffle=False)
+    model = EnergyGNN(input_dim=4, hidden_dim=128,edge_dim=1,  output_dim=1).to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=lr)
+    epoch = 5000
+    for i in range(epoch):
+        train_loss = train(model, train_loader, optimizer, criterion, device)
+        val_loss = evaluate(model, val_loader, criterion, device)
+        print(f"Epoch: {i+1}/{epoch}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
+        save_model(model, optimizer, path="energy_gnn.pth")
 
-    # Assuming `train_loader` and `val_loader` are prepared DataLoader instances for your dataset
-    # train_loader = ...
-    # val_loader = ...
-
-    best_val_loss = float('inf')
-
-    for epoch in range(1, epochs + 1):
-        train_loss = train_model(model, train_loader, optimizer, criterion, device)
-        val_loss = evaluate_model(model, val_loader, criterion, device)
-
-        print(f"Epoch {epoch}/{epochs}, Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}")
-
-        # Save the best model
-        if val_loss < best_val_loss:
-            best_val_loss = val_loss
-            save_model(model, optimizer, epoch, filepath='best_gcn_model.pth')
-
-    # Optionally, load and evaluate the best model on a test set
-    # test_loader = ...
-    # load_model('best_gcn_model.pth', model)
-    # test_loss = evaluate_model(model, test_loader, criterion, device)
-    # print(f"Test Loss: {test_loss:.4f}")
+    print (model)

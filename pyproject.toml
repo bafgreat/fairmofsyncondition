@@ -19,6 +19,12 @@ pytest = "^8.3.2"
 attr = "^0.3.2"
 llama-stack = "^0.0.40"
 transformers = "^4.45.1"
+lmdb = "^1.5.1"
+msgpack = "^1.1.0"
+six = "^1.16.0"
+ml-pyxis = {url = "https://github.com/vicolab/ml-pyxis/archive/master.zip"}
+mofstructure = "^0.1.8.2"
+torch-geometric = "^2.6.1"
 
 
 [tool.poetry.group.dev.dependencies]

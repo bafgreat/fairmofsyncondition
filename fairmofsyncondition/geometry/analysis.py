@@ -158,5 +158,5 @@ class MOFNetworkAnalysis:
 
 
 if __name__ == "__main__":
-    analysis = MOFNetworkAnalysis('json_datai2.db', similarity_threshold=0.7)
+    analysis = MOFNetworkAnalysis('../../data/json_datai3.db', similarity_threshold=0.5)
     analysis.run_analysis()
