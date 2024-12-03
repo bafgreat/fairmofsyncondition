@@ -182,3 +182,13 @@ docs/source/_static/._logo.png
 fairmofsyncondition/model/store.py
 fairmofsyncondition/model/thermodynamic_stability2.py
 fairmofsyncondition/model/thermodynamic_stability2.py
+fairmofsyncondition/featurizer/._mof_features.py
+fairmofsyncondition/geometry/._mof_network.png
+fairmofsyncondition/geometry/._unique_mofs.json
+fairmofsyncondition/geometry/mof_network.png
+fairmofsyncondition/geometry/unique_mofs.json
+data
+fairmofsyncondition/model/store
+fairmofsyncondition/functions/
+fairmofsyncondition/model/energy_gnn.pth
+tests/test_data/._EDUSIF.cif
