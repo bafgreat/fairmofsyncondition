@@ -1,5 +1,5 @@
 fairmofsyncondition
-===============================================
+======================
 
 **fairmofsyncondition** is a Python module designed to predict the synthesis conditions for metal-organic frameworks (MOFs). This tool offers two main functionalities:
 
