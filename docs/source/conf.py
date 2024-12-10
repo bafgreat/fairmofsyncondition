@@ -48,5 +48,5 @@ html_use_search = True
 html_show_sourcelink = True
 html_show_copyright = True
 html_show_powered_by = True
-
+add_module_names = False
 todo_include_todos = True

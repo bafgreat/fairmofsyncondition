@@ -3,21 +3,25 @@ from __future__ import print_function
 __author__ = "Dr. Dinga Wonanke"
 __status__ = "production"
 
-import numpy as np
+import os
 import re
+import pickle
 import torch
+import lmdb
+import numpy as np
 from ase.io import read
 from ase import Atoms, Atom
-from pymatgen.io.ase import AseAtomsAdaptor
-from orb_models.forcefield import atomic_system
-from fairmofsyncondition.read_write import filetyper
+from ase.db import connect
 from torch_geometric.data import Data
 from mofstructure import mofdeconstructor
+from orb_models.forcefield import atomic_system
+from fairmofsyncondition.read_write import filetyper
 
 
 def read_and_return_ase_atoms(filename):
     """
     Function to read the ase atoms
+
     **parameter**
         filename: string
     """
@@ -37,7 +41,17 @@ def write_ase_atoms(ase_atoms, filename):
 
 
 def ase_coordinate(filename):
-    "Read coordinate using ase"
+    """
+    Read any ASE readable file and returns coordinates and lattices
+    which should be use for setting up AMS calculations.
+
+    **parameter**
+        filename  (string) : Name of file containing the coordinate
+
+    **Returns**
+        ase_coord (list) : List of coordinate strings
+        lattice (list) : List of lattice vectors strings
+    """
     molecule = read(filename)
     atoms = Atoms(molecule)
     ase_cell = atoms.get_cell(complete=True)
@@ -57,19 +71,27 @@ def ase_coordinate(filename):
 
 def gjf_coordinate(filename):
     """
-    Read coordinates from .gjf extension
+    Reading coordinates from a gaussian .gjf file
+
+    **parameter**
+        filename  (string) : Name of file containing the coordinate
+
+    **Returns**
+        coords : List of coordinate strings
+        lattice (list) : List of lattice vectors strings
     """
     qc_input = filetyper.get_contents(filename)
     file_lines = []
     for line in qc_input:
         file_lines.append(line.split())
-    coords=[]
-    lattice =[]
+
+    coords = []
+    lattice = []
     ase_line = file_lines[2]
-    if not 'ASE' in ase_line:
-        for row in  file_lines[6:]:
-            if len(row)>0:
-                if not 'Tv' in row:
+    if 'ASE' not in ase_line:
+        for row in file_lines[6:]:
+            if len(row) > 0:
+                if 'Tv' not in row:
                     b = '\t'.join(row)
                     coords.append(b)
                 else:
@@ -78,9 +100,9 @@ def gjf_coordinate(filename):
             else:
                 break
     else:
-        for row in  file_lines[5:]:
-            if len(row)>0:
-                if not 'TV' in row:
+        for row in file_lines[5:]:
+            if len(row) > 0:
+                if 'TV' not in row:
                     b = '\t'.join(row)
                     coords.append(b)
                 else:
@@ -91,12 +113,19 @@ def gjf_coordinate(filename):
 
     return coords, lattice
 
+
 def xyz_coordinates(filename):
     """
-    read xyz coordinates
+    Read any xyz coordinate file
+
+    **parameter**
+        filename  (string) : Name of file containing the coordinate
+
+    **Returns**
+        coords : List of coordinate strings
     """
     qc_input = filetyper.get_contents(filename)
-    coords=[]
+    coords = []
     file_lines = []
     for line in qc_input:
         file_lines.append(line.split())
@@ -106,33 +135,44 @@ def xyz_coordinates(filename):
         coords.append(b)
     return coords
 
+
 def check_periodicity(filename):
     """
     Function to check periodicity in an scm output file
+
+    **parameter**
+        filename  (string) : Name of file containing the coordinate
     """
     qc_input = filetyper.get_contents(filename)
-    verdict = ''
+    verdict = False
     for line in qc_input:
         if 'Lattice vectors (angstrom)' in line:
-            verdict = 'True'
+            verdict = True
             break
     return verdict
+
 
 def scm_out(qcin):
     """
     Extract coordinates from scm output files
+
+    **parameter**
+        qcin  (string) : scm output file
+
+    **return**
+        coords (list) : list of coordinates
+        lattice_coords (list) : list of lattice coordinates
     """
     qc_input = filetyper.get_contents(qcin)
     verdict = check_periodicity(qcin)
-    coords=[]
-    lattice_coords =[]
-    lattice=[]
+    coords = []
+    lattice_coords = []
+    lattice = []
     length_value = []
-
-    if verdict == 'True':
+    if verdict:
         cods = filetyper.get_section(qc_input, 'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)', 'Lattice vectors (angstrom)', 1, -2)
 
-        for  lines in cods:
+        for lines in cods:
             data = lines.split()
             length_value.append(data[0])
             b = '\t'.join(data[1:])
@@ -146,7 +186,7 @@ def scm_out(qcin):
 
         parameters = [lattice[lat_index+1], lattice[lat_index+2], lattice[lat_index+3]]
 
-        for  line in parameters:
+        for line in parameters:
             a = line[1:]
             if len(a) > 2:
                 b = '\t'.join(a)
@@ -154,7 +194,7 @@ def scm_out(qcin):
 
     else:
         cods = filetyper.get_section(qc_input, 'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)', 'Total System Charge', 1, -2)
-        for  lines in cods:
+        for lines in cods:
             data = lines.split()
             length_value.append(data[0])
             b = '\t'.join(data[1:])
@@ -167,32 +207,54 @@ def scm_out(qcin):
 def qchemcout(filename):
     """
     Read coordinates from qchem output file
+
+    **parameter**
+        filename  (string) : Name of file containing the coordinate
+
+    **Returns**
+        coords : List of coordinate strings
     """
     qc_input = filetyper.get_contents(filename)
     cods = filetyper.get_section(qc_input, 'OPTIMIZATION CONVERGED', 'Z-matrix Print:', 5, -2)
-    #cods = filetyper.get_section(qc_input, '$molecule', '$end', 2, -1)
-    coords=[]
+    # cods = filetyper.get_section(qc_input, '$molecule', '$end', 2, -1)
+    coords = []
     for row in cods:
         data = row.split()
         b = '\t'.join(data[1:])
         coords.append(b)
     return coords
 
+
 def qchemin(filename):
     """
     Read coordinates from qchem input file
+
+    **parameter**
+        filename (string) : filename
+
+    **Returns**
+        coords : list of coordinate strings
     """
     qc_input = filetyper.get_contents(filename)
     coords = filetyper.get_section(qc_input, '$molecule', '$end', 2, -1)
     return coords
 
+
 def format_coords(coords, atom_labels):
     """
     create coords containing symbols and positions
+
+    **parameters**
+        coords (list) : list of coordinates
+        atom_labels (list) : list of atom labels
+
+    **returns**
+        coordinates (list) : list of formatted coordinates
     """
-    coordinates =[]
-    #file_obj.write('%d\n\n' %len(atom_types))
-    for labels,row in zip(atom_labels,coords):
+
+    coordinates = []
+    # file_obj.write('%d\n\n' %len(atom_types))
+    for labels, row in zip(atom_labels, coords):
         b = [labels] + [str(atom)+' ' for atom in row]
         printable_row = '\t'.join(b)
         coordinates.append(printable_row + '\n')
@@ -204,33 +266,42 @@ def coordinate_definition(filename):
     define how coordinates should be extracted
     """
     # print (filename)
-    #Robust algorithm for finding file extention (check)
+    # Robust algorithm for finding file extention (check)
     iter_index = re.finditer(r'\.', filename)
-    check = [filename[i.span()[0]+1:] for i in iter_index  ][-1]
-    coords, lattice = [],[]
-    #check = filename.split('.')[1]
+    check = [filename[i.span()[0]+1:] for i in iter_index][-1]
+    coords, lattice = [], []
+    # check = filename.split('.')[1]
     if check == 'gjf':
-        coords, lattice =  gjf_coordinate(filename)
-    elif check =='xyz':
-        coords =xyz_coordinates(filename)
-    elif check =='out':
+        coords, lattice = gjf_coordinate(filename)
+    elif check == 'xyz':
+        coords = xyz_coordinates(filename)
+    elif check == 'out':
         coords, lattice = scm_out(filename)
-    elif check =='cout':
-        coords= qchemcout(filename)
-    elif check =='cin':
-        coords= qchemin(filename)
+    elif check == 'cout':
+        coords = qchemcout(filename)
+    elif check == 'cin':
+        coords = qchemin(filename)
     else:
         coords, lattice = ase_coordinate(filename)
 
     return coords, lattice
 
+
 def collect_coords(filename):
     '''
     Collect coordinates
+
+    **parameters**
+        filename (string) : filename
+
+    **returns**
+        elements (list) : list of elements
+        positions (numpy array) : numpy array of positions
+        cell (numpy array) : numpy array of cell parameters if present in the file
     '''
     coords, lattice = coordinate_definition(filename)
     elements = []
-    positions =[]
+    positions = []
     cell = []
     for lines in coords:
         data = lines.split()
@@ -239,14 +310,20 @@ def collect_coords(filename):
 
     positions = np.array(positions)
 
-    if len(lattice)!=0:
+    if len(lattice) != 0:
         cell = np.array([[float(i) for i in j.split()] for j in lattice])
 
     return elements, positions, cell
 
+
 def load_data_as_ase(filename):
     """
     Load data as an ase atoms object
+    **parameter**
+        filename (string) : Any file type that has been defined in this module
+                            including ase readable filetypes
+    **return**
+        ase_atoms : ase atoms object
     """
     elements, positions, cell = collect_coords(filename)
     ase_atoms = Atoms(symbols=elements, positions=positions)
@@ -258,8 +335,10 @@ def load_data_as_ase(filename):
 def ase_graph(input_system):
     """
     Create a graph from an ase atoms object
+
     **parameter**
         **input_system** : Atoms or Atom object or meolcular file name e.g molecule.xyz or mof.cif
+
     **return**
         graph object: ase graph object
     """
@@ -273,13 +352,20 @@ def ase_graph(input_system):
 
 def xtb_input(filename):
     """
-    Create an xtb input
+    Creating a gfn-xtb input file from any ase readable filetype or filetype
+    that can be read by this module.
+
+    **parameter**
+        filename (string) : Any file type that has been defined in this module
+
+    **return**
+        xtb_coords : list of strings containing xtb input
     """
     elements, positions, cell = collect_coords(filename)
     xtb_coords = []
     # xtb_coords.append('> cat coord \n')
     xtb_coords.append('$coord angs\n')
-    for labels,row in zip(elements, positions):
+    for labels, row in zip(elements, positions):
         tmp_coord =  [str(atom)+ ' ' for atom in row] + [' '] + [labels]
         xtb_coords.append('\t'.join(tmp_coord) +'\n')
     if len(cell) > 0:
@@ -292,9 +378,16 @@ def xtb_input(filename):
     # xtb_coords.append('> xtb coord\n')
     return xtb_coords
 
+
 def ase_to_xtb(ase_atoms):
     """
-    Create an xtb input from an ase atom
+    Create a gfn-xtb input from an ase atom object.
+
+    **parameter**
+        ase_atoms (ase Atoms or Atom): The ase atoms object to be converted.
+
+    **return**
+        xtb_coords = ase_to_xtb_coords(ase_atoms)
     """
     check_pbc = ase_atoms.get_pbc()
     ase_cell = []
@@ -305,15 +398,15 @@ def ase_to_xtb(ase_atoms):
     positions = ase_atoms.get_positions()
     # xtb_coords.append('> cat coord \n')
     xtb_coords.append('$coord angs\n')
-    for labels,row in zip(elements, positions):
-        tmp_coord =  [str(atom)+ ' ' for atom in row] + [' '] + [labels]
-        xtb_coords.append('\t'.join(tmp_coord) +'\n')
+    for labels, row in zip(elements, positions):
+        tmp_coord = [str(atom) + ' ' for atom in row] + [' '] + [labels]
+        xtb_coords.append('\t'.join(tmp_coord) + '\n')
     if len(ase_cell) > 0:
         xtb_coords.append('$periodic cell vectors \n')
         # xtb_coords.append('$lattice angs \n')
-        for lattice in ase_cell :
-            tmp_lattice =  [str(lat)+ ' ' for lat in lattice] + [' ']
-            xtb_coords.append('\t'.join( tmp_lattice) +'\n')
+        for lattice in ase_cell:
+            tmp_lattice = [str(lat) + ' ' for lat in lattice] + [' ']
+            xtb_coords.append('\t'.join(tmp_lattice) + '\n')
     xtb_coords.append('$end')
     return xtb_coords
 
@@ -322,15 +415,14 @@ def get_pairwise_connections(graph):
     """
     Extract unique pairwise connections from an adjacency dictionary efficiently.
 
-    Parameters:
-    ----------
-    graph : dict
-        An adjacency dictionary where keys are nodes and values are arrays or lists of nodes representing neighbors.
+    **Parameters**
+        graph (dict):
+            An adjacency dictionary where keys are nodes and values are arrays
+            or lists of nodes representing neighbors.
 
-    Returns:
-    -------
-    list of tuple
-        A list of unique pairwise connections, each represented as a tuple (i, j) where i < j.
+    **returns**
+        list of tuple
+            A list of unique pairwise connections, each represented as a tuple (i, j) where i < j.
 
     """
     pairwise_connections = []
@@ -358,10 +450,10 @@ def ase_to_pytorch_geometric(input_system):
     """
     Convert an ASE Atoms object to a PyTorch Geometric graph
 
-    **Parameters:**
+    **parameters**
         input_system (ASE.Atoms or ASE.Atom or filename): The input system to be converted.
 
-    **Returns:**
+    **returns**
         torch_geometric.data.Data: The converted PyTorch Geometric Data object.
     """
 
@@ -391,10 +483,10 @@ def pytorch_geometric_to_ase(data):
     """
     Convert a PyTorch Geometric Data object back to an ASE Atoms object.
 
-    Parameters:
+    **Parameters**
         data (torch_geometric.data.Data): The PyTorch Geometric Data object.
 
-    Returns:
+    **Returns**
         ase_atoms (ase.Atoms): The converted ASE Atoms object.
     """
     node_features = data.x.numpy() if isinstance(data.x, torch.Tensor) else data.x
@@ -411,3 +503,191 @@ def pytorch_geometric_to_ase(data):
     )
 
     return ase_atoms
+
+
+def prepare_dataset(ase_obj, energy):
+    """
+    Prepares a dataset from ASE Atoms objects and their corresponding energy values.
+
+    **parameters**
+        ase_obj (ASE.Atoms): ASE Atoms object.
+        energy (float): Energy value of the crystal structure.
+
+    **returns**
+        torch_geometric.data.Data: PyTorch Geometric Data object with input features, edge indices, and energy value.
+    """
+    data = ase_to_pytorch_geometric(ase_obj)
+    data.y = torch.tensor([energy], dtype=torch.float)
+    return data
+
+
+def data_from_aseDb(path_to_db):
+    """
+    Load data from ASE database and prepare it for training.
+
+    **parameters**
+        path_to_db (str): Path to the ASE database file.
+
+    **returns**
+        list: List of PyTorch Geometric Data objects for training.
+    """
+    dataset = []
+    counter = 0
+    db = connect(path_to_db)
+    for row in db.select():
+        data = prepare_dataset(row.toatoms(), row.r_energy)
+        dataset.append(data)
+        if counter >= 23000:
+            break
+        counter += 1
+    return dataset
+
+
+def ase_database_to_lmdb(ase_database, lmdb_path):
+    """
+    Converts an ASE database into an LMDB file for
+    efficient storage and retrieval.
+
+    **parameter**
+        ase_database (str): path to ase database.
+        lmdb_path (str): Path to the LMDB file where
+            the dataset will be saved.
+    """
+    os.makedirs(os.path.dirname(lmdb_path), exist_ok=True)
+
+    try:
+        with connect(ase_database) as db:
+            with lmdb.open(lmdb_path, map_size=int(1e9)) as lmdb_env:
+                with lmdb_env.begin(write=True) as txn:
+                    count = 0
+                    for i, row in enumerate(db.select()):
+                        data = prepare_dataset(row.toatoms(), row.r_energy)
+                        txn.put(f"{i}".encode(), pickle.dumps(data))
+                        count += 1
+                    txn.put(b"__len__", pickle.dumps(count))
+        print(f"Data successfully saved to {lmdb_path} with {count} entries.")
+    except lmdb.Error as e:
+        print(f"An error occurred with LMDB: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+
+class LMDBDataset:
+    """
+    A class for loading PyTorch data stored in an LMDB file. The code is originally
+    intended for graph sructured graphs that can work with pytorh_geometric data.
+    But it should also load all type of pytorch data.
+
+    This class enables on-the-fly loading of serialized data stored in LMDB format,
+    providing an efficient way to handle large datasets that cannot fit into memory.
+
+    **parameters**
+        lmdb_path (str): Path to the LMDB file containing the dataset.
+
+    **Attributes**
+        lmdb_env (lmdb.Environment): The LMDB environment for data access.
+        length (int): The total number of entries in the dataset.
+
+    **Methods**
+        __len__(): Returns the total number of samples in the dataset.
+        __getitem__(idx): Retrieves the sample at the specified index.
+
+    **Examples**
+
+    This class provides an efficient way for loading huge datasets without
+    consuming so much memory.
+
+        data = coords_library.LMDBDataset(path_to_lmdb)
+
+        Length of the dataset
+
+        print(len(data))
+
+        # Accessing a sample at index 0
+
+        sample = data[0]
+
+        print(sample.x.shape)
+
+        print(sample)
+
+        # Accessing a list of samples at different indexes
+
+        samples = data[[1,4,8,9,18, 50]]
+
+    """
+
+    def __init__(self, lmdb_path):
+        try:
+            self.lmdb_env = lmdb.open(lmdb_path, readonly=True, lock=False)
+            with self.lmdb_env.begin() as txn:
+                length_data = txn.get(b"__len__")
+                if length_data is None:
+                    raise ValueError(
+                        f"The LMDB file at '{lmdb_path}' does not contain the key '__len__'. "
+                        f"Ensure the data was saved correctly and includes this key."
+                    )
+                self.length = pickle.loads(length_data)
+        except ValueError as ve:
+            raise RuntimeError(
+                f"ValueError: {ve}\nCheck if the LMDB file is correctly created with a '__len__' key."
+            ) from ve
+        except lmdb.Error as le:
+            raise RuntimeError(
+                f"An LMDB error occurred while accessing the file at '{lmdb_path}': {le}"
+            ) from le
+        except Exception as e:
+            raise RuntimeError(
+                f"An unexpected error occurred while initializing the dataset: {e}"
+            ) from e
+
+    def __len__(self):
+        """
+        Returns the total number of samples in the dataset.
+
+        Returns
+            int: The number of samples in the dataset.
+        """
+        return self.length
+
+    def __getitem__(self, idx):
+        """
+        Retrieves the sample(s) at the specified index or indices from the LMDB file.
+
+        **parameters**
+            idx (int or list of int): The index or indices of the sample(s) to retrieve.
+
+        **Returns**
+            Any or list: The deserialized data corresponding to the specified index/indices.
+        """
+        if isinstance(idx, int):
+            if idx < 0 or idx >= self.length:
+                raise IndexError(
+                    f"Index {idx} is out of range for dataset of size {self.length}."
+                )
+            with self.lmdb_env.begin() as txn:
+                data = txn.get(f"{idx}".encode())
+                if data is None:
+                    raise ValueError(
+                        f"No data found for index {idx}. Ensure the dataset is correctly saved."
+                    )
+                return pickle.loads(data)
+        elif isinstance(idx, list) or isinstance(idx, np.ndarray) or isinstance(idx, tuple):
+            results = []
+            for i in idx:
+                if i < 0 or i >= self.length:
+                    raise IndexError(
+                        f"Index {i} is out of range for dataset of size {self.length}."
+                    )
+                with self.lmdb_env.begin() as txn:
+                    data = txn.get(f"{i}".encode())
+                    if data is None:
+                        raise ValueError(
+                            f"No data found for index {i}. Ensure the dataset is correctly saved."
+                        )
+                    results.append(pickle.loads(data))
+            return results
+        else:
+            raise TypeError(
+                f"Index must be an int or list, or nd.array or tuple."
+            )
