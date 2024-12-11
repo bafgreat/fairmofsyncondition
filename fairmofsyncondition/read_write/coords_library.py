@@ -557,7 +557,7 @@ def ase_database_to_lmdb(ase_database, lmdb_path):
 
     try:
         with connect(ase_database) as db:
-            with lmdb.open(lmdb_path, map_size=int(1e9)) as lmdb_env:
+            with lmdb.open(lmdb_path, map_size=int(1e12)) as lmdb_env:
                 with lmdb_env.begin(write=True) as txn:
                     count = 0
                     for i, row in enumerate(db.select()):
