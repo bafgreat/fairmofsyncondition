@@ -29,12 +29,18 @@ fastai = "^2.7.18"
 autogl = "^0.4.0"
 optuna-dashboard = "^0.17.0"
 optuna = "^4.1.0"
+tensorboard = "^2.18.0"
+
+[tool.poetry.scripts]
+train_bde = "fairmofsyncondition.model.thermodynamic_stability:entry_point"
 
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "<8.0.2"
 sphinxcontrib-mermaid = "^0.9.2"
 sphinx-copybutton = "^0.5.2"
+
+
 
 
 [build-system]

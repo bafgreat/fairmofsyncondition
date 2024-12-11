@@ -205,3 +205,5 @@ fairmofsyncondition/model/test.py
 fairmofsyncondition/model/visualize.py
 fairmofsyncondition/read_write/graph_data.py
 new_test.lmdb/
+fairmofsyncondition/model/dataset.py
+errorlogger/
