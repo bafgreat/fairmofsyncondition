@@ -5,6 +5,7 @@ __status__ = "production"
 
 import os
 import re
+import random
 import pickle
 import torch
 import lmdb
@@ -571,12 +572,11 @@ def ase_database_to_lmdb(ase_database, lmdb_path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-
 class LMDBDataset:
     """
     A class for loading PyTorch data stored in an LMDB file. The code is originally
-    intended for graph sructured graphs that can work with pytorh_geometric data.
-    But it should also load all type of pytorch data.
+    intended for graph structured graphs that can work with pytorch_geometric data.
+    But it should also load all types of PyTorch data.
 
     This class enables on-the-fly loading of serialized data stored in LMDB format,
     providing an efficient way to handle large datasets that cannot fit into memory.
@@ -591,6 +591,7 @@ class LMDBDataset:
     **Methods**
         __len__(): Returns the total number of samples in the dataset.
         __getitem__(idx): Retrieves the sample at the specified index.
+        split_data(train_size, random_seed, shuffle): Lazily returns train and test data.
 
     **Examples**
 
@@ -691,3 +692,76 @@ class LMDBDataset:
             raise TypeError(
                 f"Index must be an int or list, or nd.array or tuple."
             )
+
+    def split_data(self, train_size=0.8, random_seed=None, shuffle=True):
+        """
+        Lazily splits the dataset into train and test data with class-like behavior.
+
+        Args:
+            train_size (float): The proportion of the data to be used as the training set (default is 0.8).
+            random_seed (int, optional): A random seed for reproducibility (default is None).
+            shuffle (bool): Whether to shuffle the data before splitting (default is True).
+
+        Returns:
+            tuple: A tuple containing train data and test data.
+        """
+        indices = list(range(self.length))
+
+        if random_seed is not None:
+            random.seed(random_seed)
+
+        if shuffle:
+            random.shuffle(indices)
+
+        split_index = int(self.length * train_size)
+        train_indices = indices[:split_index]
+        test_indices = indices[split_index:]
+
+        class Subset:
+            def __init__(self, parent, indices):
+                self.parent = parent
+                self.indices = indices
+
+            def __len__(self):
+                return len(self.indices)
+
+            def __getitem__(self, idx):
+                if isinstance(idx, int):
+                    return self.parent[self.indices[idx]]
+                elif isinstance(idx, list) or isinstance(idx, np.ndarray) or isinstance(idx, tuple):
+                    return [self.parent[self.indices[i]] for i in idx]
+                else:
+                    raise TypeError("Index must be an int or list, or nd.array or tuple.")
+
+        train_data = Subset(self, train_indices)
+        test_data = Subset(self, test_indices)
+
+        return train_data, test_data
+
+
+def list_train_test_split(data, train_size=0.8, random_seed=42, shuffle=True):
+    """
+    A function that take Splits a list into train and test sets based on the specified train_size.
+
+    **parameter**
+        data (list): The input list to split.
+        train_size (float): The proportion of the data to be used as the training set (default is 0.8).
+        random_seed (int, optional): A random seed for reproducibility (default is None).
+        shuffle (bool): Whether to shuffle the data before splitting (default is True).
+
+    **return**
+        train_data: indices of data to be selected for training.
+        test_data: indices of data to be selected for testing.
+    """
+    if random_seed is not None:
+        random.seed(random_seed)
+
+    if shuffle:
+        data = data.copy()
+        random.shuffle(data)
+
+    split_index = int(len(data) * train_size)
+    train_data = data[:split_index]
+    test_data = data[split_index:]
+
+    return train_data, test_data
