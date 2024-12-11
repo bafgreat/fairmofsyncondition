@@ -151,8 +151,7 @@ def save_model(model, optimizer, path="model.pth"):
     checkpoint = {
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
-        'model_architecture': model.__class__,  # Save the model class
-        # Save model architecture parameters
+        'model_architecture': model.__class__,
         'model_args': model.__dict__.get('_modules'),
     }
     torch.save(checkpoint, path)
@@ -180,9 +179,32 @@ def load_model(path="model.pth", device="cpu"):
 
     return model, optimizer
 
+def load_dataset(path_to_lmdb, batch_size, train_size=0.8, random_seed=42, shuffle=True):
+    """
+    Loads a dataset from an LMDB file and splits it into training, validation, and test sets.
 
-def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, epoch, save_path):
-    writer = SummaryWriter(log_dir="errorlogger/energy_gat")
+    The function uses the `coords_library.LMDBDataset` to load the dataset and splits it into
+    training and test datasets. The training dataset is further split into training and validation
+    sets. Data loaders are created for the training and validation datasets.
+
+    Parameters:
+        path_to_lmdb (str):
+            Path to the LMDB file containing the dataset.
+        batch_size (int):
+            Batch size for the DataLoader.
+        train_size (float, optional):
+            Fraction of the data to use for training. The rest is used for testing. Default is 0.8.
+        random_seed (int, optional):
+            Random seed for splitting the data. Ensures reproducibility. Default is 42.
+        shuffle (bool, optional):
+            Whether to shuffle the data before splitting. Default is True.
+
+    Returns:
+        tuple:
+            - train_loader (DataLoader): DataLoader for the training dataset.
+            - val_loader (DataLoader): DataLoader for the validation dataset.
+            - test_dataset (Dataset): Dataset object containing the test data.
+    """
     dataset = coords_library.LMDBDataset(path_to_lmdb)
     train_dataset, test_dataset = dataset.split_data(
         train_size=0.8, random_seed=None, shuffle=True)
@@ -194,10 +216,17 @@ def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, epo
 
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
+    return train_loader, val_loader, test_dataset
+
+
+def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, heads,  epoch, save_path):
+    writer = SummaryWriter(log_dir="errorlogger/energy_gat")
     model = EnergyGNN(input_dim=4, hidden_dim=hidden_dim,
-                      edge_dim=1, output_dim=1, dropout=dropout).to(device)
+                      edge_dim=1, output_dim=1, heads=heads, dropout=dropout).to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()
+
+    train_loader, val_loader, test_dataset = load_dataset(path_to_lmdb, batch_size)
 
     for i in tqdm(range(epoch)):
         train_loss = train(model, train_loader, optimizer, criterion, device)
@@ -205,7 +234,7 @@ def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, epo
         print(
             f"Epoch: {i+1}/{epoch}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
-        # Save intermediate models
+     
         intermediate_save_path = f"{save_path}_epoch_{i+1}.pth"
         save_model(model, optimizer, path=intermediate_save_path)
         writer.add_scalar('Loss/Train', train_loss, i)
@@ -229,6 +258,7 @@ def print_argument_defaults():
         ["--batch_size", "Batch size for training.", "113"],
         ["--dropout", "Dropout rate for the model.", "0.32357"],
         ["--epoch", "Number of epochs for training.", "500"],
+        ["--heads", "Number of attention heads in the model.", "8"],
         ["--save_path", "Base path for saving model checkpoints.",
             "Thermalstability_model"],
     ]
@@ -259,6 +289,8 @@ def parse_arguments():
                         help="Batch size for training.")
     parser.add_argument('-d', '--dropout', type=float,
                         default=0.32357, help="Dropout rate for the model.")
+    parser.add_argument('-head', '--heads', type=int, default=8,
+                        help="Number of attention heads in the model.")
     parser.add_argument('-e', '--epoch', type=int, default=500,
                         help="Number of epochs for training.")
     parser.add_argument('-s', '--save_path', type=str, default="Thermalstability_model",
@@ -266,7 +298,7 @@ def parse_arguments():
     return parser
 
 
-def main(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, epoch, save_path):
+def main(path_to_lmdb, hidden_dim, learning_rate, batch_size, heads, dropout, epoch, save_path):
     """
     Train the GNN model with specified parameters.
     """
@@ -275,11 +307,12 @@ def main(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, epoch, sa
     print(f"  Hidden Dimension: {hidden_dim}")
     print(f"  Learning Rate: {learning_rate}")
     print(f"  Batch Size: {batch_size}")
+    print(f"  Heads: {heads}")
     print(f"  Dropout: {dropout}")
     print(f"  Epochs: {epoch}")
     print(f"  Save Path: {save_path}")
     main_model(path_to_lmdb, hidden_dim, learning_rate,
-               batch_size, dropout, epoch, save_path)
+               batch_size, heads, dropout, epoch, save_path)
 
 
 def entry_point():
@@ -287,16 +320,19 @@ def entry_point():
     Entry point for the train_bde CLI command.
     Handles argument parsing and calls the main function with parsed arguments.
     """
-    parser = parse_arguments()  # Get the argument parser
-    args = parser.parse_args()  # Parse the CLI arguments
+    parser = parse_arguments()
+    args = parser.parse_args()
 
-    # Pass the parsed arguments to the main function
     main(
         path_to_lmdb=args.path_to_lmdb,
         hidden_dim=args.hidden_dim,
         learning_rate=args.learning_rate,
         batch_size=args.batch_size,
+        heads=args.heads,
         dropout=args.dropout,
         epoch=args.epoch,
         save_path=args.save_path
     )
+
+if __name__ == "__main__":
+    entry_point()
