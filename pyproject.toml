@@ -33,7 +33,7 @@ tensorboard = "^2.18.0"
 
 [tool.poetry.scripts]
 train_bde = "fairmofsyncondition.model.thermodynamic_stability:entry_point"
-find_bde_parameters = "fairmofsyncondition.model.hyper_optimiser:entry_point"
+find_bde_parameters = "fairmofsyncondition.model.hyper_optimiser:main"
 
 
 [tool.poetry.group.dev.dependencies]
