@@ -47,7 +47,7 @@ def fine_op_paramter(path_to_lmbd):
         dropout = trial.suggest_float("dropout", 0.1, 0.9)
         heads = trial.suggest_int("heads", 2, 24)
 
-        train_loader, val_loader, test_dataset = load_dataset(path_to_lmbd, batch_size=batch_size)
+        train_loader, val_loader, test_dataset, normalise_parameter = load_dataset(path_to_lmbd, batch_size=batch_size)
 
         model = EnergyGNN(input_dim=4, hidden_dim=hidden_dim, output_dim=1,
                           edge_dim=1, heads=heads, dropout=dropout).to(device)
