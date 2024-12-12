@@ -46,6 +46,7 @@ def fine_op_paramter(path_to_lmbd):
         batch_size = trial.suggest_int("batch_size", 16, 128)
         dropout = trial.suggest_float("dropout", 0.1, 0.9)
         heads = trial.suggest_int("heads", 2, 24)
+        epoch = trial.suggest_int("epoch", 10, 500)
 
         train_loader, val_loader, test_dataset, normalise_parameter = load_dataset(path_to_lmbd, batch_size=batch_size)
 
@@ -54,7 +55,7 @@ def fine_op_paramter(path_to_lmbd):
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
         criterion = nn.MSELoss()
 
-        for epoch in tqdm(range(20)):
+        for epoch in tqdm(range(50)):
             train_loss = train(model, train_loader,
                                optimizer, criterion, device)
 
@@ -65,7 +66,7 @@ def fine_op_paramter(path_to_lmbd):
         return val_loss
 
     study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=50)
+    study.optimize(objective, n_trials=20)
 
     best_params = study.best_params
     print(f"Optimal parameters: {best_params}")

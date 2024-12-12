@@ -259,7 +259,7 @@ def transform_target(test_data, normalize_param, method='z-score'):
     return test_data
 
 
-def load_dataset(path_to_lmdb, batch_size, train_size=0.8, random_seed=42, shuffle=True, normalize='full'):
+def load_dataset(path_to_lmdb, batch_size, train_size=0.9, random_seed=42, shuffle=True, normalize='full'):
     """
     Loads a dataset from an LMDB file and splits it into training, validation, and test sets.
 
