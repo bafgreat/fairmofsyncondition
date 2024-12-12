@@ -49,6 +49,11 @@ class EnergyGNN(nn.Module):
 
     def __init__(self, input_dim, hidden_dim, output_dim, edge_dim, heads=4, dropout=0.2):
         super(EnergyGNN, self).__init__()
+        input_dim = int(input_dim)
+        hidden_dim = int(hidden_dim)
+        output_dim = int(output_dim)
+        edge_dim = int(edge_dim)
+        heads = int(heads)
         self.conv1 = GATv2Conv(input_dim, hidden_dim,
                                heads=heads, edge_dim=edge_dim)
         self.norm1 = nn.BatchNorm1d(hidden_dim * heads)
@@ -105,6 +110,54 @@ def train(model, dataloader, optimizer, criterion, device):
     return total_loss / len(dataloader)
 
 
+
+def normalize_data(dataset, method='z-score'):
+    """
+    Normalize the target values (data.y) in the dataset.
+
+    Parameters:
+        dataset (Dataset): The dataset object containing the data.
+        method (str): The normalization method ('min-max' or 'z-score').
+
+    Returns:
+        tuple: Normalized dataset and the normalization parameters.
+    """
+    y_values = torch.cat([data.y for data in dataset])  # Gather all target values
+    if method == 'min-max':
+        y_min, y_max = y_values.min(), y_values.max()
+        for data in dataset:
+            data.y = (data.y - y_min) / (y_max - y_min)
+        return dataset, {'min': y_min, 'max': y_max}
+
+    elif method == 'z-score':
+        y_mean, y_std = y_values.mean(), y_values.std()
+        for data in dataset:
+            data.y = (data.y - y_mean) / y_std
+        return dataset, {'mean': y_mean, 'std': y_std}
+
+    else:
+        raise ValueError("Unsupported normalization method. Choose 'min-max' or 'z-score'.")
+
+
+def inverse_normalize(predictions, normalization_params, method='z-score'):
+    """
+    Inverse the normalization of predictions to the original scale.
+
+    Parameters:
+        predictions (Tensor): The normalized predictions.
+        normalization_params (dict): The parameters used for normalization.
+        method (str): The normalization method ('min-max' or 'z-score').
+
+    Returns:
+        Tensor: Predictions in the original scale.
+    """
+    if method == 'min-max':
+        return predictions * (normalization_params['max'] - normalization_params['min']) + normalization_params['min']
+    elif method == 'z-score':
+        return predictions * normalization_params['std'] + normalization_params['mean']
+    else:
+        raise ValueError("Unsupported normalization method. Choose 'min-max' or z-score")
+
 def evaluate(model, dataloader, criterion, device):
     """
     Evaluate the model using the given data and loss function, and compute accuracy.
@@ -139,7 +192,7 @@ def evaluate(model, dataloader, criterion, device):
     return average_loss
 
 
-def save_model(model, optimizer, path="model.pth"):
+def save_model(model, optimizer, normalise_parameter, path="model.pth"):
     """
     Save the trained model and optimizer state to a file.
 
@@ -153,6 +206,7 @@ def save_model(model, optimizer, path="model.pth"):
         'optimizer_state_dict': optimizer.state_dict(),
         'model_architecture': model.__class__,
         'model_args': model.__dict__.get('_modules'),
+        'normalise_parameter': normalise_parameter
     }
     torch.save(checkpoint, path)
 
@@ -171,15 +225,41 @@ def load_model(path="model.pth", device="cpu"):
     checkpoint = torch.load(path, map_location=device)
     model_class = checkpoint['model_architecture']
     model_args = checkpoint['model_args']
-    model = model_class(**model_args).to(device)  # Rebuild the model
+    normalise_parameter = checkpoint['normalise_parameter']
+    model = model_class(**model_args).to(device)
     model.load_state_dict(checkpoint['model_state_dict'])
 
     optimizer = optim.Adam(model.parameters())  # Rebuild the optimizer
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 
-    return model, optimizer
+    return model, optimizer, normalise_parameter
 
-def load_dataset(path_to_lmdb, batch_size, train_size=0.8, random_seed=42, shuffle=True):
+def transform_target(test_data, normalize_param, method='z-score'):
+    """
+    Transform the target values in the test dataset according to the normalization parameters.
+
+    Parameters:
+        test_data (Dataset): The test dataset containing the target values.
+        normalize_param (dict): The normalization parameters (mean and std).
+        method (str, optional): The normalization method ('z-score' or'min-max'). Default is 'z-score'.
+
+    Returns:
+        Dataset: The transformed test dataset.
+    """
+    if method == 'z-score':
+        mean, std = normalize_param['mean'], normalize_param['std']
+        for data in test_data:
+            data.y = (data.y - mean) / std
+    elif method =='min-max':
+        min_val, max_val = normalize_param['min'], normalize_param['max']
+        for data in test_data:
+            data.y = (data.y - min_val) / (max_val - min_val)
+    else:
+        raise ValueError("Unsupported normalization method. Choose 'z-score' or'min-max'.")
+    return test_data
+
+
+def load_dataset(path_to_lmdb, batch_size, train_size=0.8, random_seed=42, shuffle=True, normalize='full'):
     """
     Loads a dataset from an LMDB file and splits it into training, validation, and test sets.
 
@@ -198,6 +278,9 @@ def load_dataset(path_to_lmdb, batch_size, train_size=0.8, random_seed=42, shuff
             Random seed for splitting the data. Ensures reproducibility. Default is 42.
         shuffle (bool, optional):
             Whether to shuffle the data before splitting. Default is True.
+        normalize (str, optional):
+            Normalization method to use. Can be 'full' for full normalization or 'batch' for
+            batch normalization. Default is 'full'.
 
     Returns:
         tuple:
@@ -207,26 +290,36 @@ def load_dataset(path_to_lmdb, batch_size, train_size=0.8, random_seed=42, shuff
     """
     dataset = coords_library.LMDBDataset(path_to_lmdb)
     train_dataset, test_dataset = dataset.split_data(
-        train_size=0.8, random_seed=None, shuffle=True)
+        train_size=train_size, random_seed=random_seed, shuffle=shuffle)
 
-    train_indices, val_indices = coords_library.list_train_test_split(
-        list(range(len(train_dataset))))
+    train_indices, val_indices = coords_library.list_train_test_split(list(range(len(train_dataset))))
     train_data = train_dataset[train_indices]
     val_data = train_dataset[val_indices]
+    if normalize == 'full':
+        train_data_norm, normalise_parameter = normalize_data(train_data)
+        train_loader = DataLoader(train_data_norm, batch_size=batch_size, shuffle=True)
+        val_data = transform_target(val_data, normalise_parameter)
+        test_dataset = transform_target(test_dataset, normalise_parameter)
+    elif normalize == 'batch':
+        train_loader = DataLoader(train_data_norm, batch_size=batch_size, shuffle=True)
+        train_loader, normalise_parameter = normalize_data(train_loader)
+        val_data = transform_target(val_data, normalise_parameter)
+        test_dataset = transform_target(test_dataset, normalise_parameter)
 
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
-    return train_loader, val_loader, test_dataset
+    return train_loader, val_loader, test_dataset, normalise_parameter
 
 
-def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, heads,  epoch, save_path):
+def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, heads, epoch, save_path):
     writer = SummaryWriter(log_dir="errorlogger/energy_gat")
     model = EnergyGNN(input_dim=4, hidden_dim=hidden_dim,
-                      edge_dim=1, output_dim=1, heads=heads, dropout=dropout).to(device)
+                      output_dim=1, edge_dim=1, heads=heads, dropout=dropout).to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()
 
-    train_loader, val_loader, test_dataset = load_dataset(path_to_lmdb, batch_size)
+    train_loader, val_loader, test_dataset, normalise_parameter = load_dataset(path_to_lmdb, batch_size)
+
 
     for i in tqdm(range(epoch)):
         train_loss = train(model, train_loader, optimizer, criterion, device)
@@ -234,15 +327,15 @@ def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, hea
         print(
             f"Epoch: {i+1}/{epoch}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
-     
-        intermediate_save_path = f"{save_path}_epoch_{i+1}.pth"
-        save_model(model, optimizer, path=intermediate_save_path)
+
+        # intermediate_save_path = f"{save_path}_epoch_{i+1}.pth"
+        # save_model(model, optimizer, normalise_parameter, path=intermediate_save_path)
         writer.add_scalar('Loss/Train', train_loss, i)
         writer.add_scalar('Loss/Validation', val_loss, i)
         writer.add_scalar('Learning Rate', optimizer.param_groups[0]['lr'], i)
     writer.close()
     final_save_path = f"{save_path}_final.pth"
-    save_model(model, optimizer, path=final_save_path)
+    save_model(model, optimizer, normalise_parameter, path=final_save_path)
     print(f"Final model saved to: {final_save_path}")
 
 
@@ -298,7 +391,7 @@ def parse_arguments():
     return parser
 
 
-def main(path_to_lmdb, hidden_dim, learning_rate, batch_size, heads, dropout, epoch, save_path):
+def main(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, heads, epoch, save_path):
     """
     Train the GNN model with specified parameters.
     """
@@ -312,7 +405,7 @@ def main(path_to_lmdb, hidden_dim, learning_rate, batch_size, heads, dropout, ep
     print(f"  Epochs: {epoch}")
     print(f"  Save Path: {save_path}")
     main_model(path_to_lmdb, hidden_dim, learning_rate,
-               batch_size, heads, dropout, epoch, save_path)
+               batch_size, dropout, heads, epoch, save_path)
 
 
 def entry_point():

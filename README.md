@@ -29,6 +29,7 @@ git clone https://github.com/bafgreat/fairmofsyncondition.git
 cd fairmofsyncondition
 
 # Install the package
+pip install --upgrade pip setuptools wheel
 pip install .
 ```
 
