@@ -198,7 +198,6 @@ fairmofsyncondition/model/._test.py
 fairmofsyncondition/model/best_model_config.txt
 fairmofsyncondition/model/explain_model.py
 fairmofsyncondition/model/former_stability.py
-fairmofsyncondition/model/hyper_optimiser.py
 fairmofsyncondition/model/stability.pt
 fairmofsyncondition/model/test.pth
 fairmofsyncondition/model/test.py
