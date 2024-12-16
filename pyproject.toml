@@ -30,6 +30,8 @@ torch-geometric = "^2.6.1"
 optuna-dashboard = "^0.17.0"
 optuna = "^4.1.0"
 tensorboard = "^2.18.0"
+tornado = "^6.4.2"
+notebook = "^7.3.1"
 
 [tool.poetry.scripts]
 train_bde = "fairmofsyncondition.model.thermodynamic_stability:entry_point"
