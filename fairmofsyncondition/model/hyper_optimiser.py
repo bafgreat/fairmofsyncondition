@@ -40,13 +40,13 @@ def fine_op_paramter(path_to_lmbd):
             float: Validation loss.
         """
 
-        hidden_dim = trial.suggest_int("hidden_dim", 64, 256)
+        hidden_dim = trial.suggest_int("hidden_dim",32, 64, 128, 256)
         learning_rate = trial.suggest_float(
-            "learning_rate", 1e-6, 1e-1, log=True)
-        batch_size = trial.suggest_int("batch_size", 16, 128)
+            "learning_rate", 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, log=True)
+        batch_size = trial.suggest_int("batch_size", 512, 1042 2064)
         dropout = trial.suggest_float("dropout", 0.1, 0.9)
-        heads = trial.suggest_int("heads", 2, 24)
-        epoch = trial.suggest_int("epoch", 10, 500)
+        heads = trial.suggest_int("heads", 2, 5)
+        epoch = trial.suggest_int("epoch", 20, 5000)
 
         train_loader, val_loader, test_dataset, normalise_parameter = load_dataset(path_to_lmbd, batch_size=batch_size)
 
