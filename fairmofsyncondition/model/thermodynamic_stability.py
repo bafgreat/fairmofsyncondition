@@ -27,7 +27,7 @@ from torch import optim
 from tqdm import tqdm
 from tabulate import tabulate
 from torch.utils.tensorboard import SummaryWriter
-from torch_geometric.nn import GATv2Conv, global_mean_pool
+from torch_geometric.nn import GATv2Conv, global_mean_pool, GINV2Conv
 from torch_geometric.loader import DataLoader
 from fairmofsyncondition.read_write import coords_library, filetyper
 
@@ -320,14 +320,24 @@ def main_model(path_to_lmdb, hidden_dim, learning_rate, batch_size, dropout, hea
 
     train_loader, val_loader, test_dataset, normalise_parameter = load_dataset(path_to_lmdb, batch_size)
 
-
+    counter = 0
+    best_val = float('inf')
     for i in tqdm(range(epoch)):
         train_loss = train(model, train_loader, optimizer, criterion, device)
         val_loss = evaluate(model, val_loader, criterion, device)
         print(
             f"Epoch: {i+1}/{epoch}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
-
+        if val_loss < best_val:
+            best_val = val_loss
+            counter = 0
+        else:
+            counter += 1
+        if counter >= 10:
+            print(f"Early stopping at epoch {i+1}.")
+            break
+            # intermediate_save_path = f"{save_path}_epoch_{i+1}.pth"
+            # save_model(model, optimizer, normalise_parameter, path=intermediate_save_path)
         # intermediate_save_path = f"{save_path}_epoch_{i+1}.pth"
         # save_model(model, optimizer, normalise_parameter, path=intermediate_save_path)
         writer.add_scalar('Loss/Train', train_loss, i)
