@@ -15,7 +15,7 @@ from ase import Atoms, Atom
 from ase.db import connect
 from torch_geometric.data import Data
 from mofstructure import mofdeconstructor
-from orb_models.forcefield import atomic_system
+# from orb_models.forcefield import atomic_system
 from fairmofsyncondition.read_write import filetyper
 
 
@@ -333,22 +333,22 @@ def load_data_as_ase(filename):
     return ase_atoms
 
 
-def ase_graph(input_system):
-    """
-    Create a graph from an ase atoms object
+# def ase_graph(input_system):
+#     """
+#     Create a graph from an ase atoms object
 
-    **parameter**
-        **input_system** : Atoms or Atom object or meolcular file name e.g molecule.xyz or mof.cif
+#     **parameter**
+#         **input_system** : Atoms or Atom object or meolcular file name e.g molecule.xyz or mof.cif
 
-    **return**
-        graph object: ase graph object
-    """
-    if isinstance(input_system, Atoms) or isinstance(input_system, Atom):
-        graph = atomic_system.ase_atoms_to_atom_graphs(input_system)
-    else:
-        ase_atoms = load_data_as_ase(input_system)
-        graph = atomic_system.ase_atoms_to_atom_graphs(ase_atoms)
-    return graph
+#     **return**
+#         graph object: ase graph object
+#     """
+#     if isinstance(input_system, Atoms) or isinstance(input_system, Atom):
+#         graph = atomic_system.ase_atoms_to_atom_graphs(input_system)
+#     else:
+#         ase_atoms = load_data_as_ase(input_system)
+#         graph = atomic_system.ase_atoms_to_atom_graphs(ase_atoms)
+#     return graph
 
 
 def xtb_input(filename):
@@ -522,7 +522,7 @@ def prepare_dataset(ase_obj, energy):
     return data
 
 
-def data_from_aseDb(path_to_db):
+def data_from_aseDb(path_to_db, num_data=25000):
     """
     Load data from ASE database and prepare it for training.
 
@@ -538,7 +538,7 @@ def data_from_aseDb(path_to_db):
     for row in db.select():
         data = prepare_dataset(row.toatoms(), row.r_energy)
         dataset.append(data)
-        if counter >= 23000:
+        if counter >= num_data:
             break
         counter += 1
     return dataset
