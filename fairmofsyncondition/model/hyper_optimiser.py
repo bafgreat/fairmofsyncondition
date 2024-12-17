@@ -27,6 +27,18 @@ from fairmofsyncondition.model.thermodynamic_stability import  EnergyGNN_GAT2Con
 
 
 def fine_op_paramter(path_to_lmbd, mol_def):
+    """
+    Fine-tuning the optimization parameters using Optuna.
+
+    Parameters:
+        path_to_lmbd (str): Path to the lambda file.
+        mol_def (str): Molecule definition ('GAT' or 'GIN').
+
+    Returns:
+        float: Validation loss.
+    """
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     def objective(trial):
@@ -43,7 +55,7 @@ def fine_op_paramter(path_to_lmbd, mol_def):
         hidden_dim = trial.suggest_categorical("hidden_dim", [32, 64, 128, 256])
         learning_rate = trial.suggest_categorical(
             "learning_rate", [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1])
-        batch_size = trial.suggest_categorical("batch_size", [2048, 4000, 8000, 16000])
+        batch_size = trial.suggest_categorical("batch_size", [512, 1024, 2048])
         dropout = trial.suggest_float("dropout", 0.1, 0.9)
         heads = trial.suggest_int("heads", 2, 5)
         epoch = trial.suggest_int("epoch", 100,  5000)
@@ -67,18 +79,18 @@ def fine_op_paramter(path_to_lmbd, mol_def):
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=0.00001)
         criterion = nn.MSELoss()
 
-        for epoch in tqdm(range(100)):
+        for _ in tqdm(range(100)):
             train_loss = train(model, train_loader,
                                optimizer, criterion, device)
 
         val_loss = evaluate(model, val_loader, criterion, device)
 
         print(
-            f"Trial: Hidden_dim={hidden_dim}, LR={learning_rate:.5f}, Batch_size={batch_size}, Heads={heads}, Dropout={dropout}, Val_loss={val_loss:.4f}")
+            f"Trial: Hidden_dim={hidden_dim}, epoch={epoch}, LR={learning_rate:.5f}, Batch_size={batch_size}, Heads={heads}, Dropout={dropout}, train_loss={train_loss:.4f} Val_loss={val_loss:.4f}")
         return val_loss
 
     study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=30)
+    study.optimize(objective, n_trials=1000)
 
     best_params = study.best_params
     print(f"Optimal parameters: {best_params}")
@@ -93,7 +105,7 @@ def fine_op_paramter(path_to_lmbd, mol_def):
         "epoch": best_params["epoch"],
         "val_loss": study.best_value
     }
-    if mof_def == 'lattice':
+    if mol_def == 'lattice':
         best_model_config = {
         "hidden_dim": best_params["hidden_dim"],
         "learning_rate": best_params["learning_rate"],
