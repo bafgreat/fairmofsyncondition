@@ -43,6 +43,29 @@ pip install fairmofsyncondition
 
 ```
 
-# LICENSE
+## Training
+
+To quickly train the model on the command line, simply use the
+`train_bde` CLI command. It has several helpful options to facilated
+training.
+
+```bash
+train_bde -h
+```
+
+The above command will provide all neccesarry information to train a model.
+
+We also provide a commandline to to run optuna for searching optimal
+command line arguments.
+
+```bash
+find_bde_parameters -h
+```
+
+## Documentation
+
+Full documentation can be found [docs](https://bafgreat.github.io/fairmofsyncondition/).
+
+## LICENSE
 
 This project is licensed under the MIT

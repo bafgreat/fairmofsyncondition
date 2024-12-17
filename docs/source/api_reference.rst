@@ -34,3 +34,23 @@ read_write.filetyper
    :undoc-members:
    :show-inheritance:
 
+
+Graph Deep learning models
+====================================================
+
+**models for predicting Bond dissociations enthalpy**
+
+model.thermodynamic_stability
+--------------------------------------------------
+.. automodule:: fairmofsyncondition.model.thermodynamic_stability
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+model.hyper_optimiser
+--------------------------------------------------
+.. automodule:: fairmofsyncondition.model.hyper_optimiser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
