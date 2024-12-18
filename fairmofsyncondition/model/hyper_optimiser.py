@@ -88,9 +88,7 @@ def fine_op_paramter(path_to_lmbd, mol_def):
         val_loss = evaluate(model, val_loader, criterion, device)
 
         print(
-            f"Trial: Hidden_dim={hidden_dim}, epoch={epoch
-
-            }, LR={learning_rate:.5f}, Batch_size={batch_size}, Heads={heads}, Dropout={dropout}, train_loss={train_loss:.4f} Val_loss={val_loss:.4f}")
+            f"Trial: Hidden_dim={hidden_dim}, LR={learning_rate:.5f}, Batch_size={batch_size}, Heads={heads}, Dropout={dropout}, train_loss={train_loss:.4f} Val_loss={val_loss:.4f}")
         return val_loss
 
     study = optuna.create_study(direction="minimize")
