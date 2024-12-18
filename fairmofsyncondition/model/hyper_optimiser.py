@@ -26,7 +26,7 @@ from fairmofsyncondition.read_write import coords_library, filetyper
 from fairmofsyncondition.model.thermodynamic_stability import  EnergyGNN_GAT2Conv, EnergyGNN_GIN, GraphLatticeModel, train, evaluate, load_dataset
 
 
-def fine_op_paramter(path_to_lmbd, mol_def):
+def fine_opt_paramter(path_to_lmbd, mol_def):
     """
     Fine-tuning the optimization parameters using Optuna.
 
@@ -80,8 +80,7 @@ def fine_op_paramter(path_to_lmbd, mol_def):
         # criterion = nn.MSELoss()
         criterion = nn.L1Loss()
 
-        for epoch in tqdm(range(2000)):
-            print ( f'epoch: {epoch}')
+        for epoch in tqdm(range(100)):
             train_loss = train(model, train_loader,
                                optimizer, criterion, device)
 
@@ -92,7 +91,7 @@ def fine_op_paramter(path_to_lmbd, mol_def):
         return val_loss
 
     study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=300)
+    study.optimize(objective, n_trials=100)
 
     best_params = study.best_params
     print(f"Optimal parameters: {best_params}")
@@ -137,7 +136,7 @@ def main():
                         required=True, choices=["GAT", "GIN", "lattice"],
                         help="Model definition: GAT, GIN, or lattice")
     args = parser.parse_args()
-    fine_op_paramter(args.path_to_lmbd, args.mol_def)
+    fine_opt_paramter(args.path_to_lmbd, args.mol_def)
 
 
 if __name__ == "__main__":
