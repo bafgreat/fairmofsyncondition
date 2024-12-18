@@ -52,13 +52,13 @@ def fine_op_paramter(path_to_lmbd, mol_def):
             float: Validation loss.
         """
 
-        hidden_dim = trial.suggest_categorical("hidden_dim", [32, 64, 128, 256])
+        hidden_dim = trial.suggest_categorical("hidden_dim", [64, 128, 256])
         learning_rate = trial.suggest_categorical(
-            "learning_rate", [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1])
-        batch_size = trial.suggest_categorical("batch_size", [512, 1024, 2048])
+            "learning_rate", [1e-4, 1e-3, 1e-2, 1e-1])
+        batch_size = trial.suggest_categorical("batch_size", [2048])
         dropout = trial.suggest_float("dropout", 0.1, 0.9)
-        heads = trial.suggest_int("heads", 2, 5)
-        epoch = trial.suggest_int("epoch", 100,  5000)
+        heads = trial.suggest_int("heads", 2, 6)
+        # epoch = trial.suggest_int("epoch", 100,  5000)
 
         train_loader, val_loader, test_dataset, normalise_parameter = load_dataset(path_to_lmbd, batch_size=batch_size)
         if mol_def == 'GAT':
@@ -69,7 +69,7 @@ def fine_op_paramter(path_to_lmbd, mol_def):
                           edge_dim=1, heads=heads, dropout=dropout).to(device)
         elif mol_def == 'lattice':
             lattice_hidden_dim = trial.suggest_categorical("lattice_hidden_dim",[ 5, 10, 15, 20, 25])
-            num_layers= trial.suggest_categorical("num_layers",[ 2, 3, 4, 5, 6, 7])
+            num_layers= trial.suggest_categorical("num_layers",[ 2, 3, 4])
             model = GraphLatticeModel(input_dim=4,
                                 gnn_hidden_dim=hidden_dim,
                                 lattice_hidden_dim=lattice_hidden_dim,
@@ -77,20 +77,24 @@ def fine_op_paramter(path_to_lmbd, mol_def):
                                 num_layers=num_layers,
                                 dropout=dropout).to(device)
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=0.00001)
-        criterion = nn.MSELoss()
+        # criterion = nn.MSELoss()
+        criterion = nn.L1Loss()
 
-        for _ in tqdm(range(100)):
+        for epoch in tqdm(range(2000)):
+            print ( f'epoch: {epoch}')
             train_loss = train(model, train_loader,
                                optimizer, criterion, device)
 
         val_loss = evaluate(model, val_loader, criterion, device)
 
         print(
-            f"Trial: Hidden_dim={hidden_dim}, epoch={epoch}, LR={learning_rate:.5f}, Batch_size={batch_size}, Heads={heads}, Dropout={dropout}, train_loss={train_loss:.4f} Val_loss={val_loss:.4f}")
+            f"Trial: Hidden_dim={hidden_dim}, epoch={epoch
+
+            }, LR={learning_rate:.5f}, Batch_size={batch_size}, Heads={heads}, Dropout={dropout}, train_loss={train_loss:.4f} Val_loss={val_loss:.4f}")
         return val_loss
 
     study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=1000)
+    study.optimize(objective, n_trials=300)
 
     best_params = study.best_params
     print(f"Optimal parameters: {best_params}")
