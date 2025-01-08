@@ -43,6 +43,25 @@ pip install fairmofsyncondition
 
 ```
 
+## Useful tool
+
+one of the most useful tool is to directly extract cheminonformatic identifiers such
+as inchikey and smile strings directly from iupac names or common names. This can be
+achieved using `iupac2cheminfor` CLI as follows:
+
+```bash
+iupac2cheminfor 'water'
+```
+
+or
+
+```bash
+iupac2cheminfor -n 'water' -o filename
+```
+
+The out will be written by default to cheminfor.csv if no output is provided
+and if porvided it will be written to the name parsed.
+
 ## Training
 
 To quickly train the model on the command line, simply use the
