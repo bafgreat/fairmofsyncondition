@@ -34,6 +34,12 @@ read_write.filetyper
    :undoc-members:
    :show-inheritance:
 
+read_write.filetyper
+-------------------------------------------
+.. automodule:: fairmofsyncondition.read_write.iupacname2cheminof
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Graph Deep learning models
 ====================================================
