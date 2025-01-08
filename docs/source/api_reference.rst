@@ -36,7 +36,7 @@ read_write.filetyper
 
 read_write.filetyper
 -------------------------------------------
-.. automodule:: fairmofsyncondition.read_write.iupacname2cheminof
+.. automodule:: fairmofsyncondition.read_write.iupacname2cheminfo
    :members:
    :undoc-members:
    :show-inheritance:

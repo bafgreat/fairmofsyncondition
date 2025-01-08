@@ -37,7 +37,7 @@ pubchempy = "^1.0.4"
 [tool.poetry.scripts]
 train_bde = "fairmofsyncondition.model.thermodynamic_stability:entry_point"
 find_bde_parameters = "fairmofsyncondition.model.hyper_optimiser:main"
-iupac2cheminfor = "fairmofsyncondition.read_write.iupacname2cheminof:main"
+iupac2cheminfor = "fairmofsyncondition.read_write.iupacname2cheminfo:main"
 
 
 [tool.poetry.group.dev.dependencies]
