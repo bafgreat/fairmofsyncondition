@@ -15,21 +15,25 @@ __status__ = "production"
 #                                                                             #
 ###############################################################################
 from ase.io import read
+import warnings
 import numpy as np
 from scipy.signal import find_peaks
 from lmfit.models import GaussianModel, PolynomialModel  #
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.analysis.diffraction.neutron import NDCalculator
 from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.core import Structure
 from scipy.optimize import curve_fit
 from scipy.special import erf, wofz
 from scipy.stats import linregress
+from scipy.optimize import OptimizeWarning
+warnings.filterwarnings("ignore", category=OptimizeWarning)
 
 
 class Crystallinity(object):
     def __init__(self,
                  ase_atoms=None,
-                 filenames=None,
+                 filename=None,
                  wavelength='CuKa',
                  diffraction_type="PXRD"
                  ):
@@ -44,10 +48,13 @@ class Crystallinity(object):
         """
         if ase_atoms is not None:
             self.ase_atoms = ase_atoms
+            self.structure = AseAtomsAdaptor.get_structure(self.ase_atoms)
         else:
-            self.ase_atoms = read(filenames)
+            with open(filename, "rt", encoding="utf-8") as f:
+                cif_data = f.read()
+            self.structure = Structure.from_str(cif_data, fmt="cif")
 
-        self.structure = AseAtomsAdaptor.get_structure(self.ase_atoms)
+
         self.wavelength = wavelength
         self.diffraction_type = diffraction_type
 

@@ -30,7 +30,7 @@ def compute_size_from_xrd(filename):
 filename = './test_data/XRD_ZnO.csv'
 compute_size_from_xrd(filename)
 
-crystal = analysis.Crystallinity(filenames='test_data/AA.cif')
+crystal = analysis.Crystallinity(filename='test_data/AA.cif')
 get_modified_scherrer = crystal.get_modified_scherrer()
 av_size, av_str = crystal.get_average_size_and_strain()
 crystallinity = crystal.compute_crystallinity_area_method()

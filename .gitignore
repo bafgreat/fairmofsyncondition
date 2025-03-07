@@ -214,3 +214,4 @@ tests/test_data/._XRD_ZnO.csv
 fairmofsyncondition/read_write/._cheminfo2iupac.py
 fairmofsyncondition/read_write/._coords_library.py
 fairmofsyncondition/read_write/._iupacname2cheminfo.py
+tests/test_data/EDUSIF.json
