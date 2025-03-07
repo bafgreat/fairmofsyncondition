@@ -171,7 +171,13 @@ def scm_out(qcin):
     lattice = []
     length_value = []
     if verdict:
-        cods = filetyper.get_section(qc_input, 'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)', 'Lattice vectors (angstrom)', 1, -2)
+        cods = filetyper.get_section(
+            qc_input,
+            'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)',
+            'Lattice vectors (angstrom)',
+            1,
+            -2
+            )
 
         for lines in cods:
             data = lines.split()
@@ -185,7 +191,10 @@ def scm_out(qcin):
             if 'Lattice vectors (angstrom)' in line:
                 lat_index = i
 
-        parameters = [lattice[lat_index+1], lattice[lat_index+2], lattice[lat_index+3]]
+        parameters = [lattice[lat_index+1],
+                      lattice[lat_index+2],
+                      lattice[lat_index+3]
+                      ]
 
         for line in parameters:
             a = line[1:]
@@ -194,7 +203,11 @@ def scm_out(qcin):
                 lattice_coords.append(b)
 
     else:
-        cods = filetyper.get_section(qc_input, 'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)', 'Total System Charge', 1, -2)
+        cods = filetyper.get_section(
+            qc_input,
+            'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)',
+            'Total System Charge', 1, -2
+            )
         for lines in cods:
             data = lines.split()
             length_value.append(data[0])
@@ -216,7 +229,12 @@ def qchemcout(filename):
         coords : List of coordinate strings
     """
     qc_input = filetyper.get_contents(filename)
-    cods = filetyper.get_section(qc_input, 'OPTIMIZATION CONVERGED', 'Z-matrix Print:', 5, -2)
+    cods = filetyper.get_section(qc_input,
+                                 'OPTIMIZATION CONVERGED',
+                                 'Z-matrix Print:',
+                                 5,
+                                 -2
+                                 )
     # cods = filetyper.get_section(qc_input, '$molecule', '$end', 2, -1)
     coords = []
     for row in cods:
@@ -298,7 +316,8 @@ def collect_coords(filename):
     **returns**
         elements (list) : list of elements
         positions (numpy array) : numpy array of positions
-        cell (numpy array) : numpy array of cell parameters if present in the file
+        cell (numpy array) : numpy array of
+        cell parameters if present in the file
     '''
     coords, lattice = coordinate_definition(filename)
     elements = []
@@ -329,7 +348,11 @@ def load_data_as_ase(filename):
     elements, positions, cell = collect_coords(filename)
     ase_atoms = Atoms(symbols=elements, positions=positions)
     if len(cell) > 0:
-        ase_atoms = Atoms(symbols=elements, positions=positions, cell=cell, pbc=True)
+        ase_atoms = Atoms(symbols=elements,
+                          positions=positions,
+                          cell=cell,
+                          pbc=True
+                          )
     return ase_atoms
 
 
@@ -367,10 +390,10 @@ def xtb_input(filename):
     # xtb_coords.append('> cat coord \n')
     xtb_coords.append('$coord angs\n')
     for labels, row in zip(elements, positions):
-        tmp_coord =  [str(atom)+ ' ' for atom in row] + [' '] + [labels]
-        xtb_coords.append('\t'.join(tmp_coord) +'\n')
+        tmp_coord = [str(atom) + ' ' for atom in row] + [' '] + [labels]
+        xtb_coords.append('\t'.join(tmp_coord) + '\n')
     if len(cell) > 0:
-        xtb_coords.append('$periodic ' +str(len(cell)) +'\n')
+        xtb_coords.append('$periodic ' + str(len(cell)) + '\n')
         xtb_coords.append('$lattice angs \n')
         for lattice in cell:
             lat_vector = '\t'.join(lattice) + '\n'
@@ -414,16 +437,19 @@ def ase_to_xtb(ase_atoms):
 
 def get_pairwise_connections(graph):
     """
-    Extract unique pairwise connections from an adjacency dictionary efficiently.
+    Extract unique pairwise connections from an
+    adjacency dictionary efficiently.
 
     **Parameters**
         graph (dict):
-            An adjacency dictionary where keys are nodes and values are arrays
-            or lists of nodes representing neighbors.
+            An adjacency dictionary where keys are nodes
+            and values are arrays or lists of nodes
+            representing neighbors.
 
     **returns**
         list of tuple
-            A list of unique pairwise connections, each represented as a tuple (i, j) where i < j.
+            A list of unique pairwise connections,
+            each represented as a tuple (i, j) where i < j.
 
     """
     pairwise_connections = []
@@ -452,7 +478,8 @@ def ase_to_pytorch_geometric(input_system):
     Convert an ASE Atoms object to a PyTorch Geometric graph
 
     **parameters**
-        input_system (ASE.Atoms or ASE.Atom or filename): The input system to be converted.
+        input_system (ASE.Atoms or ASE.Atom or filename):
+        The input system to be converted.
 
     **returns**
         torch_geometric.data.Data: The converted PyTorch Geometric Data object.
@@ -464,9 +491,13 @@ def ase_to_pytorch_geometric(input_system):
         ase_atoms = load_data_as_ase(input_system)
     mic = ase_atoms.pbc.any()
     if mic:
-        lattice_parameters = torch.tensor(np.array(ase_atoms.cell), dtype=torch.float)
+        lattice_parameters = torch.tensor(np.array(ase_atoms.cell),
+                                          dtype=torch.float
+                                          )
     else:
-        lattice_parameters = torch.tensor(np.zeros(3, 3), dtype=torch.float)
+        lattice_parameters = torch.tensor(np.zeros(3, 3),
+                                          dtype=torch.float
+                                          )
 
     graph, _ = mofdeconstructor.compute_ase_neighbour(ase_atoms)
     pair_connection = np.array(get_pairwise_connections(graph))
@@ -474,9 +505,14 @@ def ase_to_pytorch_geometric(input_system):
     nodes = np.array([[atom.number, *atom.position] for atom in ase_atoms])
 
     node_features = torch.tensor(nodes, dtype=torch.float)
-    edge_index = torch.tensor(pair_connection, dtype=torch.long).t().contiguous()
-    edge_attr = torch.tensor(distances, dtype=torch.float).unsqueeze(1)
-    data = Data(x=node_features, edge_index=edge_index, edge_attr=edge_attr, lattice=lattice_parameters)
+    edge_index = torch.tensor(pair_connection,
+                              dtype=torch.long).t().contiguous()
+    edge_attr = torch.tensor(distances,
+                             dtype=torch.float).unsqueeze(1)
+    data = Data(x=node_features,
+                edge_index=edge_index,
+                edge_attr=edge_attr,
+                lattice=lattice_parameters)
     return data
 
 
@@ -490,11 +526,14 @@ def pytorch_geometric_to_ase(data):
     **Returns**
         ase_atoms (ase.Atoms): The converted ASE Atoms object.
     """
-    node_features = data.x.numpy() if isinstance(data.x, torch.Tensor) else data.x
+    node_features = data.x.numpy() if isinstance(data.x,
+                                                 torch.Tensor) else data.x
     atomic_numbers = node_features[:, 0].astype(int)
     positions = node_features[:, 1:4]
 
-    lattice = data.lattice.numpy() if isinstance(data.lattice, torch.Tensor) else data.lattice
+    lattice = data.lattice.numpy() if isinstance(data.lattice,
+                                                 torch.Tensor
+                                                 ) else data.lattice
 
     ase_atoms = Atoms(
         numbers=atomic_numbers,
@@ -508,14 +547,16 @@ def pytorch_geometric_to_ase(data):
 
 def prepare_dataset(ase_obj, energy):
     """
-    Prepares a dataset from ASE Atoms objects and their corresponding energy values.
+    Prepares a dataset from ASE Atoms objects and their
+    corresponding energy values.
 
     **parameters**
         ase_obj (ASE.Atoms): ASE Atoms object.
         energy (float): Energy value of the crystal structure.
 
     **returns**
-        torch_geometric.data.Data: PyTorch Geometric Data object with input features, edge indices, and energy value.
+        torch_geometric.data.Data: PyTorch Geometric Data object
+        with input features, edge indices, and energy value.
     """
     data = ase_to_pytorch_geometric(ase_obj)
     data.y = torch.tensor([energy], dtype=torch.float)
@@ -574,12 +615,15 @@ def ase_database_to_lmdb(ase_database, lmdb_path):
 
 class LMDBDataset:
     """
-    A class for loading PyTorch data stored in an LMDB file. The code is originally
-    intended for graph structured graphs that can work with pytorch_geometric data.
+    A class for loading PyTorch data stored in an LMDB
+    file. The code is originally
+    intended for graph structured graphs that can work with
+    pytorch_geometric data.
     But it should also load all types of PyTorch data.
 
-    This class enables on-the-fly loading of serialized data stored in LMDB format,
-    providing an efficient way to handle large datasets that cannot fit into memory.
+    This class enables on-the-fly loading of serialized data
+    stored in LMDB format, providing an efficient way to handle
+    large datasets that cannot fit into memory.
 
     **parameters**
         lmdb_path (str): Path to the LMDB file containing the dataset.
@@ -591,7 +635,8 @@ class LMDBDataset:
     **Methods**
         __len__(): Returns the total number of samples in the dataset.
         __getitem__(idx): Retrieves the sample at the specified index.
-        split_data(train_size, random_seed, shuffle): Lazily returns train and test data.
+        split_data(train_size, random_seed, shuffle): Lazily
+        returns train and test data.
 
     **Examples**
 
@@ -625,21 +670,35 @@ class LMDBDataset:
                 length_data = txn.get(b"__len__")
                 if length_data is None:
                     raise ValueError(
-                        f"The LMDB file at '{lmdb_path}' does not contain the key '__len__'. "
-                        f"Ensure the data was saved correctly and includes this key."
+                        f"""
+                        The LMDB file at '{lmdb_path}'
+                        does not contain the key '__len__'.
+                        """
+                        f"""Ensure the data was saved
+                        correctly and includes this key.
+                        """
                     )
                 self.length = pickle.loads(length_data)
         except ValueError as ve:
             raise RuntimeError(
-                f"ValueError: {ve}\nCheck if the LMDB file is correctly created with a '__len__' key."
+                f"""
+                ValueError: {ve}\nCheck if the
+                LMDB file is correctly created with a
+                '__len__' key."""
             ) from ve
         except lmdb.Error as le:
             raise RuntimeError(
-                f"An LMDB error occurred while accessing the file at '{lmdb_path}': {le}"
+                f"""
+                An LMDB error occurred while
+                accessing the file at '{lmdb_path}': {le}
+                """
             ) from le
         except Exception as e:
             raise RuntimeError(
-                f"An unexpected error occurred while initializing the dataset: {e}"
+                f"""
+                An unexpected error occurred
+                while initializing the dataset: {e}
+                """
             ) from e
 
     def __len__(self):
@@ -653,54 +712,79 @@ class LMDBDataset:
 
     def __getitem__(self, idx):
         """
-        Retrieves the sample(s) at the specified index or indices from the LMDB file.
+        Retrieves the sample(s) at the specified index or
+        indices from the LMDB file.
 
         **parameters**
-            idx (int or list of int): The index or indices of the sample(s) to retrieve.
+            idx (int or list of int): The index or indices of
+            the sample(s) to retrieve.
 
         **Returns**
-            Any or list: The deserialized data corresponding to the specified index/indices.
+            Any or list: The deserialized data corresponding
+            to the specified index/indices.
         """
         if isinstance(idx, int):
             if idx < 0 or idx >= self.length:
                 raise IndexError(
-                    f"Index {idx} is out of range for dataset of size {self.length}."
+                    f"""
+                    Index {idx} is out of range
+                    for dataset of size {self.length}.
+                    """
                 )
             with self.lmdb_env.begin() as txn:
                 data = txn.get(f"{idx}".encode())
                 if data is None:
                     raise ValueError(
-                        f"No data found for index {idx}. Ensure the dataset is correctly saved."
+                        f"""
+                        No data found for index {idx}.
+                        Ensure the dataset is correctly saved.
+                        """
                     )
                 return pickle.loads(data)
-        elif isinstance(idx, list) or isinstance(idx, np.ndarray) or isinstance(idx, tuple):
+        elif isinstance(idx,
+                        list) or isinstance(idx,
+                                            np.ndarray) or isinstance(idx,
+                                                                      tuple):
             results = []
             for i in idx:
                 if i < 0 or i >= self.length:
                     raise IndexError(
-                        f"Index {i} is out of range for dataset of size {self.length}."
+                        f"""
+                        Index {i} is out of range for
+                        dataset of size {self.length}.
+                        """
                     )
                 with self.lmdb_env.begin() as txn:
                     data = txn.get(f"{i}".encode())
                     if data is None:
                         raise ValueError(
-                            f"No data found for index {i}. Ensure the dataset is correctly saved."
+                            f"""
+                            No data found for index {i}.
+                            Ensure the dataset is correctly saved.
+                            """
                         )
                     results.append(pickle.loads(data))
             return results
         else:
             raise TypeError(
-                f"Index must be an int or list, or nd.array or tuple."
-            )
+                """
+                Index must be an int or list,
+                or nd.array or tuple.
+                """
+                )
 
     def split_data(self, train_size=0.8, random_seed=None, shuffle=True):
         """
-        Lazily splits the dataset into train and test data with class-like behavior.
+        Lazily splits the dataset into train and test data with
+        class-like behavior.
 
         Args:
-            train_size (float): The proportion of the data to be used as the training set (default is 0.8).
-            random_seed (int, optional): A random seed for reproducibility (default is None).
-            shuffle (bool): Whether to shuffle the data before splitting (default is True).
+            train_size (float): The proportion of the data to be used
+            as the training set (default is 0.8).
+            random_seed (int, optional): A random seed for reproducibility
+            (default is None).
+            shuffle (bool): Whether to shuffle the data before splitting
+            (default is True).
 
         Returns:
             tuple: A tuple containing train data and test data.
@@ -728,10 +812,17 @@ class LMDBDataset:
             def __getitem__(self, idx):
                 if isinstance(idx, int):
                     return self.parent[self.indices[idx]]
-                elif isinstance(idx, list) or isinstance(idx, np.ndarray) or isinstance(idx, tuple):
+                elif isinstance(idx,
+                                list) or isinstance(idx,
+                                                    np.ndarray) or isinstance(idx,
+                                                                              tuple):
                     return [self.parent[self.indices[i]] for i in idx]
                 else:
-                    raise TypeError("Index must be an int or list, or nd.array or tuple.")
+                    raise TypeError("""
+                                    Index must be an int or
+                                    list, or nd.array or tuple.
+                                    """
+                                    )
 
         train_data = Subset(self, train_indices)
         test_data = Subset(self, test_indices)
@@ -741,13 +832,17 @@ class LMDBDataset:
 
 def list_train_test_split(data, train_size=0.8, random_seed=42, shuffle=True):
     """
-    A function that take Splits a list into train and test sets based on the specified train_size.
+    A function that take Splits a list into train and test
+    sets based on the specified train_size.
 
     **parameter**
         data (list): The input list to split.
-        train_size (float): The proportion of the data to be used as the training set (default is 0.8).
-        random_seed (int, optional): A random seed for reproducibility (default is None).
-        shuffle (bool): Whether to shuffle the data before splitting (default is True).
+        train_size (float): The proportion of the data to be
+        used as the training set (default is 0.8).
+        random_seed (int, optional): A random seed for
+        reproducibility (default is None).
+        shuffle (bool): Whether to shuffle the data
+        before splitting (default is True).
 
     **return**
         train_data: indices of data to be selected for training.

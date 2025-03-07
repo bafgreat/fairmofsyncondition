@@ -33,6 +33,7 @@ def opsin_name_to_smile(chemical_name):
     '''
     opsin_url = 'https://opsin.ch.cam.ac.uk/opsin/'
     response = requests.get(opsin_url + chemical_name)
+    print (response)
     output = response.json()
     if output['status'] == 'SUCCESS':
         return output
