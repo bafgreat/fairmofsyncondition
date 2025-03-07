@@ -206,3 +206,11 @@ fairmofsyncondition/read_write/graph_data.py
 new_test.lmdb/
 fairmofsyncondition/model/dataset.py
 errorlogger/
+tests/test_data/._XRD_ZnO.csv
+._cheminfor.csv
+cheminfor.csv
+tests/test_data/._XRD_ZnO.csv
+._*
+fairmofsyncondition/read_write/._cheminfo2iupac.py
+fairmofsyncondition/read_write/._coords_library.py
+fairmofsyncondition/read_write/._iupacname2cheminfo.py
