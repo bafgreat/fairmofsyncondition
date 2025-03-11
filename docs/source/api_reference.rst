@@ -34,9 +34,17 @@ read_write.filetyper
    :undoc-members:
    :show-inheritance:
 
-read_write.iupacname2cheminfo
+read_write.cheminfo2iupac
 -------------------------------------------
-.. automodule:: fairmofsyncondition.read_write.iupacname2cheminfo
+.. automodule:: fairmofsyncondition.read_write.cheminfo2iupac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+read_write.struct2iupac
+-------------------------------------------
+.. automodule:: fairmofsyncondition.read_write.struct2iupac
    :members:
    :undoc-members:
    :show-inheritance:

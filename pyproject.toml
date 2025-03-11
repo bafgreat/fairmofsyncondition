@@ -41,6 +41,7 @@ train_bde = "fairmofsyncondition.model.thermodynamic_stability:entry_point"
 find_bde_parameters = "fairmofsyncondition.model.hyper_optimiser:main"
 iupac2cheminfor = "fairmofsyncondition.read_write.iupacname2cheminfo:main"
 cheminfor2iupac = "fairmofsyncondition.read_write.cheminfo2iupac:main"
+struct2iupac = "fairmofsyncondition.read_write.struct2iupac:main"
 
 
 [tool.poetry.group.dev.dependencies]

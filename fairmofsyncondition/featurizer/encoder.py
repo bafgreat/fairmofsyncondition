@@ -19,7 +19,6 @@ __status__ = "production"
 import torch
 import numpy as np
 from sentence_transformers import SentenceTransformer, util
-import torch
 
 
 def onehot_encoder(data, category):

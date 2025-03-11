@@ -21,7 +21,7 @@ Installation
 The module can be installed directly from GitHub or PYPI. Follow the steps below to get started:
 
 GitHub Installation
-==================
+=====================
 
 To install `fairmofsyncondition` from GitHub, execute the following commands in your terminal:
 
@@ -55,11 +55,11 @@ This project is licensed under the MIT License.
    :caption: Contents:
 
    quickstart
+   examples
    similarity
    graph_analysis
-   how_to
-   update
    api_reference
+   update
 
 
 Indices and tables

@@ -12,7 +12,7 @@ sys.setrecursionlimit(1500)
 sys.path.insert(0, os.path.abspath('../fairmofsyncondition'))
 
 project = 'fairmofsyncondition'
-copyright = '2024, Dinga Wonanke'
+copyright = '2025, Dinga Wonanke'
 author = 'Dinga Wonanke'
 release = '0.1.0'
 
