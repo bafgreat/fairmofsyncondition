@@ -45,6 +45,7 @@ pip install fairmofsyncondition
 
 ## Useful tool
 
+`iupac2cheminfor`
 one of the most useful tool is to directly extract cheminonformatic identifiers such
 as inchikey and smile strings directly from iupac names or common names. This can be
 achieved using `iupac2cheminfor` CLI as follows:
@@ -61,6 +62,23 @@ iupac2cheminfor -n 'water' -o filename
 
 The out will be written by default to cheminfor.csv if no output is provided
 and if porvided it will be written to the name parsed.
+
+`cheminfo2iupac`
+
+Another useful tool is directly convert a `smile` or and `inchikey` their iupac name.
+To achieve this simply run the following commandline tool
+
+```bash
+cheminfo2iupac -n 'O' -o filename
+```
+
+`struct2iupac`
+In other cases one may one to directly extract the iupac name and cheminformatic identifier of a chemical structure.
+The quickest way to do this is by running the following commands.
+
+```bash
+struct2iupac XOWJUR.xyz
+```
 
 ## Training
 
