@@ -58,7 +58,7 @@ jobs:
     - name: Build Sphinx Documentation
       run: |
         cd docs
-        make html
+        make html SPHINXBUILD="poetry run sphinx-build"
 
     - name: Upload Sphinx Documentation Artifact
       uses: actions/upload-pages-artifact@v3
