@@ -17,6 +17,12 @@ The model is trained on data extracted from the FAIR-MOF dataset, which is a com
 
 The module can be installed directly from GitHub. Follow the steps below to get started:
 
+### PyPi
+Simply pip install.
+'''bash
+pip install fairmofsyncondition
+'''
+
 ### GitHub Installation
 
 To install fairmofsyncondition from GitHub, execute the following commands in your terminal:
