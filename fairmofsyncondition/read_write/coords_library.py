@@ -14,6 +14,7 @@ from ase.io import read
 from ase import Atoms, Atom
 from ase.db import connect
 from torch_geometric.data import Data
+from ase.geometry import get_distances
 from mofstructure import mofdeconstructor
 # from orb_models.forcefield import atomic_system
 from fairmofsyncondition.read_write import filetyper
@@ -356,6 +357,109 @@ def load_data_as_ase(filename):
     return ase_atoms
 
 
+def  charge_and_ase_from_ams_gfn(filename):
+    """
+    Extract charge and ase atoms from an AMS gfn output file
+
+    **parameter**
+        filename (string) : AMS gfn output file
+
+    **return**
+        ase_atoms (ase Atoms object): ase atoms object
+        charge (float): charge of the system
+    """
+    contents = filetyper.get_contents(filename)
+    verdict = check_periodicity(filename)
+    positions = []
+    atoms_symbols = []
+    lattice = []
+    charge = []
+    charge_in_file = filetyper.get_section(
+            contents, 'Index   Atom          Charge      Population', 'Mulliken Shell Charges', 1, -4
+            )
+    for lines in charge_in_file:
+        charge.append(float(lines.split()[2]))
+
+    if verdict:
+        cods = filetyper.get_section(
+            contents,
+            'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)',
+            'Lattice vectors (angstrom)',
+            1,
+            -2
+            )
+
+        for lines in cods:
+            data = lines.split()
+            atoms_symbols.append(data[1])
+            positions.append([float(i) for i in data[2:]])
+
+        file_lattice = filetyper.get_section(
+            contents,
+            'Lattice vectors (angstrom)', 'Unit cell volume', 1,-2)
+        for lines in file_lattice:
+            data = lines.split()
+            lattice.append([float(i) for i in data[1:]])
+        ase_atoms = Atoms(symbols=atoms_symbols,
+                          positions=positions,
+                          cell=lattice,
+                          pbc=True
+                          )
+    else:
+        cods = filetyper.get_section(
+            contents,
+            'Index Symbol   x (angstrom)   y (angstrom)   z (angstrom)',
+            'Total System Charge', 1, -2
+            )
+        for lines in cods:
+            data = lines.split()
+            atoms_symbols.append(data[1])
+            positions.append([float(i) for i in data[2:]])
+        ase_atoms = Atoms(symbols=atoms_symbols, positions=positions)
+
+    return ase_atoms, charge
+
+
+def compute_esp(atoms: Atoms, charges: np.ndarray, eps: float = 1e-12) -> np.ndarray:
+    """
+    Compute the electrostatic potential (ESP) at each atomic position due to all other atoms,
+    using the point charge approximation and the minimum image convention under periodic boundary conditions (PBC).
+
+    The electrostatic potential at atom *i* is computed as:
+
+        V_i = Σ_{j ≠ i} (q_j / r_ij)
+
+    where:
+        - V_i is the electrostatic potential at atom *i*,
+        - q_j is the charge of atom *j*,
+        - r_ij is the shortest distance between atoms *i* and *j*, accounting for PBC.
+
+    **Parameters**
+        - atoms : ase.Atoms
+            An ASE Atoms object representing the system. The simulation cell and periodic boundary conditions (PBC) must be defined.
+        - charges : np.ndarray
+        A 1D NumPy array of atomic point charges (in units of elementary charge, e), with length equal to the number of atoms.
+        - eps : float, optional
+        A small constant added to distances to prevent division by zero (default is 1e-12 Å).
+
+    **Returns**
+        -np.ndarray
+            A 1D NumPy array containing the electrostatic potential at each atomic position (in units of e/Å).
+
+    **Notes**
+        - To convert the ESP values to electronvolts (eV), multiply the result by 14.3996
+        (since 1 e / (4 * π * ε₀ * Å) ≈ 14.3996 eV·Å/e).
+        - Self-interactions are excluded by setting the diagonal of the distance matrix to ∞.
+        - Distance calculations use ASE's `get_distances` function, which applies the minimum image convention under PBC.
+    """
+    if not isinstance(charges, np.ndarray):
+        charges = np.array(charges, dtype=float)
+    distances = atoms.get_all_distances(mic=atoms.pbc.any())
+    np.fill_diagonal(distances, np.inf)
+    esp = np.sum(charges / (distances + eps), axis=1)
+    return esp
+
+
 # def ase_graph(input_system):
 #     """
 #     Create a graph from an ase atoms object
@@ -495,7 +599,7 @@ def ase_to_pytorch_geometric(input_system):
                                           dtype=torch.float
                                           )
     else:
-        lattice_parameters = torch.tensor(np.zeros(3, 3),
+        lattice_parameters = torch.tensor(np.zeros((3, 3)),
                                           dtype=torch.float
                                           )
 

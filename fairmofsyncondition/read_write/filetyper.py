@@ -13,6 +13,7 @@ import ase
 import numpy as np
 import pandas as pd
 from ase import Atoms
+import msgpack
 
 
 class AtomsEncoder(json.JSONEncoder):
@@ -507,6 +508,18 @@ def combine_json_files(file1_path, file2_path, output_path):
         json.dump(combined_data, output_file, indent=2)
 
 
+def save_dict_msgpack(data: dict, filename: str) -> None:
+    """Save a dictionary to a file using MessagePack."""
+    with open(filename, "wb") as f:
+        msgpack.pack(data, f, use_bin_type=True)
+
+
+def load_dict_msgpack(filename: str) -> dict:
+    """Load a dictionary from a MessagePack file."""
+    with open(filename, "rb") as f:
+        return msgpack.unpack(f, raw=False, strict_map_key=False)
+
+
 def load_data(filename):
     '''
     Automatically detects the file extension and loads the data using the
@@ -533,6 +546,8 @@ def load_data(filename):
         data = pickle_load(filename)
     elif file_ext == 'xlsx':
         data = pd.read_excel(filename)
+    elif file_ext == 'msgpack':
+        data = load_dict_msgpack(filename)
     else:
         data = get_contents(filename)
     return data
