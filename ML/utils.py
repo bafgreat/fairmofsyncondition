@@ -50,3 +50,18 @@ def remove_unused_onehot_columns(data_list, target_field="metal_salts"):
     return data_list
 
 
+
+from ase.data import chemical_symbols
+def filter_metals(atomic_number_list):
+    # Set of atomic numbers for known nonmetals and noble gases
+    non_metals = { 1, 2, 5, 6, 7, 8, 9, 10,14, 15, 16, 17, 18,33, 34, 35, 36,52, 53, 54,85, 86}
+    # Filter out nonmetals and invalid/blank entries
+
+    metals = [
+
+        Z for Z in atomic_number_list
+
+        if Z not in non_metals and Z < len(chemical_symbols) and chemical_symbols[Z] != ''
+
+    ]
+    return metals

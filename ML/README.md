@@ -11,4 +11,9 @@ Here you will find the code to predict the metal salts of a given MOF with diffe
 | Ex2.ipynb  |  ✓       | ✓           | ✓   | ✗          |
 | Ex3.ipynb  |  ✓       | ✓           | ✗   | ✗          |
 | Ex4.ipynb  |  ✓       | ✗           | ✓   | ✗          |
+| Ex5.ipynb  |  ✗       | ✗           | ✓   | ✗          |
+| Ex6.ipynb  |  ✗       | ✗           | ✗   | ✓          |
+| Ex7.ipynb  |  ✗       | ✗           | ✓   | ✓          |
+| Ex8.ipynb  |  ✓       | ✗           | ✓   | ✓          |
+| Ex9.ipynb  |  ✓       | ✓           | ✓   | ✓          |
 
