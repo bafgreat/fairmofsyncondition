@@ -227,7 +227,6 @@ tests/test_data/ZZZWCW01.out
 
 examples/combine_for_antonio.py
 examples/data_ligand_salt_size_pore.json
-examples/script_for_synprediction.py
 examples/create_graph.py
 
 examples/LigandsXYZ/
