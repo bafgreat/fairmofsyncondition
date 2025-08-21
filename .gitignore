@@ -18,6 +18,7 @@ lib/
 lib64/
 parts/
 sdist/
+dist
 var/
 wheels/
 share/python-wheels/
@@ -216,3 +217,15 @@ fairmofsyncondition/read_write/._coords_library.py
 fairmofsyncondition/read_write/._iupacname2cheminfo.py
 tests/test_data/EDUSIF.json
 tests/test_data/XOWJUR.xyz
+
+examples/combine_all_names.py
+examples/iupacname.msgpack
+examples/unfinish.txt
+tests/extract_atom_charge.py
+tests/test_data/ZZZWCW01.out
+
+
+examples/combine_for_antonio.py
+examples/data_ligand_salt_size_pore.json
+examples/script_for_synprediction.py
+examples/create_graph.py
