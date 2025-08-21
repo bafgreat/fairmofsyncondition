@@ -56,24 +56,47 @@ def save2lmbt(lmdb_path, ligand_solvent_path, size_strain_path, oms_path, catego
     with lmdb.open(lmdb_path, map_size=int(1e12)) as lmdb_env:
         with lmdb_env.begin(write=True) as txn:
             count = 0
-            ligand_salt_solvent, size_strain, all_oms_data, ligand_cat, salt_cat, solvent_cat = data_files(ligand_solvent_path, size_strain_path, oms_path, category_path)
-            # test = list(ligand_salt_solvent.keys())[:5]
-            # all_refs = [i for i in ligand_salt_solvent if i.startswith("L")]
-            for i, refcode in enumerate(ligand_salt_solvent):
+            ligand_salt_solvent, size_strain, all_oms_data, ligand_cat, salt_cat, solvent_cat = data_files(
+                ligand_solvent_path, size_strain_path, oms_path, category_path
+            )
+            for refcode in ligand_salt_solvent:
                 try:
-                    print(i, refcode)
-                    cif_file = str(next((p / f"{refcode}.cif" for p in paths if (p / f"{refcode}.cif").exists()), None))
-                    # cif_file = f"{cif_paths}/{refcode}.cif"
+                    print("Processing:", refcode)
+                    # Try to find the CIF file
+                    cif_file_path = next(
+                        (p / f"{refcode}.cif" for p in paths if (p / f"{refcode}.cif").exists()), None
+                    )
+                    if cif_file_path is None:
+                        print("CIF file not found for", refcode)
+                        unfinish.append(f"{refcode}\n")
+                        continue
+                    cif_file = str(cif_file_path)
+
+                    # Get data for the current refcode
                     ligands = ligand_salt_solvent[refcode].get('ligands')
                     solvents = ligand_salt_solvent[refcode].get('solvents')
                     metal_salt = ligand_salt_solvent[refcode].get('metal_salts')
-                    modified_scherrer = torch.tensor(size_strain[refcode].get("modified_scherrer"), dtype=torch.float16)
-                    av_strain = torch.tensor(size_strain[refcode].get("av_strain_size"), dtype=torch.float16)
+
+                    # Check for size/strain data and skip if missing
+                    modified_val = size_strain[refcode].get("modified_scherrer")
+                    av_strain_val = size_strain[refcode].get("av_strain_size")
+                    if modified_val is None or av_strain_val is None:
+                        print("Size strain data missing for", refcode)
+                        unfinish.append(f"{refcode}\n")
+                        continue
+                    modified_scherrer = torch.tensor(modified_val, dtype=torch.float16)
+                    av_strain = torch.tensor(av_strain_val, dtype=torch.float16)
+
+                    # Encode solvents, ligands, and metal salts
                     solvent_encoder = encoder.onehot_encoder_pyg(solvents, solvent_cat)
                     ligand_encoder = encoder.onehot_encoder_pyg(ligands, ligand_cat)
                     salt_encoder = encoder.onehot_encoder_pyg(metal_salt, salt_cat)
-                    has_oms = all_oms_data[refcode].get("has_oms")
+
+                    # Process OMS data
+                    has_oms = all_oms_data.get(refcode, {}).get("has_oms", False)
                     oms = torch.tensor([1 if has_oms else 0], dtype=torch.int16)
+
+                    # Convert CIF file to data and assign attributes
                     data = ase2data(cif_file)
                     data.metal_salts = salt_encoder
                     data.ligands = ligand_encoder
@@ -81,21 +104,23 @@ def save2lmbt(lmdb_path, ligand_solvent_path, size_strain_path, oms_path, catego
                     data.modified_scherrer = modified_scherrer
                     data.microstrain = av_strain
                     data.oms = oms
-                    txn.put(f"{i}".encode(), pickle.dumps(data))
-                    file_mapper[f"{i}"] = refcode
 
-                    count += 1
-
-                except Exception:
-                    unfinish.append(refcode)
-                    unfinish.append('\n')
-                    pass
-                txn.put(b"__len__", pickle.dumps(count))
-
-            print(count)
+                    # Only write data if it meets the expected condition
+                    if len(data) == 10:
+                        txn.put(f"{count}".encode(), pickle.dumps(data))
+                        file_mapper[f"{count}"] = refcode
+                        count += 1
+                    else:
+                        print(f"Data length for {refcode} is {len(data)} (expected 10). Skipping.")
+                        unfinish.append(f"{refcode}\n")
+                except Exception as e:
+                    print(f"Error processing {refcode}: {e}")
+                    unfinish.append(f"{refcode}\n")
+            # Write the final count only once after processing all entries
+            txn.put(b"__len__", pickle.dumps(count))
+            print("Total valid entries:", count)
     filetyper.put_contents('unfinish.txt', unfinish)
     filetyper.write_json(file_mapper, "../data/json_data/torch_data_mapper.json")
-
 
 save2lmbt(lmdb_path, ligand_solvent_path, size_strain_path, oms_path, category_path)
 
