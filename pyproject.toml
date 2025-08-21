@@ -23,7 +23,7 @@ lmdb = "^1.5.1"
 msgpack = "^1.1.0"
 six = "^1.16.0"
 # ml-pyxis = {url = "https://github.com/vicolab/ml-pyxis/archive/master.zip"}
-mofstructure = "^0.1.8.2"
+mofstructure = "0.1.8.3"
 torch-geometric = "^2.6.1"
 # fastai = "^2.7.18"
 # autogl = "^0.4.0"

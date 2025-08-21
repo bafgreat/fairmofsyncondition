@@ -14,7 +14,7 @@ __status__ = "production"
 # as part of hos MSCA post doctoral fellowship at TU Dresden.                 #
 #                                                                             #
 ###############################################################################
-import os 
+import os
 import pandas as pd
 import argparse
 import requests

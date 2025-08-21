@@ -5,6 +5,7 @@ __status__ = "production"
 import os
 import re
 import pickle
+from pathlib import Path
 import csv
 import json
 import codecs
@@ -14,6 +15,7 @@ import numpy as np
 import pandas as pd
 from ase import Atoms
 import msgpack
+from importlib.resources import files
 
 
 class AtomsEncoder(json.JSONEncoder):
@@ -537,7 +539,8 @@ def load_data(filename):
             The loaded data, which can be a dictionary, DataFrame, list, or other Python object,
             depending on the file type.
     '''
-    file_ext = filename[filename.rindex('.')+1:]
+    filename = Path(filename)
+    file_ext = filename.suffix.lstrip('.')
     if file_ext == 'json':
         data = read_json(filename)
     elif file_ext == 'csv':
@@ -551,3 +554,9 @@ def load_data(filename):
     else:
         data = get_contents(filename)
     return data
+
+
+def category_names():
+    "load category"
+    msgpack_path = files("fairmofsyncondition").joinpath("db/category_names.msgpack")
+    return load_data(msgpack_path)
