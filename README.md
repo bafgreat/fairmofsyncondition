@@ -18,7 +18,9 @@ The model is trained on data extracted from the FAIR-MOF dataset, which is a com
 The module can be installed directly from GitHub. Follow the steps below to get started:
 
 ### PyPi
+
 Simply pip install.
+
 '''bash
 pip install fairmofsyncondition
 '''
@@ -108,22 +110,22 @@ find_bde_parameters -h
 
 ## Machine Learning Folder
 
-The folder **`machine_learning/`** contains the code and Jupyter notebooks to predict the **metal salt of a given MOF** using **Graph Neural Networks (GNNs)**.  
+The folder **`machine_learning/`** contains the code and Jupyter notebooks to predict the **metal salt of a given MOF** using **Graph Neural Networks (GNNs)**.
 
-- Each notebook (`Ex1.ipynb`, `Ex2.ipynb`, …, `Ex10.ipynb`) explores different combinations of input features such as:  
-  - **Scherrer** (grain size)  
-  - **Microstrain** (lattice distortion)  
-  - **OMS** (Open Metal Sites)  
-  - **Atomic Number**  
+- Each notebook (`Ex1.ipynb`, `Ex2.ipynb`, …, `Ex10.ipynb`) explores different combinations of input features such as:
+  - **Scherrer** (grain size)
+  - **Microstrain** (lattice distortion)
+  - **OMS** (Open Metal Sites)
+  - **Atomic Number**
 
-- The notebooks share the same structure:  
-  1. **Load the Data** – import and prepare the dataset  
-  2. **Define the GNN Model** – specify the architecture  
-  3. **Train the Model** – train and save weights in `tmp/` (optional)  
-  4. **Load and Evaluate the Model** – load trained weights and test performance  
+- The notebooks share the same structure:
+  1. **Load the Data** – import and prepare the dataset
+  2. **Define the GNN Model** – specify the architecture
+  3. **Train the Model** – train and save weights in `tmp/` (optional)
+  4. **Load and Evaluate the Model** – load trained weights and test performance
 
-**Note**:  
-If you only want to **test the model** with pre-trained weights, you can simply **skip step 3** (training).  
+**Note**:
+If you only want to **test the model** with pre-trained weights, you can simply **skip step 3** (training).
 
 
 
