@@ -230,4 +230,4 @@ examples/data_ligand_salt_size_pore.json
 examples/create_graph.py
 
 examples/LigandsXYZ/
-examples/test.xyz
+examples/test.xyz*.pt
