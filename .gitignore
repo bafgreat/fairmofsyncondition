@@ -231,3 +231,19 @@ examples/create_graph.py
 
 examples/LigandsXYZ/
 examples/test.xyz*.pt
+ML/tmp2/
+ML/elim/
+*.pt
+.DS_Store
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.dist/
+.build/
+.pytest_cache/
+.ipynb_checkpoints/
+examples/create_metal_salts.py
+examples/test.xyz
