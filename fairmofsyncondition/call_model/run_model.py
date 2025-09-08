@@ -136,7 +136,7 @@ class Synconmodel(object):
         torch_data = torch_data.to(device)
         torch_data.cordinates = torch_data.cordinates[0] # small cleaning
         models = get_models(torch_data, device=device) # load models (5 seeds)
-        
+        models = models[0:1]
             
         category_names = filetyper.category_names()["metal_salts"]
         # the function to get ensemble predictions, i.e. the average probability for each class over the 5 models
@@ -145,6 +145,7 @@ class Synconmodel(object):
         for name, prob in pred_list[:10]:
             print(f"{name}: {prob:.3f}")
         
+        #print(pred_list)
 
 
 ml_data = Synconmodel('../../tests/test_data/EDUSIF.cif')

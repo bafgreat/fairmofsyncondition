@@ -166,7 +166,7 @@ def get_models(torch_data,device="cpu"):
     
     models = []
     
-    for seed in range(1, 6):  # Carica modelli con semi da 1 a 5
+    for seed in [3]:
         node_in_dim = torch_data.x.shape[1]
         edge_in_dim = torch_data.edge_attr.shape[1]
         lattice_in_dim = 9
@@ -211,7 +211,7 @@ def get_models(torch_data,device="cpu"):
         ).to(device)
 
         config_name = f"HID{hidden_dim}_DO{dropout}_SEED{seed}__{suffix}"
-        checkpoint_name = f"../../ML/trained_models/Metal_salts_{config_name}.pt"
+        checkpoint_name = f"trained_models/Metal_salts_{config_name}.pt"
         model.load_state_dict(torch.load(checkpoint_name, map_location=device))
         models.append(model)
     return models
