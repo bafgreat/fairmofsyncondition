@@ -166,7 +166,7 @@ def get_models(torch_data,device="cpu"):
     
     models = []
     
-    for seed in [4]:
+    for seed in [1]:
         node_in_dim = torch_data.x.shape[1]
         edge_in_dim = torch_data.edge_attr.shape[1]
         lattice_in_dim = 9
@@ -189,7 +189,7 @@ def get_models(torch_data,device="cpu"):
         extras_dim = 448 #compute_extras_dim(torch_data, selected_extras)
 
         # Classi
-        Y_size = 665
+        Y_size = 791
         num_classes = Y_size + 1
         hidden_dim = 64
         dropout = 0.35
@@ -211,7 +211,7 @@ def get_models(torch_data,device="cpu"):
         ).to(device)
 
         config_name = f"HID{hidden_dim}_DO{dropout}_SEED{seed}__{suffix}"
-        checkpoint_name = f"trained_models/Metal_salts_{config_name}.pt"
+        checkpoint_name = f"trained_models/Metal_salts_{config_name}_tmp_test.pt"
         model.load_state_dict(torch.load(checkpoint_name, map_location=device))
         models.append(model)
     return models
