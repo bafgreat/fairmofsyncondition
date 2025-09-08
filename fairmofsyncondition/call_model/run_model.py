@@ -11,6 +11,8 @@ from mofstructure import mofdeconstructor
 from fairmofsyncondition.read_write import filetyper, coords_library
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from utils_model import get_models,ensemble_predictions
+
 
 convert_struct = {'cubic': 0,
                   'hexagonal': 1,
@@ -21,7 +23,9 @@ convert_struct = {'cubic': 0,
                   'trigonal': 6
                   }
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# We can use cpu, because it is only for inference
+device = "cpu"
 
 class MyModel(nn.Module):
     def __init__(self):
@@ -61,8 +65,7 @@ class Synconmodel(object):
         '''
         return metals dict as a dictionary of symbols with index
         '''
-        return {j: i for i, j in
-                enumerate(mofdeconstructor.transition_metals()[1:])}
+        return {j: i for i, j in enumerate(mofdeconstructor.transition_metals()[1:])}
 
     def get_species_conc(self):
         """
@@ -77,10 +80,11 @@ class Synconmodel(object):
             emb[aa] = bb
         return emb
 
+
     def get_coordination_and_oms(self):
         """
         Get the oms embeding
-        """
+        """ 
         general = self.structure.get_oms()
         metals = general['metals']
         tmp_dict = dict()
@@ -97,7 +101,7 @@ class Synconmodel(object):
         for i, j in tmp_dict.items():
             emb[self.convert_metals()[i]] = j
         oms = general["has_oms"]
-        return emb, oms, metals
+        return emb, oms, metals       
 
     def get_space_group(self):
         "Get space group embedding"
@@ -117,7 +121,6 @@ class Synconmodel(object):
         emb_sg, emb_cs = self.get_space_group()
         cn_emb, oms, metals = self.get_coordination_and_oms()
         atom_conc = self.get_species_conc()
-
         self.torch_data.atomic_one_hot = atom_conc
         self.torch_data.cordinates = cn_emb,
         self.torch_data.space_group_number = emb_sg
@@ -130,29 +133,19 @@ class Synconmodel(object):
         predict conditions
         '''
         torch_data, metals = self.complete_torch_data()
-        model = MyModel()
-        state_dict = torch.load("best_model.pth", map_location="cpu")
-        model.load_state_dict(state_dict)
-        model.eval()
-        with torch.no_grad():        # no gradient tracking during inference
-            y_pred = model(torch_data)
-        print("Prediction:", y_pred.item())
+        torch_data = torch_data.to(device)
+        torch_data.cordinates = torch_data.cordinates[0] # small cleaning
+        models = get_models(torch_data, device=device) # load models (5 seeds)
+        
+            
+        category_names = filetyper.category_names()["metal_salts"]
+        # the function to get ensemble predictions, i.e. the average probability for each class over the 5 models
+        pred_list = ensemble_predictions(models, torch_data, category_names, device=device)
 
-
-
-        print(torch_data)
-        print(metals)
-
-
-
-
-
-
-
-
-
+        for name, prob in pred_list[:10]:
+            print(f"{name}: {prob:.3f}")
+        
 
 
 ml_data = Synconmodel('../../tests/test_data/EDUSIF.cif')
-
 print(ml_data.predict_condition())
