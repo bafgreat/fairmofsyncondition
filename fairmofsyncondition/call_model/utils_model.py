@@ -166,7 +166,7 @@ def get_models(torch_data,device="cpu"):
     
     models = []
     
-    for seed in [3]:
+    for seed in [4]:
         node_in_dim = torch_data.x.shape[1]
         edge_in_dim = torch_data.edge_attr.shape[1]
         lattice_in_dim = 9
@@ -183,10 +183,10 @@ def get_models(torch_data,device="cpu"):
             "cordinates":          lambda d: _reshape_feat(d.cordinates, d),
         }
 
-        selected_extras = ["atomic_one_hot", "cordinates","crystal_system", "oms","space_group_number"]
+        selected_extras = ["atomic_one_hot", "cordinates", "oms","space_group_number"]
         selected_extras = np.sort(selected_extras).tolist()
         # Calcolo dinamico della dimensione delle extra
-        extras_dim = 455 #compute_extras_dim(torch_data, selected_extras)
+        extras_dim = 448 #compute_extras_dim(torch_data, selected_extras)
 
         # Classi
         Y_size = 665
