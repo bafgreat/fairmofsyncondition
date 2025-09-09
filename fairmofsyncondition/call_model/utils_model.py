@@ -10,10 +10,9 @@ import os
 from mofstructure import mofdeconstructor
 from pymatgen.io.ase import AseAtomsAdaptor
 from fairmofsyncondition.read_write import filetyper
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer   
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from fairmofsyncondition.read_write.coords_library import pytorch_geometric_to_ase
-import torch
-import torch.nn.functional as F
+
 
 
 
@@ -160,12 +159,12 @@ class MetalSaltGNN_Ablation(nn.Module):
 
         out = self.final_mlp(final_in)
         return out
-    
+
 
 def get_models(torch_data,device="cpu"):
-    
+
     models = []
-    
+
     for seed in [1]:
         node_in_dim = torch_data.x.shape[1]
         edge_in_dim = torch_data.edge_attr.shape[1]
@@ -215,7 +214,6 @@ def get_models(torch_data,device="cpu"):
         model.load_state_dict(torch.load(checkpoint_name, map_location=device))
         models.append(model)
     return models
-
 
 
 def ensemble_predictions(models, torch_data, category_names, device="cpu"):

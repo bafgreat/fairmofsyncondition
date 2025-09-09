@@ -3,15 +3,16 @@ import re
 import argparse
 import torch
 from ase import Atoms
-import torch.nn as nn
 import numpy as np
 from ase.io import read
 from mofstructure.structure import MOFstructure
 from mofstructure import mofdeconstructor
-from fairmofsyncondition.read_write import filetyper, coords_library
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from utils_model import get_models,ensemble_predictions
+from mofstructure.filetyper import load_iupac_names
+from fairmofsyncondition.read_write import cheminfo2iupac, coords_library, filetyper
+from fairmofsyncondition.read_write import filetyper, coords_library
+from fairmofsyncondition.call_model.utils_model import get_models, ensemble_predictions
 
 
 convert_struct = {'cubic': 0,
@@ -23,20 +24,19 @@ convert_struct = {'cubic': 0,
                   'trigonal': 6
                   }
 
-#device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# We can use cpu, because it is only for inference
 device = "cpu"
 
-class MyModel(nn.Module):
-    def __init__(self):
-        super(MyModel, self).__init__()
-        # Example layers (replace with your real architecture)
-        self.fc1 = nn.Linear(100, 50)
-        self.fc2 = nn.Linear(50, 1)
+def get_ligand_iupacname(ligand_inchi):
+    name = load_iupac_names().get(ligand_inchi, None)
+    print("tesst", name)
 
-    def forward(self, x):
-        x = torch.relu(self.fc1(x))
-        return self.fc2(x)
+    if name is None:
+        pubchem = cheminfo2iupac.pubchem_to_inchikey(ligand_inchi, name='inchikey')
+        if pubchem is None:
+            name = ligand_inchi
+        else:
+            pubchem.get('iupac_name', ligand_inchi)
+    return name
 
 class Synconmodel(object):
     def __init__(self,
@@ -80,11 +80,10 @@ class Synconmodel(object):
             emb[aa] = bb
         return emb
 
-
     def get_coordination_and_oms(self):
         """
         Get the oms embeding
-        """ 
+        """
         general = self.structure.get_oms()
         metals = general['metals']
         tmp_dict = dict()
@@ -101,7 +100,14 @@ class Synconmodel(object):
         for i, j in tmp_dict.items():
             emb[self.convert_metals()[i]] = j
         oms = general["has_oms"]
-        return emb, oms, metals       
+        return emb, oms, metals
+
+    def get_organic_ligands(self):
+        _, ligands = self.structure.get_ligands()
+        inchikeys = [ligand.info.get('inchikey') for ligand in ligands]
+        ligands_names = [get_ligand_iupacname(i) for i in inchikeys]
+        print(ligands_names)
+
 
     def get_space_group(self):
         "Get space group embedding"
@@ -128,6 +134,7 @@ class Synconmodel(object):
         self.torch_data.oms = torch.tensor([[oms]], dtype=torch.float)
         return self.torch_data.to(device), metals
 
+
     def predict_condition(self):
         '''
         predict conditions
@@ -137,16 +144,17 @@ class Synconmodel(object):
         torch_data.cordinates = torch_data.cordinates[0] # small cleaning
         models = get_models(torch_data, device=device) # load models (5 seeds)
         models = models[0:1]
-            
+
         category_names = filetyper.category_names()["metal_salts"]
         # the function to get ensemble predictions, i.e. the average probability for each class over the 5 models
         pred_list = ensemble_predictions(models, torch_data, category_names, device=device)
 
         for name, prob in pred_list[:10]:
             print(f"{name}: {prob:.3f}")
-        
+
         #print(pred_list)
 
 
 ml_data = Synconmodel('../../tests/test_data/EDUSIF.cif')
-print(ml_data.predict_condition())
+# print(ml_data.predict_condition())
+print(ml_data.get_organic_ligands())
