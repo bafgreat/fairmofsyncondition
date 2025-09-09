@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from importlib.resources import files
 import numpy as np
 from torch_geometric.nn import GINEConv, global_mean_pool
 from sklearn.metrics import f1_score
@@ -12,6 +13,7 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from fairmofsyncondition.read_write import filetyper
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from fairmofsyncondition.read_write.coords_library import pytorch_geometric_to_ase
+
 
 
 
@@ -210,7 +212,8 @@ def get_models(torch_data,device="cpu"):
         ).to(device)
 
         config_name = f"HID{hidden_dim}_DO{dropout}_SEED{seed}__{suffix}"
-        checkpoint_name = f"trained_models/Metal_salts_{config_name}_tmp_test.pt"
+        checkpoint_path = f"trained_models/Metal_salts_{config_name}_tmp_test.pt"
+        checkpoint_name = files("fairmofsyncondition").joinpath("call_model",checkpoint_path)
         model.load_state_dict(torch.load(checkpoint_name, map_location=device))
         models.append(model)
     return models
