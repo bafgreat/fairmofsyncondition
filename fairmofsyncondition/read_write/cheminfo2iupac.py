@@ -40,7 +40,12 @@ def pubchem_to_inchikey(identifier, name='smiles'):
                       otherwise, None.
     '''
     properties = {}
+
     pubchem = pcp.get_compounds(identifier, name)
+    # print('inchikey', pubchem[0].inchikey)
+    # print('name', pubchem[0].synonyms)
+    # print('iupac', pubchem[0].iupac_name)
+    # print('isomeric_smile', pubchem[0].isomeric_smiles)
     if len(pubchem) > 0:
         all_prop = pubchem[0]
         properties['inchikey'] = all_prop.inchikey if all_prop.inchikey else None

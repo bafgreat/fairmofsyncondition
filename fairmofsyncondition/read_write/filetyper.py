@@ -560,3 +560,9 @@ def category_names():
     "load category"
     msgpack_path = files("fairmofsyncondition").joinpath("db/category_names.msgpack")
     return load_data(msgpack_path)
+
+
+def smile_names_iupac():
+    "load iupac"
+    msgpack_path = files("fairmofsyncondition").joinpath("db/iupacname_smiles.msgpack")
+    return load_data(msgpack_path)

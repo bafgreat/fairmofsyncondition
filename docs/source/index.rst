@@ -45,6 +45,21 @@ To install `fairmofsyncondition` from PYPI, simply execute the following command
 
     pip install fairmofsyncondition
 
+
+Predict Synthesis Conditions
+============================
+
+The quickest way to predict the synthesis condition from any crystal structure is by
+running the below commandline argument.
+
+.. code-block:: bash
+    fairmofsyncondition_syncon my_mof.cif
+
+.. code-block:: bash
+    fairmofsyncondition_syncon my_mof.cif -o my_mof_report.txt
+
+
+
 License
 =======
 

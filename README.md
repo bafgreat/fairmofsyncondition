@@ -53,6 +53,22 @@ pip install fairmofsyncondition
 
 ## Useful tool
 
+`fairmofsyncondition_syncon`
+is a command-line tool for predicting synthetic conditions of Metal–Organic Frameworks (MOFs) directly from CIF files.
+It extracts **organic ligands**, **space group information**, and computes the **top-5 predicted metal salts**.
+
+Quickly run command on any cif file
+
+```bash
+fairmofsyncondition_syncon .my_mof.cif
+```
+
+Or run and provide and outfile
+
+```bash
+fairmofsyncondition_syncon my_mof.cif -o my_mof_report.txt
+```
+
 `iupac2cheminfor`
 one of the most useful tool is to directly extract cheminonformatic identifiers such
 as inchikey and smile strings directly from iupac names or common names. This can be
