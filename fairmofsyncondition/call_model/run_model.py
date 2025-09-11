@@ -13,7 +13,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from mofstructure.filetyper import load_iupac_names
 from fairmofsyncondition.read_write import cheminfo2iupac, coords_library, filetyper
 from fairmofsyncondition.read_write import filetyper, coords_library
-from fairmofsyncondition.call_model.utils_model import get_models, ensemble_predictions
+from fairmofsyncondition.call_model.utils_model import get_models, ensemble_predictions,get_model_energy,get_energy_prediction
 
 smile_to_iupac = filetyper.smile_names_iupac()
 
@@ -158,13 +158,17 @@ class Synconmodel(object):
         torch_data.cordinates = torch_data.cordinates[0]
         models = get_models(torch_data, device=device)
         models = models[0:1]
-
         category_names = filetyper.category_names()["metal_salts"]
         pred_list = ensemble_predictions(models, torch_data, category_names, device=device)
-        # for name, prob in pred_list[:10]:
-        #     print(f"{name}: {prob:.3f}")
-
-        #print(pred_list)
+        
+        
+        # get energy
+        energy_model = get_model_energy(torch_data, device=device)
+        energy_prediction = get_energy_prediction(energy_model,torch_data,device="cpu")
+        
+        print("energy_prediction\t",energy_prediction[0])
+        
+        
         return pred_list
 
     def compile_data(self):

@@ -13,6 +13,7 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from fairmofsyncondition.read_write import filetyper
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from fairmofsyncondition.read_write.coords_library import pytorch_geometric_to_ase
+import pickle
 
 
 
@@ -63,6 +64,100 @@ def extras_suffix(selected_extras):
     return "_".join(selected_extras)
 
 # ==================== Model ====================
+
+class MetalSaltGNN_Energy(nn.Module):
+    def __init__(
+        self,
+        node_in_dim,
+        edge_in_dim,
+        lattice_in_dim=9,
+        hidden_dim=128,
+        num_gnn_layers=4,
+        num_lattice_layers=2,
+        num_mlp_layers=2,
+        dropout=0.2,
+        use_batchnorm=True,
+        selected_extras=None,
+        extras_dim=0
+    ):
+        super().__init__()
+        self.use_batchnorm = use_batchnorm
+        self.dropout = dropout
+        self.selected_extras = selected_extras or []
+        self.extras_dim = extras_dim
+
+        # Edge encoder (-> hidden_dim) per usare edge_dim=hidden_dim in GINE
+        self.edge_encoder = nn.Sequential(
+            nn.Linear(edge_in_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim)
+        )
+
+        # GINE stack
+        self.gnn_layers = nn.ModuleList()
+        self.gnn_bns = nn.ModuleList() if use_batchnorm else None
+        for i in range(num_gnn_layers):
+            in_dim = node_in_dim if i == 0 else hidden_dim
+            mlp = nn.Sequential(
+                nn.Linear(in_dim, hidden_dim),
+                nn.ReLU(),
+                nn.Linear(hidden_dim, hidden_dim)
+            )
+            self.gnn_layers.append(GINEConv(mlp, edge_dim=hidden_dim))
+            if use_batchnorm:
+                self.gnn_bns.append(nn.BatchNorm1d(hidden_dim))
+
+        # Lattice encoder
+        lattice_layers = []
+        in_dim = lattice_in_dim
+        for _ in range(max(1, num_lattice_layers - 1)):
+            lattice_layers += [nn.Linear(in_dim, hidden_dim), nn.ReLU()]
+            if use_batchnorm:
+                lattice_layers.append(nn.BatchNorm1d(hidden_dim))
+            in_dim = hidden_dim
+        lattice_layers.append(nn.Linear(in_dim, hidden_dim))
+        self.lattice_encoder = nn.Sequential(*lattice_layers)
+
+        # Final MLP head -> output 1 per regressione
+        final_in = hidden_dim * 2 + self.extras_dim
+        mlp_layers = []
+        in_dim = final_in
+        for _ in range(max(1, num_mlp_layers - 1)):
+            mlp_layers += [nn.Linear(in_dim, hidden_dim), nn.ReLU()]
+            if use_batchnorm:
+                mlp_layers.append(nn.BatchNorm1d(hidden_dim))
+            mlp_layers.append(nn.Dropout(p=dropout))
+            in_dim = hidden_dim
+        mlp_layers.append(nn.Linear(in_dim, 1))
+        self.final_mlp = nn.Sequential(*mlp_layers)
+
+    def forward(self, data):
+        x, edge_index, edge_attr, batch = data.x, data.edge_index, data.edge_attr, data.batch
+
+        e = self.edge_encoder(edge_attr)
+        for i, conv in enumerate(self.gnn_layers):
+            x = conv(x, edge_index, e)
+            x = F.relu(x)
+            if self.use_batchnorm:
+                x = self.gnn_bns[i](x)
+            x = F.dropout(x, p=self.dropout, training=self.training)
+
+        # Graph pooling
+        x_pool = global_mean_pool(x, batch)
+
+        # Lattice
+        lattice = data.lattice.view(-1, 9)
+        lattice_feat = self.lattice_encoder(lattice)
+
+        # Extras
+        extras = build_extras_tensor(data, self.selected_extras)
+        if extras is not None:
+            final_in = torch.cat([x_pool, lattice_feat, extras], dim=1)
+        else:
+            final_in = torch.cat([x_pool, lattice_feat], dim=1)
+
+        out = self.final_mlp(final_in)     # [B, 1]
+        return out.squeeze(-1)             # [B]
 
 class MetalSaltGNN_Ablation(nn.Module):
     def __init__(
@@ -163,6 +258,47 @@ class MetalSaltGNN_Ablation(nn.Module):
         return out
 
 
+def get_model_energy(torch_data,device="cpu"):
+    node_in_dim = torch_data.x.shape[1]
+    edge_in_dim = torch_data.edge_attr.shape[1]
+    lattice_in_dim = 9
+
+    EXTRA_GETTERS = {
+        "atomic_one_hot":      lambda d: _reshape_feat(d.atomic_one_hot, d),
+        "space_group_number":  lambda d: _reshape_feat(d.space_group_number, d),
+        "crystal_system":      lambda d: _reshape_feat(d.crystal_system, d),
+        "oms":                 lambda d: _reshape_feat(d.oms, d),
+        "cordinates":          lambda d: _reshape_feat(d.cordinates, d),
+    }
+
+    selected_extras = ["atomic_one_hot", "cordinates", "oms","space_group_number"]
+    selected_extras = np.sort(selected_extras).tolist()
+    # Calcolo dinamico della dimensione delle extra
+    extras_dim = 448 #compute_extras_dim(torch_data, selected_extras)
+    dropout = 0.35
+
+
+    model = MetalSaltGNN_Energy(
+        node_in_dim=4,
+        edge_in_dim=1,
+        lattice_in_dim=9,
+        hidden_dim=128,
+        num_gnn_layers=2,
+        num_lattice_layers=2,
+        num_mlp_layers=2,
+        dropout=dropout,
+        use_batchnorm=True,
+        selected_extras=selected_extras,
+        extras_dim=extras_dim
+    ).to(device)
+
+    checkpoint_path = f"trained_models/energy_regression.pt"
+    checkpoint_name = files("fairmofsyncondition").joinpath("call_model",checkpoint_path)
+    print(checkpoint_name)
+    model.load_state_dict(torch.load(checkpoint_name, map_location=device))
+    
+    return model
+
 def get_models(torch_data,device="cpu"):
 
     models = []
@@ -218,6 +354,20 @@ def get_models(torch_data,device="cpu"):
         models.append(model)
     return models
 
+def get_energy_prediction(energy_model,torch_data,device="cpu"):
+    torch_data = torch_data.to(device)
+    energy_model = energy_model.to(device)
+    energy_model.eval()
+    with torch.no_grad():
+        pre_energy = energy_model(torch_data).item()
+    
+    scaler_path = files("fairmofsyncondition").joinpath("call_model","trained_models/target_scaler_energy.pkl")
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
+    print(scaler)
+    predicte_energy_scaled   = scaler.inverse_transform(np.array(pre_energy).reshape(-1, 1)).ravel()
+    
+    return predicte_energy_scaled
 
 def ensemble_predictions(models, torch_data, category_names, device="cpu"):
     """

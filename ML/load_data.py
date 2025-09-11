@@ -41,6 +41,16 @@ def load_pyg_obj(path_to_mdb = "mof_syncondition_data"):
                         data.append(d)
     return data
 
+def load_pyg_obj(path_to_mdb = "mof_syncondition_data"):    
+    data = []
+    for d in LMDBDataset(lmdb_path=path_to_mdb):    
+        if d.metal_salts.shape[0] != 0:
+            if d.solvents.shape[0] != 0:
+                if d.modified_scherrer.item() < 120:
+                    if d.microstrain.item() < 15:
+                        d.x = d.x.float()
+                        data.append(d)
+    return data
 
 
 
