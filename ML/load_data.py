@@ -44,6 +44,7 @@ def load_pyg_obj(path_to_mdb = "mof_syncondition_data"):
 
 
 
+
 class AtomsEncoder(json.JSONEncoder):
     '''
     Custom JSON encoder for serializing ASE `Atoms` objects and related data.
