@@ -250,3 +250,5 @@ examples/test.xyz
 examples/iupacname_smiles.msgpack
 fairmofsyncondition/call_model/mof_prediction.txt
 examples/combine_all_names2.py
+examples/extract_mofs_for_energy.py
+examples/extract_mofs_for_energy2.py
