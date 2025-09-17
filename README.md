@@ -60,7 +60,7 @@ It extracts **organic ligands**, **space group information**, and computes the *
 Quickly run command on any cif file
 
 ```bash
-fairmofsyncondition_syncon .my_mof.cif
+fairmofsyncondition_syncon my_mof.cif
 ```
 
 Or run and provide and outfile

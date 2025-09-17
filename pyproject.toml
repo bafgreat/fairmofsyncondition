@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fairmofsyncondition"
-version = "0.1.1"
+version = "0.1.2"
 description = "A python machine learning module for for accelerating the discovery and synthesis of Metal organic frameworks"
 authors = ["Dinga Wonanke <bafgreat@gmail.com>"]
 readme = "README.md"
