@@ -566,3 +566,18 @@ def smile_names_iupac():
     "load iupac"
     msgpack_path = files("fairmofsyncondition").joinpath("db/iupacname_smiles.msgpack")
     return load_data(msgpack_path)
+
+def solvent_and_inchi():
+    "load solvent names and inchi"
+    solven_path = files("fairmofsyncondition").joinpath("db/solvent_to_inchi_and_smile.json")
+    return load_data(solven_path)
+
+def ligand2solvent():
+    "load solvent names and inchi"
+    solven_path = files("fairmofsyncondition").joinpath("db/ligands_to_solvents.json")
+    return load_data(solven_path)
+
+def salt2solvent():
+    "load solvent names and inchi"
+    solven_path = files("fairmofsyncondition").joinpath("db/metal_salts_to_solvents.json")
+    return load_data(solven_path)

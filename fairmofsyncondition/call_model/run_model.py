@@ -13,9 +13,29 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from mofstructure.filetyper import load_iupac_names
 from fairmofsyncondition.read_write import cheminfo2iupac, coords_library, filetyper
 from fairmofsyncondition.read_write import filetyper, coords_library
-from fairmofsyncondition.call_model.utils_model import get_models, ensemble_predictions,get_model_energy,get_energy_prediction
+from fairmofsyncondition.call_model.utils_model import get_models, ensemble_predictions, get_model_energy, get_energy_prediction
+import warnings
+from openbabel import openbabel
+openbabel.obErrorLog.SetOutputLevel(0)
+warnings.filterwarnings(
+    "ignore",
+    message="dict interface is deprecated. Use attribute interface instead",
+    category=DeprecationWarning,
+    module=r"pymatgen\.symmetry\.analyzer"
+)
+
+warnings.filterwarnings(
+    "ignore",
+    message=r"We strongly discourage using implicit binary/text `mode`",
+    category=FutureWarning,
+    module=r"pymatgen\.io\.cif"
+)
 
 smile_to_iupac = filetyper.smile_names_iupac()
+
+solvent_and_inchi = filetyper.solvent_and_inchi()
+ligand2solvent = filetyper.ligand2solvent()
+salt2solvent = filetyper.salt2solvent()
 
 convert_struct = {'cubic': 0,
                   'hexagonal': 1,
@@ -28,18 +48,61 @@ convert_struct = {'cubic': 0,
 
 device = "cpu"
 
-def get_ligand_iupacname(ligand_inchi, smiles):
+def solvent_from_inchikey(inchikey: str, data: dict):
+    """
+    Return the FIRST matching name (key in `data`) for a given InChIKey.
+    If none is found, return None.
+    """
+    for name, info in data.items():
+        if info.get("inchikey") == inchikey:
+            return name
+    return None
+
+
+def inchikey_proportions(counts_by_inchikey: dict, data: dict, use_names: bool = True, round_to: int = 2):
+    """
+    Convert an InChIKey->count mapping into a sorted list of (label, percent) tuples.
+
+    - `counts_by_inchikey`: e.g. {'IOLCXVTUBQKXJR-UHFFFAOYSA-M': 1, 'ZMXDDKWLCZADIW-UHFFFAOYSA-N': 4}
+    - `data`: the dictionary containing names -> {inchikey, ...}
+    - `use_names`: if True, map each InChIKey to the first matching name via `solvent_from_inchikey`;
+                   if no name is found, the InChIKey is used as the label.
+                   If False, always use the InChIKey as the label.
+    - `round_to`: rounding for percentage values.
+
+    Returns:
+        List[Tuple[str, float]] sorted by percentage descending.
+    """
+    total = sum(counts_by_inchikey.values())
+    if total == 0:
+        return []
+
+    results = []
+    for ik, cnt in counts_by_inchikey.items():
+        pct = (cnt / total) * 100.0
+        if use_names:
+            label = solvent_from_inchikey(ik, data) or ik
+        else:
+            label = ik
+        results.append((label, round(pct, round_to)))
+
+    results.sort(key=lambda t: (-t[1], t[0]))
+    return results
+
+def get_ligand_iupacname(ligand_inchi, smile):
     name = load_iupac_names().get(ligand_inchi, None)
 
     if name is None:
-        name = smile_to_iupac.get(smiles, None)
+        name = smile_to_iupac.get(smile, None)
     if name is None:
-        pubchem = cheminfo2iupac.pubchem_to_inchikey(smiles, name='smiles')
+        pubchem = cheminfo2iupac.pubchem_to_inchikey(smile, name='smiles')
         if pubchem is None:
             name = None
         else:
             name = pubchem.get('iupac_name', None)
-    return name
+            smile = pubchem.get('smiles', None)
+            inchikey = pubchem.get('inchikey', None)
+    return name, smile, inchikey
 
 class Synconmodel(object):
     def __init__(self,
@@ -111,7 +174,30 @@ class Synconmodel(object):
         inchikeys = [ligand.info.get('inchikey') for ligand in ligands]
         smiles = [ligand.info.get('smi') for ligand in ligands]
         ligands_names = [get_ligand_iupacname(i, j) for i, j in  zip(inchikeys, smiles)]
-        return inchikeys, smiles, ligands_names
+        return ligands_names # inchikeys, smiles, ligands_names
+
+    def get_ligands_solvents(self):
+        "Get potential solvents for ligands"
+        all_solvents = {}
+        ligands_names = self.get_organic_ligands()
+        for data_name in ligands_names:
+            names, smile, inchikey = data_name
+            solvent = ligand2solvent.get(inchikey, None)
+            if solvent != None:
+                all_solvents[names] = inchikey_proportions(solvent, solvent_and_inchi, use_names=True)
+            else:
+                all_solvents[names] = None
+        return all_solvents
+
+    def get_metal_solvents(self, metal_salts):
+        all_salt_solvents = {}
+        for metal_salt in metal_salts:
+            solvent = salt2solvent.get(metal_salt, None)
+            if solvent != None:
+                all_salt_solvents[metal_salt ] = inchikey_proportions(solvent, solvent_and_inchi, use_names=True)
+            else:
+                all_salt_solvents[metal_salt ] = None
+        return all_salt_solvents
 
     def get_space_group(self):
         "Get space group embedding"
@@ -153,29 +239,29 @@ class Synconmodel(object):
         '''
         predict conditions
         '''
-        torch_data, metals = self.complete_torch_data()
+        torch_data, _ = self.complete_torch_data()
         torch_data = torch_data.to(device)
         torch_data.cordinates = torch_data.cordinates[0]
         models = get_models(torch_data, device=device)
         models = models[0:1]
         category_names = filetyper.category_names()["metal_salts"]
         pred_list = ensemble_predictions(models, torch_data, category_names, device=device)
-        
-        
-        # get energy
+
         energy_model = get_model_energy(torch_data, device=device)
-        energy_prediction = get_energy_prediction(energy_model,torch_data,device="cpu")
-        
-        print("energy_prediction\t",energy_prediction[0])
-        
-        
-        return pred_list
+        energy_prediction = get_energy_prediction(energy_model, torch_data, device=device)
+
+        # print("energy_prediction\t", energy_prediction[0])
+
+        return pred_list, energy_prediction[0]
 
     def compile_data(self):
         data = []
-        inchikeys, smiles, ligands_names = self.get_organic_ligands()
+        ligands_names = self.get_organic_ligands()
         _, _, space_group_number, get_crystal_system = self.get_space_group()
-        pred_list = self.predict_condition()[:5]
+        pred_list, stability_energy = self.predict_condition()
+        salts_data = [tmp[0] for tmp in pred_list[:3]]
+        salt_solvents = self.get_metal_solvents(salts_data)
+        ligand_solvents = self.get_ligands_solvents()
 
         data.append("\n")
         data.append(f"Predicted Synthetic Data Report\n")
@@ -183,35 +269,72 @@ class Synconmodel(object):
         data.append("=" * 80 + "\n")
         data.append(f"{'Space group number:':25} {space_group_number}\n")
         data.append(f"{'Crystal system:':25} {get_crystal_system}\n\n")
+        data.append("=" * 80 + "\n")
+        data.append(f"{'Thermodynamic Stability:':25} {stability_energy} kJ/mol\n")
 
 
         data.append("Organic Ligands\n")
         data.append("-" * 80 + "\n")
         data.append(f"{'InChIKey':<28} {'SMILES':<30} {'IUPAC Name':<20}\n")
         data.append("-" * 80 + "\n")
-        for inchi, smi, iupac in zip(inchikeys, smiles, ligands_names):
+        for names in ligands_names:
+            iupac, smi, inchi = names
             inchi_str = str(inchi) if inchi is not None else "N/A"
             smi_str = str(smi) if smi is not None else "N/A"
             iupac_str = str(iupac) if iupac is not None else "N/A"
             data.append(f"{inchi_str:<28} {smi_str:<30} {iupac_str:<20}\n")
         data.append("\n")
 
-        data.append("Top 5 Predicted Metal Salts\n")
+        data.append("Top 3 Predicted Metal Salts\n")
         data.append("-" * 80 + "\n")
         data.append(f"{'Metal Salt':<40} {'Probability':>15}\n")
         data.append("-" * 80 + "\n")
-        for metal_salt, prob in pred_list:
+        for metal_salt, prob in pred_list[:3]:
             salt_str = str(metal_salt) if metal_salt is not None else "N/A"
             prob_str = f"{prob:.4f}" if prob is not None else "N/A"
             data.append(f"{salt_str:<40} {prob_str:>15}\n")
         data.append("=" * 80 + "\n")
-
+        data.append("Percentage probability of solvents\n")
+        data.append("-" * 80 + "\n")
+        data.append("Organic ligands\n")
+        for ligand in ligand_solvents:
+            data.append("-" * 80 + "\n")
+            data.append(f"Ligands : {ligand }\n")
+            data.append("-" * 80 + "\n")
+            data.append(f"{'Solvent':<40} {'Predicted probability':>15}\n")
+            data.append("-" * 80 + "\n")
+            solvents = ligand_solvents[ligand]
+            if solvents == None:
+                data.append(f"No predicted solvents. Maybe try water\n")
+            else:
+                for solvent_data in solvents[:3]:
+                    solvent, prob = solvent_data
+                    data.append(f"{solvent:<40} {prob:>15} %\n")
+        data.append("=" * 80 + "\n")
+        data.append("Metal Salts\n")
+        for salts in salt_solvents:
+            data.append("-" * 80 + "\n")
+            data.append(f"Metal Salts: {salts}\n")
+            data.append("-" * 80 + "\n")
+            data.append(f"{'Solvent':<40} {'Predicted probability':>15}\n")
+            data.append("-" * 80 + "\n")
+            solvents = salt_solvents[salts]
+            if solvents == None:
+                data.append(f"No predicted solvents. Maybe try water\n")
+            else:
+                for solvent_data in solvents[:3]:
+                    solvent, prob = solvent_data
+                    data.append(f"{solvent:<40} {prob:>15} %\n")
+                    
+        data.append("=" * 80 + "\n")
         data.append("\n")
         data.append("Report generated by fairmofsyncondition\n")
         data.append("Authors: Dinga Wonanke & Antonio Longa\n")
         data.append("=" * 80 + "\n")
 
         filetyper.put_contents(self.outfile, data)
+        print(f" Predicted data has been written in {self.outfile}")
+        print(f" Thank you for using fairsyncondition")
 
 
 def print_helpful_information():
@@ -264,6 +387,8 @@ def main():
         sys.exit(1)
 
     try:
+        print (f"Processing {args.cif_file}")
+        print (f"Give it a few seconds\n")
         ml_data = Synconmodel(args.cif_file)
         ml_data.outfile = args.output
         ml_data.compile_data()

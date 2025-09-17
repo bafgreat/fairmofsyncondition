@@ -16,9 +16,6 @@ from fairmofsyncondition.read_write.coords_library import pytorch_geometric_to_a
 import pickle
 
 
-
-
-
 convert_struct = {'cubic': 0,
                   'hexagonal': 1,
                   'monoclinic': 2,
@@ -292,14 +289,14 @@ def get_model_energy(torch_data,device="cpu"):
         extras_dim=extras_dim
     ).to(device)
 
+    # checkpoint_path = f"trained_models/energy_regression.pt"
     checkpoint_path = f"trained_models/energy_regression.pt"
-    checkpoint_name = files("fairmofsyncondition").joinpath("call_model",checkpoint_path)
-    print(checkpoint_name)
+    checkpoint_name = files("fairmofsyncondition").joinpath("call_model", checkpoint_path)
     model.load_state_dict(torch.load(checkpoint_name, map_location=device))
-    
+
     return model
 
-def get_models(torch_data,device="cpu"):
+def get_models(torch_data, device="cpu"):
 
     models = []
 
@@ -360,13 +357,12 @@ def get_energy_prediction(energy_model,torch_data,device="cpu"):
     energy_model.eval()
     with torch.no_grad():
         pre_energy = energy_model(torch_data).item()
-    
+
     scaler_path = files("fairmofsyncondition").joinpath("call_model","trained_models/target_scaler_energy.pkl")
     with open(scaler_path, "rb") as f:
         scaler = pickle.load(f)
-    print(scaler)
     predicte_energy_scaled   = scaler.inverse_transform(np.array(pre_energy).reshape(-1, 1)).ravel()
-    
+
     return predicte_energy_scaled
 
 def ensemble_predictions(models, torch_data, category_names, device="cpu"):

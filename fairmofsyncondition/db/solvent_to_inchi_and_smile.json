@@ -1,0 +1,1826 @@
+{
+    "(CD3)2CO": {
+        "inchikey": "CSCPPACGZOOCGX-WFGJKAKNSA-N",
+        "smiles": "CC(=O)C"
+    },
+    "(CH3)2CHOH": {
+        "smiles": "CC(C)O",
+        "inchikey": "KFZMGEQAYNKOFK-UHFFFAOYSA-N"
+    },
+    "(CH3)2CO": {
+        "inchikey": "CSCPPACGZOOCGX-UHFFFAOYSA-N",
+        "smiles": "CC(=O)C"
+    },
+    "1,1,1,3,3,3-hexafluoro-2-propanol": {
+        "inchikey": "BYEAHWXPCBROCE-UHFFFAOYSA-N",
+        "smiles": "FC(C(C(F)(F)F)O)(F)F"
+    },
+    "1,1,1,3,3,3-hexafluoropropan-2-ol": {
+        "inchikey": "BYEAHWXPCBROCE-UHFFFAOYSA-N",
+        "smiles": "FC(C(C(F)(F)F)O)(F)F"
+    },
+    "1,1,2,2-tetrachloroethane": {
+        "inchikey": "QPFMBZIOSGYJDE-UHFFFAOYSA-N",
+        "smiles": "ClC(C(Cl)Cl)Cl"
+    },
+    "1,1,2-trichloroethane": {
+        "inchikey": "UBOXGVDOUJQMTN-UHFFFAOYSA-N",
+        "smiles": "ClC(CCl)Cl"
+    },
+    "1,2,4-trichlorobenzene": {
+        "inchikey": "PBKONEOXTCPAFI-UHFFFAOYSA-N",
+        "smiles": "ClC1=C(C=C(C=C1)Cl)Cl"
+    },
+    "1,2-diaminocyclohexane": {
+        "smiles": "C1CCC(C(C1)N)N",
+        "inchikey": "SSJXIUAHEKJCMH-UHFFFAOYSA-N"
+    },
+    "1,2-dichloroethane": {
+        "inchikey": "WSLDOOZREJYCGB-UHFFFAOYSA-N",
+        "smiles": "ClCCCl"
+    },
+    "1,2-dimethoxyethane": {
+        "inchikey": "XTHFKEDIFFGKHM-UHFFFAOYSA-N",
+        "smiles": "COCCOC"
+    },
+    "1,2-dimethylbenzene": {
+        "inchikey": "CTQNGGLPUBDAKN-UHFFFAOYSA-N",
+        "smiles": "CC1=C(C=CC=C1)C"
+    },
+    "1,2-ethanediol": {
+        "inchikey": "LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+        "smiles": "C(CO)O"
+    },
+    "1,4-dimethylbenzene": {
+        "inchikey": "URLKBWYHVLBVBO-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=C(C=C1)C"
+    },
+    "1,4-dioxane": {
+        "inchikey": "RYHBNJHYFVUHQT-UHFFFAOYSA-N",
+        "smiles": "O1CCOCC1"
+    },
+    "1-butanol": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)O"
+    },
+    "1-butylimidazole": {
+        "inchikey": "MCMFEZDRQOJKMN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)N1C=NC=C1"
+    },
+    "1-cyclohexanol": {
+        "inchikey": "HPXRVTGHNJAIIH-UHFFFAOYSA-N",
+        "smiles": "C1(CCCCC1)O"
+    },
+    "1-decanol": {
+        "inchikey": "MWKFXSUHUHTGQN-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCC)O"
+    },
+    "1-heptanol": {
+        "inchikey": "BBMCTIGTTCKYKF-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCC)O"
+    },
+    "1-hexanol": {
+        "inchikey": "ZSIAUFGUXNUGDI-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)O"
+    },
+    "1-methylethyl acetate": {
+        "inchikey": "JMMWKPVZQRWMSS-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)OC(C)C"
+    },
+    "1-octanol": {
+        "inchikey": "KBPLFHHGFOOTCA-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCC)O"
+    },
+    "1-pentanol": {
+        "inchikey": "AMQJEAYHLZJPGS-UHFFFAOYSA-N",
+        "smiles": "C(CCCC)O"
+    },
+    "1-phenylethanol": {
+        "inchikey": "WAPNOHKVXSQRPX-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=CC=C1)C(C)O"
+    },
+    "1-propanol": {
+        "inchikey": "BDERNNFJNOPAEC-UHFFFAOYSA-N",
+        "smiles": "C(CC)O"
+    },
+    "1-undecanol": {
+        "inchikey": "KJIOQYGWTQBHNH-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCCC)O"
+    },
+    "2,2,2-Trifluorethanol": {
+        "inchikey": "RHQDFWAXVIIEBN-UHFFFAOYSA-N",
+        "smiles": "C(C(F)(F)F)O"
+    },
+    "2,2,2-trifluoroethanol": {
+        "inchikey": "RHQDFWAXVIIEBN-UHFFFAOYSA-N",
+        "smiles": "FC(CO)(F)F"
+    },
+    "2,2,4-trimethylpentane": {
+        "inchikey": "NHTMVDHEPJAVLT-UHFFFAOYSA-N",
+        "smiles": "CC(C)(CC(C)C)C"
+    },
+    "2-(n-morpholino)ethanesulfonic acid": {
+        "inchikey": "SXGZJKUKBWWHRA-UHFFFAOYSA-N",
+        "smiles": "C1COCCN1CCS(=O)(=O)O"
+    },
+    "2-butanol": {
+        "inchikey": "BTANRVKWQNVYAZ-UHFFFAOYSA-N",
+        "smiles": "CC(CC)O"
+    },
+    "2-butanone": {
+        "inchikey": "ZWEHNKRNPOVVGH-UHFFFAOYSA-N",
+        "smiles": "CC(CC)=O"
+    },
+    "2-methf": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1CCCO1"
+    },
+    "2-methoxy-2-methylpropane": {
+        "inchikey": "BZLVMXJERCGZMT-UHFFFAOYSA-N",
+        "smiles": "COC(C)(C)C"
+    },
+    "2-methyl tetrahydrofuran": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1OCCC1"
+    },
+    "2-methylpentane": {
+        "inchikey": "AFABGHUZZDYHJO-UHFFFAOYSA-N",
+        "smiles": "CC(C)CCC"
+    },
+    "2-methylpropan-1-ol": {
+        "inchikey": "ZXEKIIBDNHEJCQ-UHFFFAOYSA-N",
+        "smiles": "CC(CO)C"
+    },
+    "2-methylpropan-2-ol": {
+        "inchikey": "DKGAVHZHDRPRBM-UHFFFAOYSA-N",
+        "smiles": "CC(C)(C)O"
+    },
+    "2-methyltetrahydrofuran": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1OCCC1"
+    },
+    "2-propanol": {
+        "inchikey": "KFZMGEQAYNKOFK-UHFFFAOYSA-N",
+        "smiles": "CC(C)O"
+    },
+    "2-propyl acetate": {
+        "inchikey": "JMMWKPVZQRWMSS-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)OC(C)C"
+    },
+    "2-pyrrolidone": {
+        "inchikey": "HNJBEVLQSNELDL-UHFFFAOYSA-N",
+        "smiles": "N1C(CCC1)=O"
+    },
+    "3-methyl-pentane": {
+        "inchikey": "PFEOZHBOMNWTJB-UHFFFAOYSA-N",
+        "smiles": "CC(CC)CC"
+    },
+    "4-methyl-1,3-dioxolan-2-one": {
+        "inchikey": "RUOJZAUFBMNUDX-UHFFFAOYSA-N",
+        "smiles": "CC1OC(OC1)=O"
+    },
+    "AOT": {
+        "inchikey": "APSBXTVYXVQYAB-UHFFFAOYSA-M",
+        "smiles": "CCCCC(CC)COC(=O)CC(C(=O)OCC(CC)CCCC)S(=O)(=O)[O-].[Na+]"
+    },
+    "AcOEt": {
+        "inchikey": "XEKOWRVHYACXOJ-UHFFFAOYSA-N",
+        "smiles": "CCOC(=O)C"
+    },
+    "AcOH": {
+        "inchikey": "QTBSBXVTEAMEQO-UHFFFAOYSA-N",
+        "smiles": "CC(=O)O"
+    },
+    "AgNO3": {
+        "inchikey": "SQGYOTSLMSWVJD-UHFFFAOYSA-N",
+        "smiles": "[N+](=O)([O-])[O-].[Ag+]"
+    },
+    "Bu2O": {
+        "inchikey": "DURPTKYDGMDSBL-UHFFFAOYSA-N",
+        "smiles": "CCCCOCCCC"
+    },
+    "Bu4NBr": {
+        "inchikey": "JRMUNVKIHCOMHV-UHFFFAOYSA-M",
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.[Br-]"
+    },
+    "Bu4NClO4": {
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.[O-]Cl(=O)(=O)=O",
+        "inchikey": "KBLZDCFTQSIIOH-UHFFFAOYSA-M"
+    },
+    "Bu4NPF6": {
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.F[P-](F)(F)(F)(F)F",
+        "inchikey": "BKBKEFQIOUYLBC-UHFFFAOYSA-N"
+    },
+    "BuOH": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "CCCCO"
+    },
+    "C2H5CN": {
+        "inchikey": "FVSKHRXBFJPNKK-UHFFFAOYSA-N",
+        "smiles": "CCC#N"
+    },
+    "C2H5OH": {
+        "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N",
+        "smiles": "CCO"
+    },
+    "C5H5N": {
+        "inchikey": "VMUWIDHKAIGONP-UHFFFAOYSA-N",
+        "smiles": "C#CCCC#N"
+    },
+    "C6D6": {
+        "inchikey": "UHOVQNZJYSORNB-MZWXYZOWSA-N",
+        "smiles": "C1=CC=CC=C1"
+    },
+    "C6H12": {
+        "smiles": "C1CCCCC1",
+        "inchikey": "XDTMQSROBMDMFD-UHFFFAOYSA-N"
+    },
+    "C6H14": {
+        "smiles": "CCCCCC",
+        "inchikey": "VLKZOEOYAKHREP-UHFFFAOYSA-N"
+    },
+    "C6H5CH3": {
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    },
+    "C6H5Cl": {
+        "inchikey": "MVPPADPHJFYWMZ-UHFFFAOYSA-N",
+        "smiles": "C1=CC=C(C=C1)Cl"
+    },
+    "C6H6": {
+        "inchikey": "UHOVQNZJYSORNB-UHFFFAOYSA-N",
+        "smiles": "C1=CC=CC=C1"
+    },
+    "CCl4": {
+        "inchikey": "VZGDMQKNWNREIO-UHFFFAOYSA-N",
+        "smiles": "C(Cl)(Cl)(Cl)Cl"
+    },
+    "CD2Cl2": {
+        "inchikey": "YMWUJEATGCHHMB-DICFDUPASA-N",
+        "smiles": "C(Cl)Cl"
+    },
+    "CD3CN": {
+        "inchikey": "WEVYAHXRMPXWCK-FIBGUPNXSA-N",
+        "smiles": "CC#N"
+    },
+    "CD3COCD3": {
+        "smiles": "CC(=O)C",
+        "inchikey": "CSCPPACGZOOCGX-WFGJKAKNSA-N"
+    },
+    "CD3OD": {
+        "inchikey": "OKKJLVBELUTLKV-MZCSYVLQSA-N",
+        "smiles": "CO"
+    },
+    "CD3SOCD3": {
+        "smiles": "CS(=O)C",
+        "inchikey": "IAZDPXIOMUYVGZ-WFGJKAKNSA-N"
+    },
+    "CDCl3": {
+        "inchikey": "HEDRZPFGACZZDS-MICDWDOJSA-N",
+        "smiles": "C(Cl)(Cl)Cl"
+    },
+    "CH2Cl2": {
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N",
+        "smiles": "C(Cl)Cl"
+    },
+    "CH2ClCH2Cl": {
+        "inchikey": "WSLDOOZREJYCGB-UHFFFAOYSA-N",
+        "smiles": "C(CCl)Cl"
+    },
+    "CH2O": {
+        "smiles": "C=O",
+        "inchikey": "WSFSSNUMVMOOMR-UHFFFAOYSA-N"
+    },
+    "CH3CN": {
+        "inchikey": "WEVYAHXRMPXWCK-UHFFFAOYSA-N",
+        "smiles": "CC#N"
+    },
+    "CH3CO2H": {
+        "inchikey": "QTBSBXVTEAMEQO-UHFFFAOYSA-N",
+        "smiles": "CC(=O)O"
+    },
+    "CH3COCH3": {
+        "inchikey": "CSCPPACGZOOCGX-UHFFFAOYSA-N",
+        "smiles": "CC(=O)C"
+    },
+    "CH3COOH": {
+        "inchikey": "QTBSBXVTEAMEQO-UHFFFAOYSA-N",
+        "smiles": "CC(=O)O"
+    },
+    "CH3Cl": {
+        "inchikey": "NEHMKBQYUWJMIP-UHFFFAOYSA-N",
+        "smiles": "CCl"
+    },
+    "CH3NO2": {
+        "inchikey": "LYGJENNIWJXYER-UHFFFAOYSA-N",
+        "smiles": "C[N+](=O)[O-]"
+    },
+    "CH3OD": {
+        "inchikey": "OKKJLVBELUTLKV-VMNATFBRSA-N",
+        "smiles": "CO"
+    },
+    "CH3OH": {
+        "inchikey": "OKKJLVBELUTLKV-UHFFFAOYSA-N",
+        "smiles": "CO"
+    },
+    "CHCl2": {
+        "inchikey": "ZJULYDCRWUEPTK-UHFFFAOYSA-N",
+        "smiles": "[CH](Cl)Cl"
+    },
+    "CHCl3": {
+        "inchikey": "HEDRZPFGACZZDS-UHFFFAOYSA-N",
+        "smiles": "C(Cl)(Cl)Cl"
+    },
+    "CHX": {
+        "inchikey": "YPHMISFOHDHNIV-FSZOTQKASA-N",
+        "smiles": "CC1CC(C(=O)C(C1)C(CC2CC(=O)NC(=O)C2)O)C"
+    },
+    "Cl2CH2": {
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N",
+        "smiles": "C(Cl)Cl"
+    },
+    "ClCH2CH2Cl": {
+        "inchikey": "WSLDOOZREJYCGB-UHFFFAOYSA-N",
+        "smiles": "C(CCl)Cl"
+    },
+    "D2O": {
+        "inchikey": "XLYOFNOQVPJJNP-ZSJDYOACSA-N",
+        "smiles": "O"
+    },
+    "DCE": {
+        "inchikey": "WSLDOOZREJYCGB-UHFFFAOYSA-N",
+        "smiles": "C(CCl)Cl"
+    },
+    "DCM": {
+        "smiles": "C(Cl)Cl",
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N"
+    },
+    "DEE": {
+        "inchikey": "BCKARVLFIJPHQU-UHFFFAOYSA-N",
+        "smiles": "CCOC(=O)C1=C(NN=C1C)C"
+    },
+    "DEF": {
+        "inchikey": "ZOKXUAHZSKEQSS-UHFFFAOYSA-N",
+        "smiles": "CCCCSP(=O)(SCCCC)SCCCC"
+    },
+    "DMAc": {
+        "inchikey": "FXHOOIRPVKKKFG-UHFFFAOYSA-N",
+        "smiles": "CC(=O)N(C)C"
+    },
+    "DMF": {
+        "inchikey": "ZMXDDKWLCZADIW-UHFFFAOYSA-N",
+        "smiles": "CN(C)C=O"
+    },
+    "DMSO": {
+        "inchikey": "IAZDPXIOMUYVGZ-UHFFFAOYSA-N",
+        "smiles": "CS(=O)C"
+    },
+    "Et2O": {
+        "inchikey": "RTZKZFJDLAIYFH-UHFFFAOYSA-N",
+        "smiles": "CCOCC"
+    },
+    "EtCN": {
+        "inchikey": "FVSKHRXBFJPNKK-UHFFFAOYSA-N",
+        "smiles": "CCC#N"
+    },
+    "EtOAc": {
+        "inchikey": "XEKOWRVHYACXOJ-UHFFFAOYSA-N",
+        "smiles": "CCOC(=O)C"
+    },
+    "EtOD": {
+        "inchikey": "LFQSCWFLJHTTHZ-WFVSFCRTSA-N",
+        "smiles": "CCO"
+    },
+    "EtOH": {
+        "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N",
+        "smiles": "CCO"
+    },
+    "H2O": {
+        "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N",
+        "smiles": "O"
+    },
+    "H2O2": {
+        "inchikey": "MHAJPDPJQMAIIY-UHFFFAOYSA-N",
+        "smiles": "OO"
+    },
+    "H2SO4": {
+        "inchikey": "QAOWNCQODCNURD-UHFFFAOYSA-N",
+        "smiles": "OS(=O)(=O)O"
+    },
+    "HBF4": {
+        "inchikey": "ODGCEQLVLXJUCC-UHFFFAOYSA-O",
+        "smiles": "[H+].[B-](F)(F)(F)F"
+    },
+    "HCHO": {
+        "smiles": "C=O",
+        "inchikey": "WSFSSNUMVMOOMR-UHFFFAOYSA-N"
+    },
+    "HCO2H": {
+        "inchikey": "BDAGIHXWWSANSR-UHFFFAOYSA-N",
+        "smiles": "C(=O)O"
+    },
+    "HCONH2": {
+        "inchikey": "ZHNUHDYFZUAESO-UHFFFAOYSA-N",
+        "smiles": "C(=O)N"
+    },
+    "HCl": {
+        "inchikey": "VEXZGXHMUGYJMC-UHFFFAOYSA-N",
+        "smiles": "Cl"
+    },
+    "HClO4": {
+        "inchikey": "VLTRZXGMWDSKGL-UHFFFAOYSA-N",
+        "smiles": "OCl(=O)(=O)=O"
+    },
+    "HEPES": {
+        "inchikey": "JKMHFZQWWAIEOD-UHFFFAOYSA-N",
+        "smiles": "C1CN(CCN1CCO)CCS(=O)(=O)O"
+    },
+    "HEX": {
+        "inchikey": "DVZQUMSQEGOYMX-UHFFFAOYSA-N",
+        "smiles": "C1CC(C(=O)N(C1)O)P(=O)(O)O"
+    },
+    "HFIP": {
+        "inchikey": "BYEAHWXPCBROCE-UHFFFAOYSA-N",
+        "smiles": "C(C(F)(F)F)(C(F)(F)F)O"
+    },
+    "HNO3": {
+        "inchikey": "GRYLNZFGIOXLOG-UHFFFAOYSA-N",
+        "smiles": "[N+](=O)(O)[O-]"
+    },
+    "KBr": {
+        "inchikey": "IOLCXVTUBQKXJR-UHFFFAOYSA-M",
+        "smiles": "[K+].[Br-]"
+    },
+    "KCl": {
+        "inchikey": "WCUXLLCKKVVCTQ-UHFFFAOYSA-M",
+        "smiles": "[Cl-].[K+]"
+    },
+    "KOH": {
+        "inchikey": "KWYUFKZDYYNOTN-UHFFFAOYSA-M",
+        "smiles": "[OH-].[K+]"
+    },
+    "LiCl": {
+        "inchikey": "KWGKDLIKAYFUFQ-UHFFFAOYSA-M",
+        "smiles": "[Li+].[Cl-]"
+    },
+    "MES": {
+        "inchikey": "SXGZJKUKBWWHRA-UHFFFAOYSA-N",
+        "smiles": "C1COCCN1CCS(=O)(=O)O"
+    },
+    "MIBK": {
+        "inchikey": "NTIZESTWPVYFNL-UHFFFAOYSA-N",
+        "smiles": "CC(C)CC(=O)C"
+    },
+    "MOPS": {
+        "inchikey": "DVLFYONBTKHTER-UHFFFAOYSA-N",
+        "smiles": "C1COCCN1CCCS(=O)(=O)O"
+    },
+    "Me-THF": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1CCCO1"
+    },
+    "Me2CO": {
+        "smiles": "CC(=O)C",
+        "inchikey": "CSCPPACGZOOCGX-UHFFFAOYSA-N"
+    },
+    "MeCN": {
+        "inchikey": "WEVYAHXRMPXWCK-UHFFFAOYSA-N",
+        "smiles": "CC#N"
+    },
+    "MeCO2Et": {
+        "smiles": "CCOC(=O)C",
+        "inchikey": "XEKOWRVHYACXOJ-UHFFFAOYSA-N"
+    },
+    "MeNO2": {
+        "inchikey": "LYGJENNIWJXYER-UHFFFAOYSA-N",
+        "smiles": "C[N+](=O)[O-]"
+    },
+    "MeOD": {
+        "inchikey": "OKKJLVBELUTLKV-VMNATFBRSA-N",
+        "smiles": "CO"
+    },
+    "MeOH": {
+        "inchikey": "OKKJLVBELUTLKV-UHFFFAOYSA-N",
+        "smiles": "CO"
+    },
+    "MeTHF": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1CCCO1"
+    },
+    "N,N-diethylformamide": {
+        "inchikey": "SUAKHGWARZSWIH-UHFFFAOYSA-N",
+        "smiles": "C(C)N(C=O)CC"
+    },
+    "N,N-dimethylformamide": {
+        "inchikey": "ZMXDDKWLCZADIW-UHFFFAOYSA-N",
+        "smiles": "CN(C=O)C"
+    },
+    "NMP": {
+        "inchikey": "SECXISVLQFMRJM-UHFFFAOYSA-N",
+        "smiles": "CN1CCCC1=O"
+    },
+    "Na2SO4": {
+        "inchikey": "PMZURENOXWZQFD-UHFFFAOYSA-L",
+        "smiles": "[O-]S(=O)(=O)[O-].[Na+].[Na+]"
+    },
+    "NaBr": {
+        "inchikey": "JHJLBTNAGRQEKS-UHFFFAOYSA-M",
+        "smiles": "[Na+].[Br-]"
+    },
+    "NaCl": {
+        "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M",
+        "smiles": "[Na+].[Cl-]"
+    },
+    "NaClO4": {
+        "inchikey": "BAZAXWOYCMUHIX-UHFFFAOYSA-M",
+        "smiles": "[O-]Cl(=O)(=O)=O.[Na+]"
+    },
+    "NaF": {
+        "inchikey": "PUZPDOWCWNUUKD-UHFFFAOYSA-M",
+        "smiles": "[F-].[Na+]"
+    },
+    "NaHCO3": {
+        "inchikey": "UIIMBOGNXHQVGW-UHFFFAOYSA-M",
+        "smiles": "C(=O)(O)[O-].[Na+]"
+    },
+    "NaI": {
+        "smiles": "[Na+].[I-]",
+        "inchikey": "FVAUCKIRQBBSSJ-UHFFFAOYSA-M"
+    },
+    "NaOH": {
+        "inchikey": "HEMHJVSKTPXQMS-UHFFFAOYSA-M",
+        "smiles": "[OH-].[Na+]"
+    },
+    "ODCB": {
+        "inchikey": "RFFLAFLAYFXFSW-UHFFFAOYSA-N",
+        "smiles": "C1=CC=C(C(=C1)Cl)Cl"
+    },
+    "PhCH3": {
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    },
+    "PhCN": {
+        "smiles": "C1=CC=C(C=C1)C#N",
+        "inchikey": "JFDZBHWFFUWGJE-UHFFFAOYSA-N"
+    },
+    "PhCl": {
+        "inchikey": "MVPPADPHJFYWMZ-UHFFFAOYSA-N",
+        "smiles": "C1=CC=C(C=C1)Cl"
+    },
+    "PhMe": {
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    },
+    "Phenyl ethanol": {
+        "inchikey": "WAPNOHKVXSQRPX-UHFFFAOYSA-N",
+        "smiles": "CC(C1=CC=CC=C1)O"
+    },
+    "PrOH": {
+        "inchikey": "BDERNNFJNOPAEC-UHFFFAOYSA-N",
+        "smiles": "CCCO"
+    },
+    "SNO2": {
+        "inchikey": "XOLBLPGZBRYERU-UHFFFAOYSA-N",
+        "smiles": "O=[Sn]=O"
+    },
+    "TBAF": {
+        "inchikey": "FPGGTKZVZWFYPV-UHFFFAOYSA-M",
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.[F-]"
+    },
+    "TBAH": {
+        "inchikey": "VDZOOKBUILJEDG-UHFFFAOYSA-M",
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.[OH-]"
+    },
+    "TBAP": {
+        "inchikey": "ARRNBPCNZJXHRJ-UHFFFAOYSA-M",
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.OP(=O)(O)[O-]"
+    },
+    "TEA": {
+        "smiles": "CCN(CC)CC",
+        "inchikey": "ZMANZCXQSJIPKH-UHFFFAOYSA-N"
+    },
+    "TEAP": {
+        "inchikey": "UNXNGGMLCSMSLH-UHFFFAOYSA-N",
+        "smiles": "CCN(CC)CC.OP(=O)(O)O"
+    },
+    "TEOA": {
+        "inchikey": "GSEJCLTVZPLZKY-UHFFFAOYSA-N",
+        "smiles": "C(CO)N(CCO)CCO"
+    },
+    "TFA": {
+        "inchikey": "DTQVDTLACAAQTR-UHFFFAOYSA-N",
+        "smiles": "C(=O)(C(F)(F)F)O"
+    },
+    "TFE": {
+        "inchikey": "RHQDFWAXVIIEBN-UHFFFAOYSA-N",
+        "smiles": "C(C(F)(F)F)O"
+    },
+    "THF": {
+        "inchikey": "WYURNTSHIVDZCO-UHFFFAOYSA-N",
+        "smiles": "C1CCOC1"
+    },
+    "THF-d8": {
+        "inchikey": "WYURNTSHIVDZCO-SVYQBANQSA-N",
+        "smiles": "C1CCOC1"
+    },
+    "Triton X-100": {
+        "inchikey": "JYCQQPHGFMYQCF-UHFFFAOYSA-N",
+        "smiles": "CC(C)(C)CC(C)(C)C1=CC=C(C=C1)OCCO"
+    },
+    "acetic acid": {
+        "inchikey": "QTBSBXVTEAMEQO-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)O"
+    },
+    "aceto-nitrile": {
+        "inchikey": "WEVYAHXRMPXWCK-UHFFFAOYSA-N",
+        "smiles": "CC#N"
+    },
+    "acetone": {
+        "inchikey": "CSCPPACGZOOCGX-UHFFFAOYSA-N",
+        "smiles": "CC(=O)C"
+    },
+    "acetonitril": {
+        "smiles": "CC#N",
+        "inchikey": "WEVYAHXRMPXWCK-UHFFFAOYSA-N"
+    },
+    "acetonitrile": {
+        "inchikey": "WEVYAHXRMPXWCK-UHFFFAOYSA-N",
+        "smiles": "C(C)#N"
+    },
+    "aniline": {
+        "inchikey": "PAYRUJLWNCNPSJ-UHFFFAOYSA-N",
+        "smiles": "NC1=CC=CC=C1"
+    },
+    "anisole": {
+        "inchikey": "RDOXTESZEPMUJZ-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=CC=C1)OC"
+    },
+    "benzene": {
+        "inchikey": "UHOVQNZJYSORNB-UHFFFAOYSA-N",
+        "smiles": "C1=CC=CC=C1"
+    },
+    "benzonitrile": {
+        "inchikey": "JFDZBHWFFUWGJE-UHFFFAOYSA-N",
+        "smiles": "C(C1=CC=CC=C1)#N"
+    },
+    "benzyl alcohol": {
+        "inchikey": "WVDDGKGOMKODPV-UHFFFAOYSA-N",
+        "smiles": "C(C1=CC=CC=C1)O"
+    },
+    "benzylalcohol": {
+        "inchikey": "WVDDGKGOMKODPV-UHFFFAOYSA-N",
+        "smiles": "C(C1=CC=CC=C1)O"
+    },
+    "bromoform": {
+        "inchikey": "DIKBFYAXUHHXCS-UHFFFAOYSA-N",
+        "smiles": "C(Br)(Br)Br"
+    },
+    "butan-1-ol": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)O"
+    },
+    "butan-2-ol": {
+        "inchikey": "BTANRVKWQNVYAZ-UHFFFAOYSA-N",
+        "smiles": "CC(CC)O"
+    },
+    "butan-2-one": {
+        "inchikey": "ZWEHNKRNPOVVGH-UHFFFAOYSA-N",
+        "smiles": "CC(CC)=O"
+    },
+    "butane": {
+        "inchikey": "IJDNQMDRQITEOD-UHFFFAOYSA-N",
+        "smiles": "CCCC"
+    },
+    "butanol": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)O"
+    },
+    "butanone": {
+        "inchikey": "ZWEHNKRNPOVVGH-UHFFFAOYSA-N",
+        "smiles": "CC(CC)=O"
+    },
+    "butene": {
+        "inchikey": "VXNZUUAINFGPBY-UHFFFAOYSA-N",
+        "smiles": "CCC=C"
+    },
+    "butyl acetate": {
+        "inchikey": "DKPFZGUDAPQIHT-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)OCCCC"
+    },
+    "butyl acetonitrile": {
+        "inchikey": "AILKHAQXUAOOFU-UHFFFAOYSA-N",
+        "smiles": "C(CCC)CC#N"
+    },
+    "butyl alcohol": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)O"
+    },
+    "butyl amine": {
+        "inchikey": "HQABUPZFAYXKJW-UHFFFAOYSA-N",
+        "smiles": "C(CCC)N"
+    },
+    "butyl chloride": {
+        "inchikey": "VFWCMGCRMGJXDK-UHFFFAOYSA-N",
+        "smiles": "C(CCC)Cl"
+    },
+    "butylacetonitrile": {
+        "inchikey": "AILKHAQXUAOOFU-UHFFFAOYSA-N",
+        "smiles": "C(CCC)CC#N"
+    },
+    "butylalcohol": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)O"
+    },
+    "butylchloride": {
+        "inchikey": "VFWCMGCRMGJXDK-UHFFFAOYSA-N",
+        "smiles": "C(CCC)Cl"
+    },
+    "butyronitrile": {
+        "inchikey": "KVNRLNFWIYMESJ-UHFFFAOYSA-N",
+        "smiles": "C(CCC)#N"
+    },
+    "calcium hydroxide": {
+        "inchikey": "AXCZMVOFGPJBDE-UHFFFAOYSA-L",
+        "smiles": "[OH-].[Ca+2].[OH-]"
+    },
+    "carbon disulfide": {
+        "inchikey": "QGJOPFRUJISHPQ-UHFFFAOYSA-N",
+        "smiles": "C(=S)=S"
+    },
+    "carbon tetrachloride": {
+        "inchikey": "VZGDMQKNWNREIO-UHFFFAOYSA-N",
+        "smiles": "C(Cl)(Cl)(Cl)Cl"
+    },
+    "chlorobenzene": {
+        "inchikey": "MVPPADPHJFYWMZ-UHFFFAOYSA-N",
+        "smiles": "ClC1=CC=CC=C1"
+    },
+    "chloroform": {
+        "inchikey": "HEDRZPFGACZZDS-UHFFFAOYSA-N",
+        "smiles": "C(Cl)(Cl)Cl"
+    },
+    "chloromethane": {
+        "inchikey": "NEHMKBQYUWJMIP-UHFFFAOYSA-N",
+        "smiles": "ClC"
+    },
+    "cumene": {
+        "inchikey": "RWGFKTVRMDUZSP-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=CC=C1)C(C)C"
+    },
+    "cyclohexane": {
+        "inchikey": "XDTMQSROBMDMFD-UHFFFAOYSA-N",
+        "smiles": "C1CCCCC1"
+    },
+    "cyclohexanol": {
+        "inchikey": "HPXRVTGHNJAIIH-UHFFFAOYSA-N",
+        "smiles": "C1(CCCCC1)O"
+    },
+    "cyclopentyl methyl ether": {
+        "inchikey": "SKTCDJAMAYNROS-UHFFFAOYSA-N",
+        "smiles": "COC1CCCC1"
+    },
+    "cyclopentylmethylether": {
+        "inchikey": "SKTCDJAMAYNROS-UHFFFAOYSA-N",
+        "smiles": "C1(CCCC1)OC"
+    },
+    "decalin": {
+        "inchikey": "NNBZCPXTIHJBJL-UHFFFAOYSA-N",
+        "smiles": "C1CCCC2CCCCC12"
+    },
+    "decan-1-ol": {
+        "inchikey": "MWKFXSUHUHTGQN-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCC)O"
+    },
+    "decane": {
+        "inchikey": "DIOQZVSQGTUSAI-UHFFFAOYSA-N",
+        "smiles": "CCCCCCCCCC"
+    },
+    "decanol": {
+        "inchikey": "MWKFXSUHUHTGQN-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCC)O"
+    },
+    "di-isopropyl ether": {
+        "inchikey": "ZAFNJMIOTHYJRJ-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)OC(C)C"
+    },
+    "di-isopropylether": {
+        "inchikey": "ZAFNJMIOTHYJRJ-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)OC(C)C"
+    },
+    "di-n-butyl ether": {
+        "inchikey": "DURPTKYDGMDSBL-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OCCCC"
+    },
+    "di-n-butylether": {
+        "inchikey": "DURPTKYDGMDSBL-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OCCCC"
+    },
+    "di-n-hexyl ether": {
+        "inchikey": "BPIUIOXAFBGMNB-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)OCCCCCC"
+    },
+    "di-n-hexylether": {
+        "inchikey": "BPIUIOXAFBGMNB-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)OCCCCCC"
+    },
+    "dibromoethane": {
+        "inchikey": "APQIUTYORBAGEZ-UHFFFAOYSA-N",
+        "smiles": "CC(Br)Br"
+    },
+    "dibutoxymethane": {
+        "inchikey": "QLCJOAMJPCOIDI-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OCOCCCC"
+    },
+    "dibutyl ether": {
+        "inchikey": "DURPTKYDGMDSBL-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OCCCC"
+    },
+    "dibutylether": {
+        "inchikey": "DURPTKYDGMDSBL-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OCCCC"
+    },
+    "dichloro-methane": {
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N",
+        "smiles": "ClCCl"
+    },
+    "dichlorobenzene": {
+        "inchikey": "OCJBOOLMMGQPQU-UHFFFAOYSA-N",
+        "smiles": "C1=CC(=CC=C1Cl)Cl"
+    },
+    "dichloroethane": {
+        "inchikey": "SCYULBFZEHDVBN-UHFFFAOYSA-N",
+        "smiles": "CC(Cl)Cl"
+    },
+    "dichloromethane": {
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N",
+        "smiles": "ClCCl"
+    },
+    "diethoxymethane": {
+        "inchikey": "KLKFAASOGCDTDT-UHFFFAOYSA-N",
+        "smiles": "C(C)OCOCC"
+    },
+    "diethyl carbonate": {
+        "inchikey": "OIFBSDVPJOWBCH-UHFFFAOYSA-N",
+        "smiles": "C(OCC)(OCC)=O"
+    },
+    "diethyl ether": {
+        "inchikey": "RTZKZFJDLAIYFH-UHFFFAOYSA-N",
+        "smiles": "C(C)OCC"
+    },
+    "diethylamine": {
+        "inchikey": "HPNMFZURTQLUMO-UHFFFAOYSA-N",
+        "smiles": "C(C)NCC"
+    },
+    "diethylcarbonate": {
+        "inchikey": "OIFBSDVPJOWBCH-UHFFFAOYSA-N",
+        "smiles": "C(C)OC(OCC)=O"
+    },
+    "diethylether": {
+        "inchikey": "RTZKZFJDLAIYFH-UHFFFAOYSA-N",
+        "smiles": "C(C)OCC"
+    },
+    "diglyme": {
+        "inchikey": "SBZXBUIDTXKZTM-UHFFFAOYSA-N",
+        "smiles": "COCCOCCOC"
+    },
+    "dihexyl ether": {
+        "inchikey": "BPIUIOXAFBGMNB-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)OCCCCCC"
+    },
+    "diiodomethane": {
+        "inchikey": "NZZFYRREKKOMAT-UHFFFAOYSA-N",
+        "smiles": "ICI"
+    },
+    "diisopropyl ether": {
+        "inchikey": "ZAFNJMIOTHYJRJ-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)OC(C)C"
+    },
+    "diisopropylamine": {
+        "inchikey": "UAOMVDZJSHZZME-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)NC(C)C"
+    },
+    "diisopropylether": {
+        "inchikey": "ZAFNJMIOTHYJRJ-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)OC(C)C"
+    },
+    "dimethoxyethane": {
+        "inchikey": "XTHFKEDIFFGKHM-UHFFFAOYSA-N",
+        "smiles": "C(OC)COC"
+    },
+    "dimethoxymethane": {
+        "inchikey": "NKDDWNXOKDWJAK-UHFFFAOYSA-N",
+        "smiles": "COCOC"
+    },
+    "dimethyl acetamide": {
+        "inchikey": "FXHOOIRPVKKKFG-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)N(C)C"
+    },
+    "dimethyl benzene": {
+        "inchikey": "CTQNGGLPUBDAKN-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1C"
+    },
+    "dimethyl carbonate": {
+        "inchikey": "IEJIGPNLZYLLBP-UHFFFAOYSA-N",
+        "smiles": "C(OC)(OC)=O"
+    },
+    "dimethyl ether": {
+        "inchikey": "LCGLNKUTAGEVQW-UHFFFAOYSA-N",
+        "smiles": "COC"
+    },
+    "dimethyl formamide": {
+        "inchikey": "ZMXDDKWLCZADIW-UHFFFAOYSA-N",
+        "smiles": "C(=O)N(C)C"
+    },
+    "dimethyl sulfoxide": {
+        "inchikey": "IAZDPXIOMUYVGZ-UHFFFAOYSA-N",
+        "smiles": "CS(=O)C"
+    },
+    "dimethylacetamide": {
+        "inchikey": "FXHOOIRPVKKKFG-UHFFFAOYSA-N",
+        "smiles": "CC(=O)N(C)C"
+    },
+    "dimethylbenzene": {
+        "inchikey": "CTQNGGLPUBDAKN-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1C"
+    },
+    "dimethylcarbonate": {
+        "inchikey": "IEJIGPNLZYLLBP-UHFFFAOYSA-N",
+        "smiles": "COC(OC)=O"
+    },
+    "dimethylformamide": {
+        "inchikey": "ZMXDDKWLCZADIW-UHFFFAOYSA-N",
+        "smiles": "CN(C=O)C"
+    },
+    "dimethylsulfoxide": {
+        "inchikey": "IAZDPXIOMUYVGZ-UHFFFAOYSA-N",
+        "smiles": "CS(=O)C"
+    },
+    "dioctyl sodium sulfosuccinate": {
+        "inchikey": "APSBXTVYXVQYAB-UHFFFAOYSA-M",
+        "smiles": "CCCCC(CC)COC(=O)CC(C(=O)OCC(CC)CCCC)S(=O)(=O)[O-].[Na+]"
+    },
+    "dioxane": {
+        "inchikey": "RYHBNJHYFVUHQT-UHFFFAOYSA-N",
+        "smiles": "O1CCOCC1"
+    },
+    "dioxolane": {
+        "inchikey": "WNXJIVFYUVYPPR-UHFFFAOYSA-N",
+        "smiles": "O1COCC1"
+    },
+    "dipropyl ether": {
+        "inchikey": "POLCUAVZOMRGSN-UHFFFAOYSA-N",
+        "smiles": "C(CC)OCCC"
+    },
+    "dipropylether": {
+        "inchikey": "POLCUAVZOMRGSN-UHFFFAOYSA-N",
+        "smiles": "C(CC)OCCC"
+    },
+    "ethane-1,2-diol": {
+        "inchikey": "LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+        "smiles": "C(CO)O"
+    },
+    "ethanediol": {
+        "inchikey": "LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+        "smiles": "C(CO)O"
+    },
+    "ethanol": {
+        "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N",
+        "smiles": "C(C)O"
+    },
+    "ethyl (S)-2-hydroxypropanoate": {
+        "inchikey": "LZCLXQDLBQLTDK-BYPYZUCNSA-N",
+        "smiles": "O[C@H](C(=O)OCC)C"
+    },
+    "ethyl acetate": {
+        "inchikey": "XEKOWRVHYACXOJ-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)OCC"
+    },
+    "ethyl benzoate": {
+        "inchikey": "MTZQAGJQAFMTAQ-UHFFFAOYSA-N",
+        "smiles": "C(C1=CC=CC=C1)(=O)OCC"
+    },
+    "ethyl formate": {
+        "inchikey": "WBJINCZRORDGAQ-UHFFFAOYSA-N",
+        "smiles": "C(=O)OCC"
+    },
+    "ethyl lactate": {
+        "inchikey": "LZCLXQDLBQLTDK-UHFFFAOYSA-N",
+        "smiles": "C(C(O)C)(=O)OCC"
+    },
+    "ethyl propionate": {
+        "inchikey": "FKRCODPIKNYEAC-UHFFFAOYSA-N",
+        "smiles": "C(CC)(=O)OCC"
+    },
+    "ethyl(S)-2-hydroxypropanoate": {
+        "inchikey": "LZCLXQDLBQLTDK-BYPYZUCNSA-N",
+        "smiles": "C(C)OC([C@H](C)O)=O"
+    },
+    "ethylacetamide": {
+        "inchikey": "DNSISZSEWVHGLH-UHFFFAOYSA-N",
+        "smiles": "C(C)CC(=O)N"
+    },
+    "ethylacetate": {
+        "inchikey": "XEKOWRVHYACXOJ-UHFFFAOYSA-N",
+        "smiles": "C(C)OC(C)=O"
+    },
+    "ethylbenzoate": {
+        "inchikey": "MTZQAGJQAFMTAQ-UHFFFAOYSA-N",
+        "smiles": "C(C)OC(C1=CC=CC=C1)=O"
+    },
+    "ethylene carbonate": {
+        "inchikey": "KMTRUDSVKNLOMY-UHFFFAOYSA-N",
+        "smiles": "C1(OCCO1)=O"
+    },
+    "ethylene glycol": {
+        "inchikey": "LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+        "smiles": "C(CO)O"
+    },
+    "ethylenecarbonate": {
+        "inchikey": "KMTRUDSVKNLOMY-UHFFFAOYSA-N",
+        "smiles": "C1COC(=O)O1"
+    },
+    "ethyleneglycol": {
+        "inchikey": "LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+        "smiles": "C(CO)O"
+    },
+    "ethylformate": {
+        "inchikey": "WBJINCZRORDGAQ-UHFFFAOYSA-N",
+        "smiles": "C(C)OC=O"
+    },
+    "ethyllactate": {
+        "inchikey": "LZCLXQDLBQLTDK-UHFFFAOYSA-N",
+        "smiles": "C(C)OC(C(O)C)=O"
+    },
+    "ethylpropionate": {
+        "inchikey": "FKRCODPIKNYEAC-UHFFFAOYSA-N",
+        "smiles": "C(C)OC(CC)=O"
+    },
+    "eucalyptol": {
+        "inchikey": "WEEGYLXZBRQIMU-UHFFFAOYSA-N",
+        "smiles": "CC1(C2CCC(O1)(CC2)C)C"
+    },
+    "formaldehyde": {
+        "inchikey": "WSFSSNUMVMOOMR-UHFFFAOYSA-N",
+        "smiles": "C=O"
+    },
+    "formamide": {
+        "inchikey": "ZHNUHDYFZUAESO-UHFFFAOYSA-N",
+        "smiles": "C(=O)N"
+    },
+    "glacial acetic acid": {
+        "inchikey": "QTBSBXVTEAMEQO-UHFFFAOYSA-N",
+        "smiles": "CC(=O)O"
+    },
+    "glycerol": {
+        "inchikey": "PEDCQBHIVMGVHV-UHFFFAOYSA-N",
+        "smiles": "OCC(O)CO"
+    },
+    "heptan-1-ol": {
+        "inchikey": "BBMCTIGTTCKYKF-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCC)O"
+    },
+    "heptane": {
+        "inchikey": "IMNFDUFMRHMDMM-UHFFFAOYSA-N",
+        "smiles": "CCCCCCC"
+    },
+    "heptanol": {
+        "inchikey": "BBMCTIGTTCKYKF-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCC)O"
+    },
+    "hexadecylamine": {
+        "inchikey": "FJLUATLTXUNBOT-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCCCCCCCC)N"
+    },
+    "hexafluoroisopropanol": {
+        "inchikey": "BYEAHWXPCBROCE-UHFFFAOYSA-N",
+        "smiles": "C(C(F)(F)F)(C(F)(F)F)O"
+    },
+    "hexafluoropropanol": {
+        "inchikey": "YEDDVXZFXSHDIB-UHFFFAOYSA-N",
+        "smiles": "C(C(C(O)(F)F)(F)F)(F)F"
+    },
+    "hexan-1-ol": {
+        "inchikey": "ZSIAUFGUXNUGDI-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)O"
+    },
+    "hexane": {
+        "inchikey": "VLKZOEOYAKHREP-UHFFFAOYSA-N",
+        "smiles": "CCCCCC"
+    },
+    "hexanes": {
+        "inchikey": "AFABGHUZZDYHJO-UHFFFAOYSA-N",
+        "smiles": "CCCC(C)C"
+    },
+    "hexanol": {
+        "inchikey": "ZSIAUFGUXNUGDI-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)O"
+    },
+    "hexene": {
+        "inchikey": "LIKMAJRDDDTEIG-UHFFFAOYSA-N",
+        "smiles": "CCCCC=C"
+    },
+    "hexyl ether": {
+        "inchikey": "BPIUIOXAFBGMNB-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)OCCCCCC"
+    },
+    "hexylether": {
+        "inchikey": "BPIUIOXAFBGMNB-UHFFFAOYSA-N",
+        "smiles": "C(CCCCC)OCCCCCC"
+    },
+    "hydrochloric acid": {
+        "inchikey": "VEXZGXHMUGYJMC-UHFFFAOYSA-N",
+        "smiles": "Cl"
+    },
+    "hydrogen peroxide": {
+        "inchikey": "MHAJPDPJQMAIIY-UHFFFAOYSA-N",
+        "smiles": "OO"
+    },
+    "iodobenzene": {
+        "inchikey": "SNHMUERNLJLMHN-UHFFFAOYSA-N",
+        "smiles": "IC1=CC=CC=C1"
+    },
+    "isohexane": {
+        "inchikey": "AFABGHUZZDYHJO-UHFFFAOYSA-N",
+        "smiles": "CCCC(C)C"
+    },
+    "isooctane": {
+        "inchikey": "NHTMVDHEPJAVLT-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)CC(C)(C)C"
+    },
+    "isopropanol": {
+        "inchikey": "KFZMGEQAYNKOFK-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)O"
+    },
+    "isopropyl benzene": {
+        "inchikey": "RWGFKTVRMDUZSP-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)C1=CC=CC=C1"
+    },
+    "isopropylbenzene": {
+        "inchikey": "RWGFKTVRMDUZSP-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)C1=CC=CC=C1"
+    },
+    "limonene": {
+        "inchikey": "XMGQYMWWDOXHJM-UHFFFAOYSA-N",
+        "smiles": "CC1=CCC(CC1)C(=C)C"
+    },
+    "mesitylene": {
+        "inchikey": "AUHZEENZYGFFBQ-UHFFFAOYSA-N",
+        "smiles": "C1(=CC(=CC(=C1)C)C)C"
+    },
+    "methanamide": {
+        "inchikey": "ZHNUHDYFZUAESO-UHFFFAOYSA-N",
+        "smiles": "C(=O)N"
+    },
+    "methanol": {
+        "inchikey": "OKKJLVBELUTLKV-UHFFFAOYSA-N",
+        "smiles": "CO"
+    },
+    "methoxybenzene": {
+        "inchikey": "RDOXTESZEPMUJZ-UHFFFAOYSA-N",
+        "smiles": "COC1=CC=CC=C1"
+    },
+    "methoxyethylamine": {
+        "inchikey": "ASUDFOJKTJLAIK-UHFFFAOYSA-N",
+        "smiles": "COCCN"
+    },
+    "methyl acetamide": {
+        "inchikey": "OHLUUHNLEMFGTQ-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)NC"
+    },
+    "methyl acetoacetate": {
+        "inchikey": "WRQNANDWMGAFTP-UHFFFAOYSA-N",
+        "smiles": "C(CC(=O)C)(=O)OC"
+    },
+    "methyl benzene": {
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    },
+    "methyl cyclohexane": {
+        "inchikey": "UAEPNZWRGJTJPN-UHFFFAOYSA-N",
+        "smiles": "CC1CCCCC1"
+    },
+    "methyl ethyl ketone": {
+        "inchikey": "ZWEHNKRNPOVVGH-UHFFFAOYSA-N",
+        "smiles": "C(C)C(=O)C"
+    },
+    "methyl formamide": {
+        "inchikey": "ATHHXGZTWNVVOU-UHFFFAOYSA-N",
+        "smiles": "C(=O)NC"
+    },
+    "methyl formate": {
+        "inchikey": "TZIHFWKZFHZASV-UHFFFAOYSA-N",
+        "smiles": "C(=O)OC"
+    },
+    "methyl isobutyl ketone": {
+        "inchikey": "NTIZESTWPVYFNL-UHFFFAOYSA-N",
+        "smiles": "C(C(C)C)C(=O)C"
+    },
+    "methyl laurate": {
+        "inchikey": "UQDUPQYQJKYHQI-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCCCC)(=O)OC"
+    },
+    "methyl methanoate": {
+        "inchikey": "TZIHFWKZFHZASV-UHFFFAOYSA-N",
+        "smiles": "C(=O)OC"
+    },
+    "methyl naphthalene": {
+        "inchikey": "QPUYECUOLPXSFR-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC2=CC=CC=C12"
+    },
+    "methyl pentane": {
+        "inchikey": "AFABGHUZZDYHJO-UHFFFAOYSA-N",
+        "smiles": "CCCC(C)C"
+    },
+    "methyl propionate": {
+        "inchikey": "RJUFJBKOKNCXHH-UHFFFAOYSA-N",
+        "smiles": "C(CC)(=O)OC"
+    },
+    "methyl pyrrolidine": {
+        "inchikey": "AVFZOVWCLRSYKC-UHFFFAOYSA-N",
+        "smiles": "CN1CCCC1"
+    },
+    "methyl t-butyl ether": {
+        "inchikey": "BZLVMXJERCGZMT-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)(C)OC"
+    },
+    "methyl tetrahydrofuran": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1CCCO1"
+    },
+    "methyl-2-pyrrolidone": {
+        "inchikey": "SECXISVLQFMRJM-UHFFFAOYSA-N",
+        "smiles": "CN1CCCC1=O"
+    },
+    "methylacetamide": {
+        "inchikey": "QLNJFJADRCOGBJ-UHFFFAOYSA-N",
+        "smiles": "CCC(=O)N"
+    },
+    "methylacetoacetate": {
+        "inchikey": "WRQNANDWMGAFTP-UHFFFAOYSA-N",
+        "smiles": "COC(CC(=O)C)=O"
+    },
+    "methylbenzene": {
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    },
+    "methylbutane": {
+        "inchikey": "QWTDNUCVQCZILF-UHFFFAOYSA-N",
+        "smiles": "CCC(C)C"
+    },
+    "methylcyclohexane": {
+        "inchikey": "UAEPNZWRGJTJPN-UHFFFAOYSA-N",
+        "smiles": "CC1CCCCC1"
+    },
+    "methylene chloride": {
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N",
+        "smiles": "C(Cl)Cl"
+    },
+    "methylenechloride": {
+        "inchikey": "YMWUJEATGCHHMB-UHFFFAOYSA-N",
+        "smiles": "C(Cl)Cl"
+    },
+    "methylethylketone": {
+        "inchikey": "ZWEHNKRNPOVVGH-UHFFFAOYSA-N",
+        "smiles": "CC(=O)CC"
+    },
+    "methylformamide": {
+        "inchikey": "ATHHXGZTWNVVOU-UHFFFAOYSA-N",
+        "smiles": "CNC=O"
+    },
+    "methylformate": {
+        "inchikey": "TZIHFWKZFHZASV-UHFFFAOYSA-N",
+        "smiles": "COC=O"
+    },
+    "methyllaurate": {
+        "inchikey": "UQDUPQYQJKYHQI-UHFFFAOYSA-N",
+        "smiles": "COC(CCCCCCCCCCC)=O"
+    },
+    "methylmethanoate": {
+        "inchikey": "TZIHFWKZFHZASV-UHFFFAOYSA-N",
+        "smiles": "COC=O"
+    },
+    "methylnaphthalene": {
+        "inchikey": "QPUYECUOLPXSFR-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC2=CC=CC=C12"
+    },
+    "methylpropan-2-ol": {
+        "inchikey": "BTANRVKWQNVYAZ-UHFFFAOYSA-N",
+        "smiles": "CCC(C)O"
+    },
+    "methylpropionate": {
+        "inchikey": "RJUFJBKOKNCXHH-UHFFFAOYSA-N",
+        "smiles": "COC(CC)=O"
+    },
+    "methylpyrrolidin-2-one": {
+        "inchikey": "SECXISVLQFMRJM-UHFFFAOYSA-N",
+        "smiles": "CN1CCCC1=O"
+    },
+    "methylpyrrolidine": {
+        "inchikey": "AVFZOVWCLRSYKC-UHFFFAOYSA-N",
+        "smiles": "CN1CCCC1"
+    },
+    "methylpyrrolidinone": {
+        "inchikey": "SECXISVLQFMRJM-UHFFFAOYSA-N",
+        "smiles": "CN1CCCC1=O"
+    },
+    "methylt-butylether": {
+        "inchikey": "BZLVMXJERCGZMT-UHFFFAOYSA-N",
+        "smiles": "COC(C)(C)C"
+    },
+    "methyltetrahydrofuran": {
+        "inchikey": "JWUJQDFVADABEY-UHFFFAOYSA-N",
+        "smiles": "CC1CCCO1"
+    },
+    "morpholine": {
+        "inchikey": "YNAVUWVOSKDBBP-UHFFFAOYSA-N",
+        "smiles": "N1CCOCC1"
+    },
+    "n,n-dimethylacetamide": {
+        "inchikey": "FXHOOIRPVKKKFG-UHFFFAOYSA-N",
+        "smiles": "CC(=O)N(C)C"
+    },
+    "n,n-dimethylformamide": {
+        "inchikey": "ZMXDDKWLCZADIW-UHFFFAOYSA-N",
+        "smiles": "CN(C)C=O"
+    },
+    "n-butanol": {
+        "inchikey": "LRHPLDYGYMQRHN-UHFFFAOYSA-N",
+        "smiles": "C(CCC)O"
+    },
+    "n-butyl acetate": {
+        "inchikey": "DKPFZGUDAPQIHT-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)OCCCC"
+    },
+    "n-butylacetate": {
+        "inchikey": "DKPFZGUDAPQIHT-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OC(C)=O"
+    },
+    "n-decane": {
+        "inchikey": "DIOQZVSQGTUSAI-UHFFFAOYSA-N",
+        "smiles": "CCCCCCCCCC"
+    },
+    "n-heptane": {
+        "inchikey": "IMNFDUFMRHMDMM-UHFFFAOYSA-N",
+        "smiles": "CCCCCCC"
+    },
+    "n-hexane": {
+        "inchikey": "VLKZOEOYAKHREP-UHFFFAOYSA-N",
+        "smiles": "CCCCCC"
+    },
+    "n-methylformamide": {
+        "inchikey": "ATHHXGZTWNVVOU-UHFFFAOYSA-N",
+        "smiles": "CNC=O"
+    },
+    "n-methylpyrrolidone": {
+        "inchikey": "SECXISVLQFMRJM-UHFFFAOYSA-N",
+        "smiles": "CN1C(CCC1)=O"
+    },
+    "n-nonane": {
+        "inchikey": "BKIMMITUMNQMOS-UHFFFAOYSA-N",
+        "smiles": "CCCCCCCCC"
+    },
+    "n-octanol": {
+        "inchikey": "KBPLFHHGFOOTCA-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCC)O"
+    },
+    "n-pentane": {
+        "inchikey": "OFBQJSOFQDEBGM-UHFFFAOYSA-N",
+        "smiles": "CCCCC"
+    },
+    "n-propanol": {
+        "inchikey": "BDERNNFJNOPAEC-UHFFFAOYSA-N",
+        "smiles": "C(CC)O"
+    },
+    "nitric acid": {
+        "inchikey": "GRYLNZFGIOXLOG-UHFFFAOYSA-N",
+        "smiles": "[N+](=O)(O)[O-]"
+    },
+    "nitrobenzene": {
+        "inchikey": "LQNUZADURLCDLV-UHFFFAOYSA-N",
+        "smiles": "[N+](=O)([O-])C1=CC=CC=C1"
+    },
+    "nitromethane": {
+        "inchikey": "LYGJENNIWJXYER-UHFFFAOYSA-N",
+        "smiles": "[N+](=O)([O-])C"
+    },
+    "nonane": {
+        "inchikey": "BKIMMITUMNQMOS-UHFFFAOYSA-N",
+        "smiles": "CCCCCCCCC"
+    },
+    "o-dichlorobenzene": {
+        "inchikey": "RFFLAFLAYFXFSW-UHFFFAOYSA-N",
+        "smiles": "ClC1=C(C=CC=C1)Cl"
+    },
+    "o-xylene": {
+        "inchikey": "CTQNGGLPUBDAKN-UHFFFAOYSA-N",
+        "smiles": "C=1(C(=CC=CC1)C)C"
+    },
+    "octan-1-ol": {
+        "inchikey": "KBPLFHHGFOOTCA-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCC)O"
+    },
+    "octane": {
+        "inchikey": "TVMXDCGIABBOFY-UHFFFAOYSA-N",
+        "smiles": "CCCCCCCC"
+    },
+    "octanol": {
+        "inchikey": "KBPLFHHGFOOTCA-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCC)O"
+    },
+    "octene": {
+        "inchikey": "KWKAKUADMBZCLK-UHFFFAOYSA-N",
+        "smiles": "CCCCCCC=C"
+    },
+    "p-xylene": {
+        "inchikey": "URLKBWYHVLBVBO-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=C(C=C1)C)C"
+    },
+    "pentan-1-ol": {
+        "inchikey": "AMQJEAYHLZJPGS-UHFFFAOYSA-N",
+        "smiles": "C(CCCC)O"
+    },
+    "pentane": {
+        "inchikey": "OFBQJSOFQDEBGM-UHFFFAOYSA-N",
+        "smiles": "CCCCC"
+    },
+    "pentanol": {
+        "inchikey": "AMQJEAYHLZJPGS-UHFFFAOYSA-N",
+        "smiles": "C(CCCC)O"
+    },
+    "pentanone": {
+        "inchikey": "XNLICIUVMPYHGG-UHFFFAOYSA-N",
+        "smiles": "CCCC(=O)C"
+    },
+    "pentene": {
+        "inchikey": "YWAKXRMUMFPDSH-UHFFFAOYSA-N",
+        "smiles": "CCCC=C"
+    },
+    "perchloric acid": {
+        "inchikey": "VLTRZXGMWDSKGL-UHFFFAOYSA-N",
+        "smiles": "Cl(=O)(=O)(=O)O"
+    },
+    "phenoxyethanol": {
+        "inchikey": "QCDWFXQBSFUVSP-UHFFFAOYSA-N",
+        "smiles": "C1=CC=C(C=C1)OCCO"
+    },
+    "phenyl acetylene": {
+        "inchikey": "UEXCJVNBTNXOEH-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=CC=C1)C#C"
+    },
+    "phenylamine": {
+        "inchikey": "PAYRUJLWNCNPSJ-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=CC=C1)N"
+    },
+    "phenylethanolamine": {
+        "inchikey": "ULSIYEODSMZIPX-UHFFFAOYSA-N",
+        "smiles": "C1=CC=C(C=C1)C(CN)O"
+    },
+    "phenylmethanol": {
+        "inchikey": "WVDDGKGOMKODPV-UHFFFAOYSA-N",
+        "smiles": "C1(=CC=CC=C1)CO"
+    },
+    "phosphate": {
+        "inchikey": "NBIIXXVUZAFLBC-UHFFFAOYSA-K",
+        "smiles": "P(=O)([O-])([O-])[O-]"
+    },
+    "phosphate buffered saline": {
+        "inchikey": "LOKCTEFSRHRXRJ-UHFFFAOYSA-I",
+        "smiles": "OP(=O)(O)[O-].OP(=O)([O-])[O-].[Na+].[Na+].[Na+].[Cl-].[Cl-].[K+].[K+]"
+    },
+    "pinane": {
+        "inchikey": "XOKSLPVRUOBDEW-UHFFFAOYSA-N",
+        "smiles": "C12C(CCC(C1(C)C)C2)C"
+    },
+    "piperidine": {
+        "inchikey": "NQRYJNQNLNOLGT-UHFFFAOYSA-N",
+        "smiles": "N1CCCCC1"
+    },
+    "polytetrafluoroethylene": {
+        "inchikey": null,
+        "smiles": "FC(C(F)(F)[*:1])(F)[*:2]"
+    },
+    "potassium bromide": {
+        "inchikey": "IOLCXVTUBQKXJR-UHFFFAOYSA-M",
+        "smiles": "[Br-].[K+]"
+    },
+    "potassium chloride": {
+        "inchikey": "WCUXLLCKKVVCTQ-UHFFFAOYSA-M",
+        "smiles": "[Cl-].[K+]"
+    },
+    "potassium floride": {
+        "inchikey": "NROKBHXJSPEDAR-UHFFFAOYSA-M",
+        "smiles": "[F-].[K+]"
+    },
+    "potassium hydroxide": {
+        "inchikey": "KWYUFKZDYYNOTN-UHFFFAOYSA-M",
+        "smiles": "[OH-].[K+]"
+    },
+    "potassium iodide": {
+        "inchikey": "NLKNQRATVPKPDG-UHFFFAOYSA-M",
+        "smiles": "[I-].[K+]"
+    },
+    "propan-1-ol": {
+        "inchikey": "BDERNNFJNOPAEC-UHFFFAOYSA-N",
+        "smiles": "C(CC)O"
+    },
+    "propan-2-ol": {
+        "inchikey": "KFZMGEQAYNKOFK-UHFFFAOYSA-N",
+        "smiles": "CC(C)O"
+    },
+    "propane": {
+        "inchikey": "ATUOYWHBWRKTHZ-UHFFFAOYSA-N",
+        "smiles": "CCC"
+    },
+    "propane-1,2,3-triol": {
+        "inchikey": "PEDCQBHIVMGVHV-UHFFFAOYSA-N",
+        "smiles": "C(C(CO)O)O"
+    },
+    "propane-1,2-diol": {
+        "inchikey": "DNIAPMSPPWPWGF-UHFFFAOYSA-N",
+        "smiles": "C(C(C)O)O"
+    },
+    "propanol": {
+        "inchikey": "BDERNNFJNOPAEC-UHFFFAOYSA-N",
+        "smiles": "C(CC)O"
+    },
+    "propene": {
+        "inchikey": "QQONPFPTGQHPMA-UHFFFAOYSA-N",
+        "smiles": "C=CC"
+    },
+    "propionic acid": {
+        "inchikey": "XBDQKXXYIPTUBI-UHFFFAOYSA-N",
+        "smiles": "C(CC)(=O)O"
+    },
+    "propionitrile": {
+        "inchikey": "FVSKHRXBFJPNKK-UHFFFAOYSA-N",
+        "smiles": "C(CC)#N"
+    },
+    "propyl acetate": {
+        "inchikey": "YKYONYBAUNKHLG-UHFFFAOYSA-N",
+        "smiles": "C(C)(=O)OCCC"
+    },
+    "propyl amine": {
+        "inchikey": "WGYKZJWCGVVSQN-UHFFFAOYSA-N",
+        "smiles": "C(CC)N"
+    },
+    "propylacetate": {
+        "inchikey": "YKYONYBAUNKHLG-UHFFFAOYSA-N",
+        "smiles": "C(CC)OC(C)=O"
+    },
+    "propylamine": {
+        "inchikey": "WGYKZJWCGVVSQN-UHFFFAOYSA-N",
+        "smiles": "C(CC)N"
+    },
+    "propylene carbonate": {
+        "inchikey": "RUOJZAUFBMNUDX-UHFFFAOYSA-N",
+        "smiles": "C1(OCC(C)O1)=O"
+    },
+    "propylene glycol": {
+        "inchikey": "DNIAPMSPPWPWGF-UHFFFAOYSA-N",
+        "smiles": "C(C(C)O)O"
+    },
+    "propyleneglycol": {
+        "inchikey": "DNIAPMSPPWPWGF-UHFFFAOYSA-N",
+        "smiles": "C(C(C)O)O"
+    },
+    "pyridine": {
+        "inchikey": "JUJWROOIHBZHMG-UHFFFAOYSA-N",
+        "smiles": "N1=CC=CC=C1"
+    },
+    "pyrrolidone": {
+        "inchikey": "HNJBEVLQSNELDL-UHFFFAOYSA-N",
+        "smiles": "N1C(CCC1)=O"
+    },
+    "quinoline": {
+        "inchikey": "SMWDFEZZVXVKRB-UHFFFAOYSA-N",
+        "smiles": "N1=CC=CC2=CC=CC=C12"
+    },
+    "silver nitrate": {
+        "inchikey": "SQGYOTSLMSWVJD-UHFFFAOYSA-N",
+        "smiles": "[N+](=O)([O-])[O-].[Ag+]"
+    },
+    "sodium bromide": {
+        "inchikey": "JHJLBTNAGRQEKS-UHFFFAOYSA-M",
+        "smiles": "[Br-].[Na+]"
+    },
+    "sodium chloride": {
+        "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M",
+        "smiles": "[Cl-].[Na+]"
+    },
+    "sodium floride": {
+        "inchikey": "PUZPDOWCWNUUKD-UHFFFAOYSA-M",
+        "smiles": "[F-].[Na+]"
+    },
+    "sodium hydroxide": {
+        "inchikey": "HEMHJVSKTPXQMS-UHFFFAOYSA-M",
+        "smiles": "[OH-].[Na+]"
+    },
+    "sodium perchlorate": {
+        "inchikey": "BAZAXWOYCMUHIX-UHFFFAOYSA-M",
+        "smiles": "Cl(=O)(=O)(=O)[O-].[Na+]"
+    },
+    "sulfuric acid": {
+        "inchikey": "QAOWNCQODCNURD-UHFFFAOYSA-N",
+        "smiles": "S(O)(O)(=O)=O"
+    },
+    "sulphuric acid": {
+        "smiles": "OS(=O)(=O)O",
+        "inchikey": "QAOWNCQODCNURD-UHFFFAOYSA-N"
+    },
+    "t-butanol": {
+        "inchikey": "DKGAVHZHDRPRBM-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)(C)O"
+    },
+    "tert-butanol": {
+        "inchikey": "DKGAVHZHDRPRBM-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)(C)O"
+    },
+    "tert-butyl alcohol": {
+        "inchikey": "DKGAVHZHDRPRBM-UHFFFAOYSA-N",
+        "smiles": "C(C)(C)(C)O"
+    },
+    "tetrabutylammonium hexafluorophosphate": {
+        "inchikey": "BKBKEFQIOUYLBC-UHFFFAOYSA-N",
+        "smiles": "F[P-](F)(F)(F)(F)F.C(CCC)[N+](CCCC)(CCCC)CCCC"
+    },
+    "tetrabutylammonium hydroxide": {
+        "inchikey": "VDZOOKBUILJEDG-UHFFFAOYSA-M",
+        "smiles": "[OH-].C(CCC)[N+](CCCC)(CCCC)CCCC"
+    },
+    "tetrachloroethane": {
+        "smiles": "C(C(Cl)Cl)(Cl)Cl",
+        "inchikey": "QPFMBZIOSGYJDE-UHFFFAOYSA-N"
+    },
+    "tetrachloroethylene": {
+        "inchikey": "CYTYCFOTNPOANT-UHFFFAOYSA-N",
+        "smiles": "ClC(=C(Cl)Cl)Cl"
+    },
+    "tetrachloromethane": {
+        "inchikey": "VZGDMQKNWNREIO-UHFFFAOYSA-N",
+        "smiles": "ClC(Cl)(Cl)Cl"
+    },
+    "tetrafluoroethylene": {
+        "inchikey": "BFKJFAAPBSQJPD-UHFFFAOYSA-N",
+        "smiles": "FC(=C(F)F)F"
+    },
+    "tetrahydrofuran": {
+        "inchikey": "WYURNTSHIVDZCO-UHFFFAOYSA-N",
+        "smiles": "O1CCCC1"
+    },
+    "tetralin": {
+        "inchikey": "CXWXQJXEFPUFDZ-UHFFFAOYSA-N",
+        "smiles": "C1CCCC2=CC=CC=C12"
+    },
+    "tetramethylsilane": {
+        "inchikey": "CZDYPVPMEAXLPK-UHFFFAOYSA-N",
+        "smiles": "C[Si](C)(C)C"
+    },
+    "tetramethylurea": {
+        "inchikey": "AVQQQNCBBIEMEU-UHFFFAOYSA-N",
+        "smiles": "CN(C(N(C)C)=O)C"
+    },
+    "tin dioxide": {
+        "inchikey": "XOLBLPGZBRYERU-UHFFFAOYSA-N",
+        "smiles": "[Sn](=O)=O"
+    },
+    "titanium dioxide": {
+        "inchikey": "SOQBVABWOPYFQZ-UHFFFAOYSA-N",
+        "smiles": "[O-2].[O-2].[Ti+4]"
+    },
+    "toluene": {
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    },
+    "tri-n-butyl phosphate": {
+        "inchikey": "STCOOQWBFONSKY-UHFFFAOYSA-N",
+        "smiles": "P(=O)(OCCCC)(OCCCC)OCCCC"
+    },
+    "tri-n-butylphosphate": {
+        "inchikey": "STCOOQWBFONSKY-UHFFFAOYSA-N",
+        "smiles": "C(CCC)OP(=O)(OCCCC)OCCCC"
+    },
+    "triacetate": {
+        "inchikey": "ILJSQTXMGCGYMG-UHFFFAOYSA-N",
+        "smiles": "CC(=O)CC(=O)CC(=O)O"
+    },
+    "triacetin": {
+        "inchikey": "URAYPUMNDPQOKB-UHFFFAOYSA-N",
+        "smiles": "CC(OCC(OC(C)=O)COC(C)=O)=O"
+    },
+    "tribromomethane": {
+        "inchikey": "DIKBFYAXUHHXCS-UHFFFAOYSA-N",
+        "smiles": "BrC(Br)Br"
+    },
+    "tributyl phosphate": {
+        "inchikey": "STCOOQWBFONSKY-UHFFFAOYSA-N",
+        "smiles": "P(=O)(OCCCC)(OCCCC)OCCCC"
+    },
+    "trichlorobenzene": {
+        "inchikey": "RELMFMZEBKVZJC-UHFFFAOYSA-N",
+        "smiles": "C1=CC(=C(C(=C1)Cl)Cl)Cl"
+    },
+    "trichloroethene": {
+        "inchikey": "XSTXAVWGXDQKEL-UHFFFAOYSA-N",
+        "smiles": "ClC=C(Cl)Cl"
+    },
+    "trichloromethane": {
+        "inchikey": "HEDRZPFGACZZDS-UHFFFAOYSA-N",
+        "smiles": "ClC(Cl)Cl"
+    },
+    "triethyl amine": {
+        "inchikey": "ZMANZCXQSJIPKH-UHFFFAOYSA-N",
+        "smiles": "C(C)N(CC)CC"
+    },
+    "triethyl phosphate": {
+        "inchikey": "DQWPFSLDHJDLRL-UHFFFAOYSA-N",
+        "smiles": "P(=O)(OCC)(OCC)OCC"
+    },
+    "triethylamine": {
+        "inchikey": "ZMANZCXQSJIPKH-UHFFFAOYSA-N",
+        "smiles": "C(C)N(CC)CC"
+    },
+    "trifluoroacetic acid": {
+        "inchikey": "DTQVDTLACAAQTR-UHFFFAOYSA-N",
+        "smiles": "FC(C(=O)O)(F)F"
+    },
+    "trifluoroethanol": {
+        "inchikey": "RHQDFWAXVIIEBN-UHFFFAOYSA-N",
+        "smiles": "C(C(F)(F)F)O"
+    },
+    "trifluoroethanol ": {
+        "inchikey": "RHQDFWAXVIIEBN-UHFFFAOYSA-N",
+        "smiles": "C(C(F)(F)F)O"
+    },
+    "trimethyl benzene": {
+        "inchikey": "FYGHSUNMUKGBRK-UHFFFAOYSA-N",
+        "smiles": "CC1=C(C(=CC=C1)C)C"
+    },
+    "undecan-1-ol": {
+        "inchikey": "KJIOQYGWTQBHNH-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCCC)O"
+    },
+    "undecanol": {
+        "inchikey": "KJIOQYGWTQBHNH-UHFFFAOYSA-N",
+        "smiles": "C(CCCCCCCCCC)O"
+    },
+    "valeronitrile": {
+        "inchikey": "RFFFKMOABOFIDF-UHFFFAOYSA-N",
+        "smiles": "C(CCCC)#N"
+    },
+    "water": {
+        "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N",
+        "smiles": "O"
+    },
+    "xylene": {
+        "inchikey": "CTQNGGLPUBDAKN-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1C"
+    },
+    "chloroform-d": {
+        "inchikey": "HEDRZPFGACZZDS-MICDWDOJSA-N",
+        "smiles": "[2H]C(Cl)(Cl)Cl"
+    },
+    "acetonitrile-d3": {
+        "inchikey": "WEVYAHXRMPXWCK-FIBGUPNXSA-N",
+        "smiles": "[2H]C([2H])([2H])C#N"
+    },
+    "methanol-d4": {
+        "inchikey": " OKKJLVBELUTLKV-MZCSYVLQSA-N",
+        "smiles": "[2H]C([2H])([2H])O[2H]"
+    },
+    "benzene-d6": {
+        "inchikey": "UHOVQNZJYSORNB-MZWXYZOWSA-N",
+        "smiles": "C1=CC=CC=C1"
+    },
+    "tetrabutylammonium perchlorate":{
+        "inchikey": "KBLZDCFTQSIIOH-UHFFFAOYSA-M",
+        "smiles": "CCCC[N+](CCCC)(CCCC)CCCC.[O-]Cl(=O)(=O)=O"
+    },
+    "sodium iodide":{
+        "inchikey": "FVAUCKIRQBBSSJ-UHFFFAOYSA-M",
+        "smiles": "[Na+].[I-]"
+    },
+    "dimethyl sulfoxide-d6":{
+        "inchikey": "IAZDPXIOMUYVGZ-WFGJKAKNSA-N",
+        "smiles": "CS(=O)C([2H])([2H])[2H]"
+    },
+    "sodium fluoride":{
+        "inchikey": "PUZPDOWCWNUUKD-UHFFFAOYSA-M",
+        "smiles": "[F-].[Na+]"
+    },
+    "deuterium oxide":{
+        "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N",
+        "smiles": "O"
+    },
+    "acetone-d6":{
+        "inchikey": "CSCPPACGZOOCGX-WFGJKAKNSA-N",
+        "smiles": "2H]C([2H])([2H])C(=O)C([2H])([2H])[2H]"
+    },
+    "Hexane":{
+        "inchikey": "VLKZOEOYAKHREP-UHFFFAOYSA-N",
+        "smiles": "CCCCCC"
+    },
+    "Toluene":{
+        "inchikey": "YXFVVABEGXRONW-UHFFFAOYSA-N",
+        "smiles": "CC1=CC=CC=C1"
+    }
+}
