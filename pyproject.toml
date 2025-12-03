@@ -43,15 +43,13 @@ iupac2cheminfor = "fairmofsyncondition.read_write.iupacname2cheminfo:main"
 cheminfor2iupac = "fairmofsyncondition.read_write.cheminfo2iupac:main"
 struct2iupac = "fairmofsyncondition.read_write.struct2iupac:main"
 fairmofsyncondition_syncon = "fairmofsyncondition.call_model.run_model:main"
-
+pgraph_from_cifs = "fairmofsyncondition.crystal.crystal2data:main"
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "<8.0.2"
 sphinxcontrib-mermaid = "^0.9.2"
 sphinx-copybutton = "^0.5.2"
 flake8 = "^7.1.1"
-
-
 
 
 [build-system]

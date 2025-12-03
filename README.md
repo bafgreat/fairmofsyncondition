@@ -60,13 +60,13 @@ It extracts **organic ligands**, **space group information**, and computes the *
 Quickly run command on any cif file
 
 ```bash
-fairmofsyncondition_syncon my_mof.cif
+  fairmofsyncondition_syncon my_mof.cif
 ```
 
 Or run and provide and outfile
 
 ```bash
-fairmofsyncondition_syncon my_mof.cif -o my_mof_report.txt
+  fairmofsyncondition_syncon my_mof.cif -o my_mof_report.txt
 ```
 
 `iupac2cheminfor`
@@ -75,13 +75,13 @@ as inchikey and smile strings directly from iupac names or common names. This ca
 achieved using `iupac2cheminfor` CLI as follows:
 
 ```bash
-iupac2cheminfor 'water'
+  iupac2cheminfor 'water'
 ```
 
 or
 
 ```bash
-iupac2cheminfor -n 'water' -o filename
+  iupac2cheminfor -n 'water' -o filename
 ```
 
 The out will be written by default to cheminfor.csv if no output is provided
@@ -93,7 +93,7 @@ Another useful tool is directly convert a `smile` or and `inchikey` their iupac 
 To achieve this simply run the following commandline tool
 
 ```bash
-cheminfo2iupac -n 'O' -o filename
+  cheminfo2iupac -n 'O' -o filename
 ```
 
 `struct2iupac`
@@ -101,7 +101,15 @@ In other cases one may one to directly extract the iupac name and cheminformatic
 The quickest way to do this is by running the following commands.
 
 ```bash
-struct2iupac XOWJUR.xyz
+  struct2iupac XOWJUR.xyz
+```
+
+`pg_graph from cif file or folder`
+
+One can reliably create an `lmdb` dataset using the following code.
+
+```bash
+  pggraph_from_cifs -i ./CIFs/ -o mof_db.lmdb
 ```
 
 ## Training
@@ -123,7 +131,6 @@ command line arguments.
 find_bde_parameters -h
 ```
 
-
 ## Machine Learning Folder
 
 The folder **`machine_learning/`** contains the code and Jupyter notebooks to predict the **metal salt of a given MOF** using **Graph Neural Networks (GNNs)**.
@@ -142,8 +149,6 @@ The folder **`machine_learning/`** contains the code and Jupyter notebooks to pr
 
 **Note**:
 If you only want to **test the model** with pre-trained weights, you can simply **skip step 3** (training).
-
-
 
 ## Documentation
 

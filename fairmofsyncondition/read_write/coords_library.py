@@ -7,6 +7,10 @@ import os
 import re
 import random
 import pickle
+import zipfile
+import gzip
+import shutil
+import tempfile
 import torch
 import lmdb
 import numpy as np
@@ -717,7 +721,7 @@ def ase_database_to_lmdb(ase_database, lmdb_path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-class LMDBDataset:
+class LMDBDataset2:
     """
     A class for loading PyTorch data stored in an LMDB
     file. The code is originally
@@ -927,6 +931,308 @@ class LMDBDataset:
                                     list, or nd.array or tuple.
                                     """
                                     )
+
+        train_data = Subset(self, train_indices)
+        test_data = Subset(self, test_indices)
+
+        return train_data, test_data
+
+
+class LMDBDataset:
+    """
+    A class for loading PyTorch (or general Python) data stored in an LMDB file.
+
+    Works with the following key schema (as written by save2lmdb):
+    - b"data:{idx}"     -> pickled data object
+    - b"idx:{idx}"      -> refcode as bytes
+    - b"ref:{refcode}"  -> pickled list[int] of indices
+    - b"__len__"        -> pickled int, total number of entries
+
+    Supported lmdb_path formats:
+    - LMDB directory
+    - path ending with ".lmdb" (directory or file; parent dir is used)
+    - ".lmdb.zip" or ".zip"  (extracted to a temporary directory)
+    - ".lmdb.gz" or ".gz"    (assumed gzip'd data.mdb; extracted to temp dir)
+    """
+
+    def __init__(self, lmdb_path: str):
+        self._temp_dir = None
+
+        lmdb_dir = self._prepare_lmdb_dir(lmdb_path)
+
+        try:
+            self.lmdb_env = lmdb.open(lmdb_dir, readonly=True, lock=False)
+            with self.lmdb_env.begin() as txn:
+                length_data = txn.get(b"__len__")
+                if length_data is None:
+                    raise ValueError(
+                        f"The LMDB at '{lmdb_path}' does not contain the key '__len__'. "
+                        f"Ensure the data was saved correctly."
+                    )
+                self.length = pickle.loads(length_data)
+
+        except ValueError as ve:
+            self._cleanup()
+            raise RuntimeError(
+                f"ValueError while initializing LMDBDataset: {ve}\n"
+                f"Check if the LMDB file is correctly created with a '__len__' key."
+            ) from ve
+        except lmdb.Error as le:
+            self._cleanup()
+            raise RuntimeError(
+                f"An LMDB error occurred while accessing '{lmdb_path}': {le}"
+            ) from le
+        except Exception as e:
+            self._cleanup()
+            raise RuntimeError(
+                f"An unexpected error occurred while initializing the dataset: {e}"
+            ) from e
+
+
+    def _prepare_lmdb_dir(self, lmdb_path: str) -> str:
+        """
+        Normalize various lmdb_path formats to an actual LMDB directory path.
+
+        Supported:
+        - directory → used as-is
+        - *.lmdb    → if directory, used as-is; if file, parent directory is used
+        - *.zip / *.lmdb.zip → extracted to temp dir
+        - *.gz / *.lmdb.gz   → extracted `data.mdb` to temp dir
+        """
+        p = os.path.abspath(str(lmdb_path))
+
+        # Case 1: LMDB directory
+        if os.path.isdir(p):
+            return p
+
+        # Case 2: path ends with ".lmdb"
+        if p.endswith(".lmdb"):
+            # Could be a directory named foo.lmdb
+            if os.path.isdir(p):
+                return p
+            # Or a file inside a dir; use parent dir as LMDB environment
+            parent = os.path.dirname(p)
+            if os.path.isdir(parent):
+                return parent
+            raise ValueError(
+                f"Path '{lmdb_path}' ends with '.lmdb' but is neither a directory "
+                f"nor within a valid directory."
+            )
+
+        # Case 3: ZIP-compressed LMDB
+        if p.endswith(".lmdb.zip") or p.endswith(".zip"):
+            if not os.path.isfile(p):
+                raise FileNotFoundError(f"ZIP file not found: {lmdb_path}")
+            self._temp_dir = tempfile.mkdtemp(prefix="lmdb_zip_")
+            with zipfile.ZipFile(p, "r") as zf:
+                zf.extractall(self._temp_dir)
+            return self._temp_dir
+
+        # Case 4: GZ-compressed LMDB (assume single data.mdb gzipped)
+        if p.endswith(".lmdb.gz") or p.endswith(".gz"):
+            if not os.path.isfile(p):
+                raise FileNotFoundError(f"GZ file not found: {lmdb_path}")
+            self._temp_dir = tempfile.mkdtemp(prefix="lmdb_gz_")
+            data_path = os.path.join(self._temp_dir, "data.mdb")
+            with gzip.open(p, "rb") as f_in, open(data_path, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
+            # LMDB will create lock.mdb as needed in this directory
+            return self._temp_dir
+
+        raise ValueError(
+            f"Unsupported LMDB path format: '{lmdb_path}'.\n"
+            "Supported: LMDB directory, *.lmdb, *.lmdb.zip, *.zip, *.lmdb.gz, *.gz"
+        )
+
+    def _cleanup(self):
+        """Remove temporary extraction directory if one was created."""
+        if self._temp_dir and os.path.isdir(self._temp_dir):
+            shutil.rmtree(self._temp_dir, ignore_errors=True)
+            self._temp_dir = None
+
+    def __del__(self):
+        self._cleanup()
+
+
+    def __len__(self) -> int:
+        """Return the total number of samples in the dataset."""
+        return self.length
+
+    def _get_single_item(self, idx: int):
+        """Internal helper to load a single item by integer index."""
+        if idx < 0 or idx >= self.length:
+            raise IndexError(
+                f"Index {idx} is out of range for dataset of size {self.length}."
+            )
+
+        key = f"data:{idx}".encode("ascii")
+        with self.lmdb_env.begin() as txn:
+            blob = txn.get(key)
+            if blob is None:
+                raise ValueError(
+                    f"No data found for index {idx}. "
+                    f"Ensure the dataset is correctly saved."
+                )
+            return pickle.loads(blob)
+
+    def _get_many_items(self, indices):
+        """Internal helper to load many items in a single LMDB transaction."""
+        indices = list(indices)
+        results = []
+
+        with self.lmdb_env.begin() as txn:
+            for i in indices:
+                if i < 0 or i >= self.length:
+                    raise IndexError(
+                        f"Index {i} is out of range for dataset of size {self.length}."
+                    )
+                key = f"data:{i}".encode("ascii")
+                blob = txn.get(key)
+                if blob is None:
+                    raise ValueError(
+                        f"No data found for index {i}. "
+                        f"Ensure the dataset is correctly saved."
+                    )
+                results.append(pickle.loads(blob))
+
+        return results
+
+    def __getitem__(self, idx):
+        """
+        Retrieve sample(s) by:
+        - integer index      → single sample
+        - list/tuple/ndarray of ints → list of samples
+        - refcode string     → list of samples for that refcode
+        - list/tuple/ndarray of refcodes → list of samples for all refcodes
+        """
+
+        # 1) Single integer index
+        if isinstance(idx, int):
+            return self._get_single_item(idx)
+
+        # 2) Single refcode as string (non-numeric)
+        if isinstance(idx, str) and not idx.isdigit():
+            indices = self.indices_for_refcode(idx)
+            return self._get_many_items(indices)
+
+        # 3) Sequence (list/tuple/np.ndarray)
+        if isinstance(idx, (list, tuple, np.ndarray)):
+            if len(idx) == 0:
+                return []
+
+            # all strings → refcodes
+            if all(isinstance(i, str) for i in idx):
+                indices = self.indices_for_refcodes(idx)
+                return self._get_many_items(indices)
+
+            # all ints → indices
+            if all(isinstance(i, int) for i in idx):
+                return self._get_many_items(idx)
+
+            raise TypeError(
+                "Index sequence must contain only ints or only refcode strings."
+            )
+
+        # 4) Bad type
+        raise TypeError(
+            "Index must be int, list[int], np.ndarray[int], tuple[int], "
+            "str (refcode), or list/tuple/ndarray[str] (refcodes)."
+        )
+
+
+    @property
+    def refcodes(self):
+        """
+        Return a sorted list of all unique refcodes stored in this LMDB.
+
+        Uses the key pattern b"ref:{refcode}" written by save2lmdb.
+        Scans LMDB once and caches the result.
+        """
+        if hasattr(self, "_refcodes_cache"):
+            return self._refcodes_cache
+
+        codes = []
+        prefix = b"ref:"
+
+        with self.lmdb_env.begin() as txn:
+            cur = txn.cursor()
+            for key, _ in cur:
+                if key.startswith(prefix):
+                    refcode = key[len(prefix):].decode("utf-8")
+                    codes.append(refcode)
+
+        codes = sorted(set(codes))
+        self._refcodes_cache = codes
+        return codes
+
+    def get_refcode(self, idx: int):
+        """
+        Return the refcode associated with a given integer index, if available.
+        """
+        if idx < 0 or idx >= self.length:
+            raise IndexError(
+                f"Index {idx} is out of range for dataset of size {self.length}."
+            )
+        key = f"idx:{idx}".encode("ascii")
+        with self.lmdb_env.begin() as txn:
+            val = txn.get(key)
+            if val is None:
+                return None
+            return val.decode("utf-8")
+
+    def indices_for_refcode(self, refcode: str):
+        """
+        Return the list of indices corresponding to a given refcode.
+        """
+        key = f"ref:{refcode}".encode("utf-8")
+        with self.lmdb_env.begin() as txn:
+            blob = txn.get(key)
+            if blob is None:
+                return []
+            return pickle.loads(blob)
+
+    def indices_for_refcodes(self, refcodes):
+        """
+        Given an iterable of refcodes, return a sorted list of all matching indices.
+        """
+        all_indices = []
+        for ref in refcodes:
+            all_indices.extend(self.indices_for_refcode(ref))
+        return sorted(set(all_indices))
+
+
+    def split_data(self, train_size=0.8, random_seed=None, shuffle=True):
+        """
+        Lazily split the dataset into train and test subsets.
+        """
+        indices = list(range(self.length))
+
+        if random_seed is not None:
+            random.seed(random_seed)
+
+        if shuffle:
+            random.shuffle(indices)
+
+        split_index = int(self.length * train_size)
+        train_indices = indices[:split_index]
+        test_indices = indices[split_index:]
+
+        class Subset:
+            def __init__(self, parent, indices_):
+                self.parent = parent
+                self.indices = list(indices_)
+
+            def __len__(self):
+                return len(self.indices)
+
+            def __getitem__(self, idx_):
+                if isinstance(idx_, int):
+                    return self.parent[self.indices[idx_]]
+                if isinstance(idx_, (list, tuple, np.ndarray)):
+                    return [self.parent[self.indices[i]] for i in idx_]
+                raise TypeError(
+                    "Index must be an int, list, tuple, or np.ndarray of int."
+                )
 
         train_data = Subset(self, train_indices)
         test_data = Subset(self, test_indices)

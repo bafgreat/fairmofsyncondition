@@ -67,10 +67,10 @@ class Crystallinity(object):
         """
         if self.diffraction_type == "PXRD":
             xrd = XRDCalculator(wavelength=self.wavelength)
-            pattern = xrd.get_pattern(self.structure)
+            pattern = xrd.get_pattern(self.structure, two_theta_range=(0, 100))
         elif self.diffraction_type == "ND":
-            xrd = NDCalculator(wavelength=self.wavelength)
-            pattern = xrd.get_pattern(self.structure)
+            nd = NDCalculator(wavelength=self.wavelength, two_theta_range=(0, 100))
+            pattern = nd.get_pattern(self.structure)
         else:
             raise ValueError("""Invalid diffraction type.
                              Choose between PXRD and ND""")
@@ -81,8 +81,8 @@ class Crystallinity(object):
         """
         """
         pattern = self.find_diffraction_pattern()
-        two_theta = np.array(pattern.x)
-        intensity = np.array(pattern.y)
+        two_theta = np.array(pattern.x, dtype=np.float32)
+        intensity = np.array(pattern.y, dtype=np.float32)
         return two_theta, intensity
 
 
