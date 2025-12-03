@@ -180,20 +180,6 @@ class DataStructure(object):
         # self.torch_data.hklmsd = torch.tensor(hkls, dtype=torch.float32)
         return self.torch_data
 
-import os
-import argparse
-import pickle
-import gzip
-import shutil
-import tarfile
-import zipfile
-import tempfile  # you can remove this now if you like
-from pathlib import Path
-from typing import Union, Iterable
-
-import lmdb
-
-# from your_module import DataStructure   # make sure this import is correct
 
 
 def save2lmdb(
@@ -230,46 +216,44 @@ def save2lmdb(
             refcode = Path(cif_file).stem
             print(refcode)
 
-            data = DataStructure(cif_file).complete_torch_data()
+            try:
+                data = DataStructure(cif_file).complete_torch_data()
 
-            if len(data) != 10:
-                print(f"[WARN] Data length != 10 for {refcode}, skipping")
+                if len(data) != 10:
+                    print(f"[WARN] Data length != 10 for {refcode}, skipping")
+                    continue
+               
+                data_key = f"data:{count}".encode("ascii")
+                blob = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
+                txn.put(data_key, blob)
+
+                idx_key = f"idx:{count}".encode("ascii")
+                txn.put(idx_key, refcode.encode("utf-8"))
+
+                ref_key = f"ref:{refcode}".encode("utf-8")
+                existing = txn.get(ref_key)
+                if existing is not None:
+                    indices = pickle.loads(existing)
+                else:
+                    indices = []
+                indices.append(count)
+                txn.put(ref_key, pickle.dumps(indices, protocol=pickle.HIGHEST_PROTOCOL))
+
+                count += 1
+
+                if count % commit_interval == 0:
+                    txn.commit()
+                    txn = env.begin(write=True)
+
+            except Exception as e:
+                print(f"[ERROR] Skipping {refcode}: {e}")
                 continue
-
-            data_key = f"data:{count}".encode("ascii")
-            blob = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
-            txn.put(data_key, blob)
-
-            idx_key = f"idx:{count}".encode("ascii")
-            txn.put(idx_key, refcode.encode("utf-8"))
-
-            ref_key = f"ref:{refcode}".encode("utf-8")
-            existing = txn.get(ref_key)
-            if existing is not None:
-                indices = pickle.loads(existing)
-            else:
-                indices = []
-            indices.append(count)
-            txn.put(ref_key, pickle.dumps(indices, protocol=pickle.HIGHEST_PROTOCOL))
-
-            count += 1
-
-            if count % commit_interval == 0:
-                txn.commit()
-                txn = env.begin(write=True)
 
         txn.put(b"__len__", pickle.dumps(count, protocol=pickle.HIGHEST_PROTOCOL))
         txn.commit()
 
-    except Exception as e:
-        # Abort current transaction on error and re-raise
-        # txn.abort()
-        # env.close()
-        #
-        print(f"Skipping the following {e} error for {refcode}")
     finally:
         env.close()
-
 
 def collect_cif_files(input_path: str):
     """
