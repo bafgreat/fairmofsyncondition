@@ -1,32 +1,24 @@
 [tool.poetry]
 name = "fairmofsyncondition"
-version = "0.1.2"
+version = "0.1.4"
 description = "A python machine learning module for for accelerating the discovery and synthesis of Metal organic frameworks"
 authors = ["Dinga Wonanke <bafgreat@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-torch = "2.2.0"
-# numpy = "<2.0"
-pytorch-lightning = "2.4.0"
-scikit-learn ="1.7.1"
-ase = "^3.23.0"
-# orb-models = { git = "https://github.com/bafgreat/orb-models-mof.git" }
-# pynanoflann = { git = "https://github.com/dwastberg/pynanoflann.git", rev = "af434039ae14bedcbb838a7808924d6689274168" }
+pytorch-lightning = ">=2.4.0"
+scikit-learn = ">=1.7.1"
+ase = ">=3.23.0"
 pandas = "^2.2.2"
 pytest = "^8.3.2"
 attr = "^0.3.2"
-# llama-stack = "^0.0.40"
 transformers = "^4.45.1"
 lmdb = "^1.5.1"
 msgpack = "^1.1.0"
 six = "^1.16.0"
-# ml-pyxis = {url = "https://github.com/vicolab/ml-pyxis/archive/master.zip"}
-mofstructure = "0.1.8.3"
+mofstructure = ">=0.1.8.4"
 torch-geometric = "^2.6.1"
-# fastai = "^2.7.18"
-# autogl = "^0.4.0"
 optuna-dashboard = "^0.17.0"
 optuna = "^4.1.0"
 tensorboard = "^2.18.0"
@@ -35,7 +27,16 @@ notebook = "^7.3.1"
 pubchempy = "^1.0.5"
 sentence-transformers = "^3.4.1"
 lmfit = "^1.3.2"
-
+torch = [
+    { version = "2.2.2", platform = "darwin" },
+    { version = "*", platform = "linux" },
+    { version = "*", platform = "win32" }
+]
+numpy = [
+    { version = "<2", platform = "darwin" },
+    { version = "*", platform = "linux" },
+    { version = "*", platform = "win32" }
+]
 [tool.poetry.scripts]
 train_bde = "fairmofsyncondition.model.thermodynamic_stability:entry_point"
 find_bde_parameters = "fairmofsyncondition.model.hyper_optimiser:main"

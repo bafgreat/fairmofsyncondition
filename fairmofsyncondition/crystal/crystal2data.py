@@ -24,7 +24,6 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from mofstructure.structure import MOFstructure
 from mofstructure import mofdeconstructor
-from fairmofsyncondition.crystal import analysis
 from fairmofsyncondition.read_write import filetyper, coords_library
 
 warnings.filterwarnings(
@@ -68,10 +67,7 @@ def encode_peaks_with_hkl(pattern):
 
 
 class DataStructure(object):
-    def __init__(self,
-                    ase_atom=None,
-                    wavelength='CuKa'
-                        ):
+    def __init__(self, ase_atom=None, wavelength='CuKa'):
         if isinstance(ase_atom, Atoms):
             self.ase_atom = ase_atom
         elif isinstance(ase_atom, str) and os.path.isfile(ase_atom):
@@ -157,7 +153,7 @@ class DataStructure(object):
         cn_emb, oms, _ = self.get_coordination_and_oms()
         atom_conc = self.get_species_conc()
         self.torch_data.atomic_one_hot = atom_conc
-        self.torch_data.cordinates = cn_emb,
+        self.torch_data.cordinates = cn_emb
         self.torch_data.space_group_number = emb_sg
         self.torch_data.crystal_system = emb_cs
         self.torch_data.oms = torch.tensor([[oms]], dtype=torch.float)
@@ -219,10 +215,14 @@ def save2lmdb(
             try:
                 data = DataStructure(cif_file).complete_torch_data()
 
-                if len(data) != 10:
-                    print(f"[WARN] Data length != 10 for {refcode}, skipping")
+                required = ["x","edge_index","edge_attr","lattice","atomic_one_hot","cordinates","space_group_number","crystal_system","oms"]
+                if not all(hasattr(data, k) for k in required):
                     continue
-               
+
+                # if len(data) != 10:
+                #     print(f"[WARN] Data length != 10 for {refcode}, skipping")
+                #     continue
+
                 data_key = f"data:{count}".encode("ascii")
                 blob = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
                 txn.put(data_key, blob)
