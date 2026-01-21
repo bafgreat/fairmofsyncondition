@@ -233,7 +233,8 @@ examples/LigandsXYZ/
 examples/test.xyz*.pt
 ML/tmp2/
 ML/elim/
-*.pt
+ML/tmp
+ML/trained_models
 .DS_Store
 .vscode/
 .idea/
