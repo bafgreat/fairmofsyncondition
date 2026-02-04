@@ -1,9 +1,14 @@
 [tool.poetry]
 name = "fairmofsyncondition"
-version = "0.1.4"
+version = "0.1.5"
 description = "A python machine learning module for for accelerating the discovery and synthesis of Metal organic frameworks"
-authors = ["Dinga Wonanke <bafgreat@gmail.com>"]
+authors = ["Dinga Wonanke <dak52@uclive.ac.nz>"]
 readme = "README.md"
+
+[tool.poetry.urls]
+Repository = "https://github.com/bafgreat/mofsyncondition"
+Author-Github = "https://github.com/bafgreat"
+Author-Website = "https://www.dingawonanke.com"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
