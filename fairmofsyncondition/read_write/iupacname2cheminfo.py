@@ -54,7 +54,7 @@ def pubchem_to_inchikey(identifier):
     '''
     pubchem = pcp.get_compounds(identifier, 'name')
     if len(pubchem) > 0:
-        return pubchem[0].inchikey, pubchem[0].canonical_smiles
+        return pubchem[0].inchikey, pubchem[0].connectivity_smiles
     else:
         return None
 

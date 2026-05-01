@@ -1239,7 +1239,131 @@ class LMDBDataset:
 
         return train_data, test_data
 
+class LMDBWriter:
+    """
+    Separate writer class for creating/appending to an LMDB dataset.
 
+    Schema:
+    - b"data:{idx}"     -> pickled data object
+    - b"idx:{idx}"      -> refcode as bytes
+    - b"ref:{refcode}"  -> pickled list[int] of indices
+    - b"__len__"        -> pickled int
+    """
+
+    def __init__(self, lmdb_path: str, map_size: int = 10 * 1024**3):
+        self.lmdb_path = os.path.abspath(str(lmdb_path))
+
+        os.makedirs(self.lmdb_path, exist_ok=True)
+
+        self.lmdb_env = lmdb.open(
+            self.lmdb_path,
+            readonly=False,
+            lock=True,
+            create=True,
+            map_size=map_size,
+            subdir=True,
+        )
+
+        with self.lmdb_env.begin(write=True) as txn:
+            length_blob = txn.get(b"__len__")
+
+            if length_blob is None:
+                self.length = 0
+                txn.put(b"__len__", pickle.dumps(self.length))
+            else:
+                self.length = pickle.loads(length_blob)
+
+    def add_item(self, refcode: str, data):
+        """
+        Add one item to the LMDB.
+        """
+
+        idx = self.length
+
+        data_key = f"data:{idx}".encode("ascii")
+        idx_key = f"idx:{idx}".encode("ascii")
+        ref_key = f"ref:{refcode}".encode("utf-8")
+
+        with self.lmdb_env.begin(write=True) as txn:
+            txn.put(data_key, pickle.dumps(data))
+            txn.put(idx_key, refcode.encode("utf-8"))
+
+            old_blob = txn.get(ref_key)
+            if old_blob is None:
+                indices = []
+            else:
+                indices = pickle.loads(old_blob)
+
+            indices.append(idx)
+            txn.put(ref_key, pickle.dumps(indices))
+
+            self.length += 1
+            txn.put(b"__len__", pickle.dumps(self.length))
+
+        return idx
+
+    def add_many(self, items):
+        """
+        Add many items.
+
+        items should be an iterable of:
+
+            (refcode, data)
+
+        Example:
+            writer.add_many([
+                ("MOF001", data1),
+                ("MOF002", data2),
+            ])
+        """
+
+        written_indices = []
+
+        with self.lmdb_env.begin(write=True) as txn:
+            for refcode, data in items:
+                idx = self.length
+
+                data_key = f"data:{idx}".encode("ascii")
+                idx_key = f"idx:{idx}".encode("ascii")
+                ref_key = f"ref:{refcode}".encode("utf-8")
+
+                txn.put(data_key, pickle.dumps(data))
+                txn.put(idx_key, refcode.encode("utf-8"))
+
+                old_blob = txn.get(ref_key)
+                if old_blob is None:
+                    indices = []
+                else:
+                    indices = pickle.loads(old_blob)
+
+                indices.append(idx)
+                txn.put(ref_key, pickle.dumps(indices))
+
+                self.length += 1
+                written_indices.append(idx)
+
+            txn.put(b"__len__", pickle.dumps(self.length))
+
+        return written_indices
+
+    def __len__(self):
+        return self.length
+
+    def close(self):
+        if self.lmdb_env is not None:
+            self.lmdb_env.sync()
+            self.lmdb_env.close()
+            self.lmdb_env = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+    def __del__(self):
+        self.close()
+        
 def list_train_test_split(data, train_size=0.8, random_seed=42, shuffle=True):
     """
     A function that take Splits a list into train and test

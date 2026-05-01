@@ -257,3 +257,12 @@ ML/Predicted_energy.png
 examples/count_element.py
 examples/mof_syncondition_data.lmdb/
 main_scripts/
+
+examples/compile_final_json_for_ML_training.py
+examples/create_category_for_metal_salts.py
+examples/create_final_graph_for_training_syn.py
+examples/create_final_json_for_training_syn.py
+examples/create_modulator_dic_and_category.py
+examples/create_solvent_dic_and_category.py
+examples/fix_data_for_final_ML_training.py
+examples/load_lmdb.py
