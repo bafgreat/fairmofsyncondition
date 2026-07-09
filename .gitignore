@@ -266,6 +266,11 @@ examples/create_modulator_dic_and_category.py
 examples/create_solvent_dic_and_category.py
 examples/fix_data_for_final_ML_training.py
 examples/load_lmdb.py
+<<<<<<< HEAD
+=======
+
+xamples/find_water_with_no_stop.py
+>>>>>>> 8b0ac36 (Improve training pipeline and update best models)
 tests/test_data/ADIQAG_fair.cif
 tests/test_data/REWQUG_fair.cif
 tests/test_data/REWRAN_fair.cif
